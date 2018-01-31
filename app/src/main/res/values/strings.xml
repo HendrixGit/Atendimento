@@ -4,7 +4,7 @@
     <string name="email">E-Mail</string>
     <string name="title_activity_login">Sign in</string>
 
-    <!-- Strings related to login -->
+    <!-- Strings relatedlogoogin -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>

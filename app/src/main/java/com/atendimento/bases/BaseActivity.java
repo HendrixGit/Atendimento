@@ -1,11 +1,11 @@
-package com.atendimento.activity;
+package com.atendimento.bases;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.atendimento.R;
 
-public class baseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
