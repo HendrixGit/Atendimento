@@ -6,8 +6,9 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.atendimento.R;
+import com.atendimento.bases.BaseActivity;
 
-public class InicioActivity extends AppCompatActivity {
+public class InicioActivity extends BaseActivity {
 
     private ImageView botaoFacebook;
     private ImageView botaoEmail;
@@ -30,9 +31,11 @@ public class InicioActivity extends AppCompatActivity {
         botaoEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                mudarTela(getApplicationContext(), LoginActivity.class);
             }
         });
 
     }
+
+
 }

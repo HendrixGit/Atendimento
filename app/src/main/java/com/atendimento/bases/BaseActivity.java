@@ -1,5 +1,7 @@
 package com.atendimento.bases;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -12,4 +14,11 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
     }
+
+    protected void mudarTela(Context contexto, Class classe) {
+        Intent intent = new Intent(contexto, classe);
+        startActivity(intent);
+        finish();
+    }
+
 }

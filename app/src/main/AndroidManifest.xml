@@ -23,7 +23,8 @@
         </activity>
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".bases.BaseActivity" />
-        <activity android:name=".activity.LoginActivity"></activity>
+        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.CadastroActivity"></activity>
     </application>
 
 </manifest>
