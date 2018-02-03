@@ -1,13 +1,18 @@
 package com.atendimento.bases;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
 import com.atendimento.R;
 
+
 public class BaseActivity extends AppCompatActivity {
+
+    private String[]  permissoesNecessarias = new String[]{
+            Manifest.permission.INTERNET
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,5 +30,5 @@ public class BaseActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
+    
 }
