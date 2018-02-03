@@ -1,7 +1,5 @@
 package com.atendimento.activity;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -35,6 +33,8 @@ public class InicioActivity extends BaseActivity {
                 mudarTela(getApplicationContext(), LoginActivity.class);
             }
         });
+
+        validaPermissoes(1,this, permissoesNecessarias);
 
     }
 
