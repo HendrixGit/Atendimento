@@ -18,6 +18,11 @@ public class BaseActivity extends AppCompatActivity {
     protected void mudarTela(Context contexto, Class classe) {
         Intent intent = new Intent(contexto, classe);
         startActivity(intent);
+    }
+
+    protected void mudarTelaFinish(Context contexto, Class classe) {
+        Intent intent = new Intent(contexto, classe);
+        startActivity(intent);
         finish();
     }
 

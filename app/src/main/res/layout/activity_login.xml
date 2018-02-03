@@ -20,7 +20,7 @@
             android:id="@+id/textView12"
             android:layout_width="0dp"
             android:layout_height="17dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="110dp"
             android:text="@string/email"
@@ -54,16 +54,14 @@
             android:id="@+id/textView14"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
             android:layout_marginTop="16dp"
             android:text="@string/senha"
+            android:textColor="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editEmail"
-            tools:textColor="@android:color/white" />
+            app:layout_constraintTop_toBottomOf="@+id/editEmail" />
 
         <EditText
             android:id="@+id/editSenha"
@@ -73,7 +71,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:ems="10"
-            android:inputType="numberPassword"
+            android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView14" />
@@ -87,11 +85,11 @@
             android:layout_marginTop="16dp"
             android:text="@string/cadastrese"
             android:textAlignment="center"
+            android:textColor="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageLogar"
-            tools:textColor="@android:color/white" />
+            app:layout_constraintTop_toBottomOf="@+id/imageLogar" />
 
         <ImageView
             android:id="@+id/imageLogar"
