@@ -20,4 +20,5 @@
     <string name="cadastrese">Não Possui Login, Cadastre-se aqui</string>
     <string name="logar">Logar</string>
     <string name="nome">Nome</string>
+    <string name="sair">Sair</string>
 </resources>

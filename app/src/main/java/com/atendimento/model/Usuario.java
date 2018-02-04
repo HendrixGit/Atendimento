@@ -2,6 +2,7 @@ package com.atendimento.model;
 
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
 
 public class Usuario {
 
@@ -15,9 +16,10 @@ public class Usuario {
 
     public void salvar(){
         DatabaseReference referenciaDatabase = ConfiguracaoFirebase.getFirebaseDatabase();
-        referenciaDatabase.child("Usuarios").child(getId()).setValue(this);
+        referenciaDatabase.child("usuarios").child(getId()).setValue(this);
     }
 
+    @Exclude
     public String getId() {
         return id;
     }
@@ -42,6 +44,7 @@ public class Usuario {
         this.email = email;
     }
 
+    @Exclude
     public String getSenha() {
         return senha;
     }
