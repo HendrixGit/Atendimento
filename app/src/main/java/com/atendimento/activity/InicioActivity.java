@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class InicioActivity extends BaseActivity {
 
-    private LoginButton botaoFacebook;
+    private ImageView botaoFacebook;
     private ImageView botaoEmail;
     private FirebaseAuth autenticacao;
 
@@ -23,7 +23,7 @@ public class InicioActivity extends BaseActivity {
 
         verificarUsuarioLogado();
 
-        botaoFacebook = findViewById(R.id.buttonFacebook);
+        botaoFacebook = findViewById(R.id.imageFacebook);
         botaoEmail    = findViewById(R.id.imageEmail);
 
         botaoFacebook.setOnClickListener(new View.OnClickListener() {

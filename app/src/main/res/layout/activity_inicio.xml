@@ -31,19 +31,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/buttonFacebook"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            style="@style/FacebookLoginButton"/>
-
         <ImageView
             android:id="@+id/imageEmail"
             android:layout_width="0dp"
@@ -51,15 +38,29 @@
             android:layout_marginBottom="32dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonFacebook"
-            app:layout_constraintVertical_bias="0.18"
+            app:layout_constraintTop_toBottomOf="@+id/imageFacebook"
+            app:layout_constraintVertical_bias="0.065"
             app:srcCompat="@drawable/botaologinemail" />
 
+        <ImageView
+            android:id="@+id/imageFacebook"
+            android:layout_width="0dp"
+            android:layout_height="68dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:srcCompat="@drawable/botaologinfacebook" />
 
 
     </android.support.constraint.ConstraintLayout>
