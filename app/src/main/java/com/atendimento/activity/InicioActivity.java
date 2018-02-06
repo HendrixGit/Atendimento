@@ -7,11 +7,12 @@ import android.widget.ImageView;
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
+import com.facebook.login.widget.LoginButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class InicioActivity extends BaseActivity {
 
-    private ImageView botaoFacebook;
+    private LoginButton botaoFacebook;
     private ImageView botaoEmail;
     private FirebaseAuth autenticacao;
 
@@ -22,7 +23,7 @@ public class InicioActivity extends BaseActivity {
 
         verificarUsuarioLogado();
 
-        botaoFacebook = findViewById(R.id.imageFacebook);
+        botaoFacebook = findViewById(R.id.buttonFacebook);
         botaoEmail    = findViewById(R.id.imageEmail);
 
         botaoFacebook.setOnClickListener(new View.OnClickListener() {
@@ -49,6 +50,8 @@ public class InicioActivity extends BaseActivity {
             mudarTelaFinish(getApplicationContext(), MainActivity.class);
         }
     }
+
+
 
 
 }
