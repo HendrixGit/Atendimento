@@ -62,6 +62,22 @@
             app:layout_constraintTop_toBottomOf="@+id/textView"
             app:srcCompat="@drawable/botaologinfacebook" />
 
+        <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/loginButtonFacebook"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="340dp"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageEmail"
+            facebook:com_facebook_login_text="Login com Facebook"
+            facebook:layout_constraintTop_toTopOf="parent" />
+
 
     </android.support.constraint.ConstraintLayout>
 

@@ -81,5 +81,4 @@ public class BaseActivity extends AppCompatActivity {
         dialog.show();
     }
 
-
 }
