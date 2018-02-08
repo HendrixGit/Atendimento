@@ -1,12 +1,8 @@
 package com.atendimento.activity;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -29,9 +25,6 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 public class InicioActivity extends BaseActivity {
 
     private ImageView botaoFacebook;
@@ -49,22 +42,6 @@ public class InicioActivity extends BaseActivity {
 
         botaoFacebook = findViewById(R.id.imageFacebook);
         botaoEmail    = findViewById(R.id.imageEmail);
-
-        try {//codigo descobre KeyHash muito util
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.atendimento",
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
-
 
         mCallbackManager = CallbackManager.Factory.create();
         botaoLoginFacebook = findViewById(R.id.loginButtonFacebook);
@@ -88,7 +65,6 @@ public class InicioActivity extends BaseActivity {
         });
 
 
-
         botaoEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,7 +77,6 @@ public class InicioActivity extends BaseActivity {
 
     private void verificarUsuarioLogado(){
         autenticacao = ConfiguracaoFirebase.getAutenticacao();
-        //updateUI(currentUser);
         if (autenticacao.getCurrentUser() != null){
             mudarTelaFinish(getApplicationContext(), MainActivity.class);
         }
@@ -118,15 +93,21 @@ public class InicioActivity extends BaseActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Facebook", "signInWithCredential:success");
-                            FirebaseUser user = autenticacao.getCurrentUser();
+                            FirebaseUser usuarioFirebase =  task.getResult().getUser();
                             mudarTelaFinish(getApplicationContext(),MainActivity.class);
-      //                      updateUI(user);
-                        } else {
+                        }
+                        else {
                             // If sign in fails, display a message to the user.
+                            String erroExececao = "";
+                            try{
+                                throw task.getException();
+
+                            }
+                            catch (Exception e){
+                                erroExececao = "Falha no Login";
+                            }
                             Log.w("Facebook", "signInWithCredential:failure", task.getException());
-                            Toast.makeText(InicioActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-    //                        updateUI(null);
+                            Toast.makeText(InicioActivity.this, erroExececao, Toast.LENGTH_SHORT).show();
                         }
 
                     }

@@ -24,4 +24,5 @@
     <string name="facebook_app_id">779753262213464</string>
     <string name="fb_login_protocol_scheme">fb779753262213464</string>
     <string name="opcaoInicio">Como Gostaria de Realizar  o Login:</string>
+    <string name="esqueciSenha">Esqueci a Senha</string>
 </resources>

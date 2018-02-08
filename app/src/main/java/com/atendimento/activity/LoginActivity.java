@@ -71,7 +71,6 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
-                    FirebaseUser usuarioFirebase = task.getResult().getUser();
                     Toast.makeText(getApplicationContext(),"Bem vindo ", Toast.LENGTH_LONG).show();
                     mudarTelaFinish(getApplicationContext(), MainActivity.class);
                 }

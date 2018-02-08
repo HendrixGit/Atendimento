@@ -91,7 +91,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageLogar" />
+            app:layout_constraintTop_toBottomOf="@+id/textEsqueci" />
 
         <ImageView
             android:id="@+id/imageLogar"
@@ -105,6 +105,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editSenha"
             app:srcCompat="@drawable/botaologarse" />
+
+        <TextView
+            android:id="@+id/textEsqueci"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/esqueciSenha"
+            android:textAlignment="center"
+            android:textColor="@color/cardview_light_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageLogar" />
 
 
     </android.support.constraint.ConstraintLayout>
