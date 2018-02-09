@@ -15,6 +15,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -101,10 +102,10 @@ public class InicioActivity extends BaseActivity {
                             String erroExececao = "";
                             try{
                                 throw task.getException();
-
                             }
                             catch (Exception e){
                                 erroExececao = "Falha no Login";
+                                LoginManager.getInstance().logOut();
                             }
                             Log.w("Facebook", "signInWithCredential:failure", task.getException());
                             Toast.makeText(InicioActivity.this, erroExececao, Toast.LENGTH_SHORT).show();

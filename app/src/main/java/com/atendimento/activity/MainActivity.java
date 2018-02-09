@@ -29,7 +29,7 @@ public class MainActivity extends BaseActivity {
                 autenticacao = ConfiguracaoFirebase.getAutenticacao();
                 autenticacao.signOut();
                 LoginManager.getInstance().logOut();
-                mudarTelaFinish(getApplicationContext(), LoginActivity.class);
+                mudarTelaFinish(getApplicationContext(),  InicioActivity.class);
             }
         });
     }

@@ -24,6 +24,7 @@ public class LoginActivity extends BaseActivity {
 
     private ImageView botaoLogar;
     private TextView textoCadastro;
+    private TextView textoEsqueci;
     private EditText email;
     private EditText senha;
     private FirebaseAuth autenticacao;
@@ -55,6 +56,14 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 mudarTela(getApplicationContext(),CadastroActivity.class);
+            }
+        });
+
+        textoEsqueci = findViewById(R.id.textoEsqueci);
+        textoEsqueci.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mudarTela(getApplicationContext(),RedifinicaoSenhaActivity.class);
             }
         });
     }

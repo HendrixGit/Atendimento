@@ -3,8 +3,8 @@
     package="com.atendimento">
 
     <!-- To auto-complete the email text field in logoogin form with the user's emails -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_PROFILE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
 
     <application
         android:allowBackup="true"
@@ -23,26 +23,29 @@
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".bases.BaseActivity" />
         <activity android:name=".activity.LoginActivity" />
-        <activity android:name=".activity.CadastroActivity"></activity>
+        <activity android:name=".activity.CadastroActivity" />
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
-        <activity android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".activity.RedifinicaoSenhaActivity"></activity>
     </application>
 
 </manifest>

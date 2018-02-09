@@ -25,4 +25,7 @@
     <string name="fb_login_protocol_scheme">fb779753262213464</string>
     <string name="opcaoInicio">Como Gostaria de Realizar  o Login:</string>
     <string name="esqueciSenha">Esqueci a Senha</string>
+    <string name="redefinirSenhaTexto">Informe o email e clique no botão abaixo para o que o e-mail, para a redefinição da senha seja enviado</string>
+    <string name="enviarEmail">Enviar E-mail</string>
+    <string name="loginEmail">Login com E-mail</string>
 </resources>
