@@ -3,6 +3,7 @@ package com.atendimento.activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,7 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends BaseActivity {
 
-    private ImageView botaoLogar;
+    private Button botaoLogar;
     private TextView textoCadastro;
     private TextView textoEsqueci;
     private EditText email;
@@ -37,7 +38,7 @@ public class LoginActivity extends BaseActivity {
 
         email = findViewById(R.id.editEmail);
         senha = findViewById(R.id.editSenha);
-        botaoLogar = findViewById(R.id.imageLogar);
+        botaoLogar = findViewById(R.id.buttonLoginEntrar);
 
         botaoLogar.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -29,4 +29,6 @@
     <string name="enviarEmail">Enviar E-mail</string>
     <string name="loginEmail">Login com E-mail</string>
     <string name="cadastro">Cadastro: é necessário um e-mail válido e uma senha de no mínino 8 caracteres</string>
+    <string name="entrar">Entrar</string>
+    <string name="cadastrar">Cadastrar</string>
 </resources>

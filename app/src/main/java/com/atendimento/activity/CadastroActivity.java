@@ -3,6 +3,7 @@ package com.atendimento.activity;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -25,7 +26,7 @@ public class CadastroActivity extends BaseActivity {
 
     private EditText email;
     private EditText senha;
-    private ImageView botaoCadastrar;
+    private Button botaoCadastrar;
     private FirebaseAuth autenticacao;
     private Usuario usuario;
 
@@ -36,7 +37,7 @@ public class CadastroActivity extends BaseActivity {
 
         email = findViewById(R.id.editCadEmail);
         senha = findViewById(R.id.editCadSenha);
-        botaoCadastrar = findViewById(R.id.imageViewCadastrar);
+        botaoCadastrar = findViewById(R.id.buttonCadastrar);
 
         botaoCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override

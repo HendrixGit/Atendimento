@@ -93,19 +93,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textoEsqueci" />
 
-        <ImageView
-            android:id="@+id/imageLogar"
-            android:layout_width="0dp"
-            android:layout_height="68dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:scaleType="fitXY"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editSenha"
-            app:srcCompat="@drawable/botaologarse" />
-
         <TextView
             android:id="@+id/textoEsqueci"
             android:layout_width="0dp"
@@ -118,7 +105,21 @@
             android:textColor="@color/cardview_light_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageLogar" />
+            app:layout_constraintTop_toBottomOf="@+id/buttonLoginEntrar" />
+
+        <Button
+            android:id="@+id/buttonLoginEntrar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/com_facebook_button_background"
+            android:text="@string/entrar"
+            android:textColor="@color/cardview_light_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editSenha" />
 
 
     </android.support.constraint.ConstraintLayout>
