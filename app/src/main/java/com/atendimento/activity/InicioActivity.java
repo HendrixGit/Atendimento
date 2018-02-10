@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.atendimento.R;
@@ -14,6 +13,7 @@ import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Usuario;
 import com.atendimento.util.Base64Custom;
+import com.atendimento.util.Preferencias;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -104,6 +104,8 @@ public class InicioActivity extends BaseActivity {
                             usuario.setEmail(usuarioFirebase.getEmail());
                             usuario.setNome(usuarioFirebase.getEmail());
                             usuario.salvar();
+                            Preferencias preferencias = new Preferencias(getApplicationContext());
+                            preferencias.salvarDados(identificadorUsuario,usuarioFirebase.getEmail());
                             Toast.makeText(getApplicationContext(),"Sucesso no cadastro Bem-Vindo ",Toast.LENGTH_LONG).show();
                             mudarTelaFinish(getApplicationContext(),MainActivity.class);
                         }

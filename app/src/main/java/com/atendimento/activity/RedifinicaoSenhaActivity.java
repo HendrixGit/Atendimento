@@ -13,10 +13,6 @@ import com.atendimento.config.ConfiguracaoFirebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-
-import java.util.concurrent.AbstractExecutorService;
 
 public class RedifinicaoSenhaActivity extends BaseActivity {
 
