@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -31,9 +32,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class InicioActivity extends BaseActivity {
 
-    private ImageView botaoFacebook;
     private LoginButton botaoLoginFacebook;
-    private ImageView botaoEmail;
+    private Button botaoEmail;
     private FirebaseAuth autenticacao;
     private CallbackManager mCallbackManager;
     private Usuario usuario;
@@ -45,8 +45,7 @@ public class InicioActivity extends BaseActivity {
 
         verificarUsuarioLogado();
 
-        botaoFacebook = findViewById(R.id.imageFacebook);
-        botaoEmail    = findViewById(R.id.imageEmail);
+        botaoEmail    = findViewById(R.id.buttonLoginEmail);
 
         mCallbackManager = CallbackManager.Factory.create();
         botaoLoginFacebook = findViewById(R.id.loginButtonFacebook);
