@@ -99,7 +99,7 @@ public class InicioActivity extends BaseActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Facebook", "signInWithCredential:success");
                             FirebaseUser usuarioFirebase =  task.getResult().getUser();
-                            String identificadorUsuario = Base64Custom.codificarBase64(usuarioFirebase.getEmail());
+                            String identificadorUsuario  = Base64Custom.codificarBase64(usuarioFirebase.getEmail());
                             usuario = new Usuario();
                             usuario.setId(identificadorUsuario);
                             usuario.setEmail(usuarioFirebase.getEmail());

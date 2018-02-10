@@ -28,4 +28,5 @@
     <string name="redefinirSenhaTexto">Informe o email e clique no botão abaixo para o que o e-mail, para a redefinição da senha seja enviado</string>
     <string name="enviarEmail">Enviar E-mail</string>
     <string name="loginEmail">Login com E-mail</string>
+    <string name="cadastro">Cadastro: é necessário um e-mail válido e uma senha de no mínino 8 caracteres</string>
 </resources>
