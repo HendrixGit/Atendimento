@@ -24,6 +24,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class InicioActivity extends BaseActivity {
@@ -100,14 +101,18 @@ public class InicioActivity extends BaseActivity {
                         else {
                             // If sign in fails, display a message to the user.
                             String erroExececao = "";
-                            try{
+                            try {
                                 throw task.getException();
+                            }
+                            catch(FirebaseAuthUserCollisionException e){
+                                erroExececao = "E-mail ja cadastrado, como Login com e-mail";
+
                             }
                             catch (Exception e){
                                 erroExececao = "Falha no Login";
-                                LoginManager.getInstance().logOut();
                             }
                             Log.w("Facebook", "signInWithCredential:failure", task.getException());
+                            LoginManager.getInstance().logOut();
                             Toast.makeText(InicioActivity.this, erroExececao, Toast.LENGTH_SHORT).show();
                         }
 
