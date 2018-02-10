@@ -11,6 +11,8 @@ import android.widget.Toast;
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
+import com.atendimento.model.Usuario;
+import com.atendimento.util.Base64Custom;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -34,6 +36,7 @@ public class InicioActivity extends BaseActivity {
     private ImageView botaoEmail;
     private FirebaseAuth autenticacao;
     private CallbackManager mCallbackManager;
+    private Usuario usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +99,13 @@ public class InicioActivity extends BaseActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Facebook", "signInWithCredential:success");
                             FirebaseUser usuarioFirebase =  task.getResult().getUser();
+                            String identificadorUsuario = Base64Custom.codificarBase64(usuarioFirebase.getEmail());
+                            usuario = new Usuario();
+                            usuario.setId(identificadorUsuario);
+                            usuario.setEmail(usuarioFirebase.getEmail());
+                            usuario.setNome(usuarioFirebase.getEmail());
+                            usuario.salvar();
+                            Toast.makeText(getApplicationContext(),"Sucesso no cadastro Bem-Vindo ",Toast.LENGTH_LONG).show();
                             mudarTelaFinish(getApplicationContext(),MainActivity.class);
                         }
                         else {

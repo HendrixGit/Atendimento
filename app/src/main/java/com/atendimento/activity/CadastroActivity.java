@@ -11,6 +11,7 @@ import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Usuario;
+import com.atendimento.util.Base64Custom;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -22,18 +23,17 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class CadastroActivity extends BaseActivity {
 
-    private EditText nome;
     private EditText email;
     private EditText senha;
     private ImageView botaoCadastrar;
     private FirebaseAuth autenticacao;
+    private Usuario usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro);
 
-        nome  = findViewById(R.id.editCadNome);
         email = findViewById(R.id.editCadEmail);
         senha = findViewById(R.id.editCadSenha);
         botaoCadastrar = findViewById(R.id.imageViewCadastrar);
@@ -42,7 +42,7 @@ public class CadastroActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
 
-                if ((!nome.getText().toString().equals("")) && (!email.getText().toString().equals("")) && (!senha.getText().toString().equals(""))){
+                if ((!email.getText().toString().equals("")) && (!senha.getText().toString().equals(""))){
                     cadastrarUsuario();
                 }
                 else{
@@ -54,8 +54,8 @@ public class CadastroActivity extends BaseActivity {
     }
 
     private void cadastrarUsuario(){
-        final Usuario usuario = new Usuario();
-        usuario.setNome(nome.getText().toString());
+        usuario = new Usuario();
+        usuario.setNome(email.getText().toString());
         usuario.setEmail(email.getText().toString());
         usuario.setSenha(senha.getText().toString());
 
@@ -67,9 +67,10 @@ public class CadastroActivity extends BaseActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
                     FirebaseUser usuarioFirebase = task.getResult().getUser();
-                    usuario.setId(usuarioFirebase.getUid());
+                    String identificadorUsuario = Base64Custom.codificarBase64(usuarioFirebase.getEmail());
+                    usuario.setId(identificadorUsuario);
                     usuario.salvar();
-                    Toast.makeText(getApplicationContext(),"Sucesso no cadastro Bem-Vindo " + usuario.getNome(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Sucesso no cadastro Bem-Vindo ",Toast.LENGTH_LONG).show();
                     mudarTelaFinish(getApplication(),MainActivity.class);
                 }
                 else{
