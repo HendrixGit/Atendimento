@@ -2,8 +2,6 @@ package com.atendimento.activity;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.ToolbarWidgetWrapper;
-import android.util.AndroidException;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
