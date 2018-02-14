@@ -46,7 +46,6 @@ public class InicioActivity extends BaseActivity {
         verificarUsuarioLogado();
 
         botaoEmail    = findViewById(R.id.buttonLoginEmail);
-
         mCallbackManager = CallbackManager.Factory.create();
         botaoLoginFacebook = findViewById(R.id.loginButtonFacebook);
         botaoLoginFacebook.setReadPermissions("email", "public_profile");
@@ -106,8 +105,8 @@ public class InicioActivity extends BaseActivity {
                             usuario.salvar();
                             Preferencias preferencias = new Preferencias(getApplicationContext());
                             preferencias.salvarDados(identificadorUsuario,usuarioFirebase.getEmail());
-                            Toast.makeText(getApplicationContext(),"Sucesso no cadastro Bem-Vindo ",Toast.LENGTH_LONG).show();
                             mudarTelaFinish(getApplicationContext(),MainActivity.class);
+                            Toast.makeText(getApplicationContext(),"Sucesso no cadastro Bem-Vindo ",Toast.LENGTH_LONG).show();
                         }
                         else {
                             // If sign in fails, display a message to the user.
