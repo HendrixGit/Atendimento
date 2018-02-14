@@ -2,7 +2,11 @@ package com.atendimento.activity;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.ToolbarWidgetWrapper;
 import android.util.AndroidException;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -24,23 +28,40 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Atendimento");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
-        getSupportActionBar().hide();
-//        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
 
         botaoSair = findViewById(R.id.buttonSair);
         botaoSair.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                autenticacao = ConfiguracaoFirebase.getAutenticacao();
-                autenticacao.signOut();
-                LoginManager.getInstance().logOut();
-                mudarTelaFinish(getApplicationContext(),  InicioActivity.class);
+                deslogarUsuario();
             }
         });
     }
 
+    private void deslogarUsuario() {
+        autenticacao = ConfiguracaoFirebase.getAutenticacao();
+        autenticacao.signOut();
+        LoginManager.getInstance().logOut();
+        mudarTelaFinish(getApplicationContext(),  InicioActivity.class);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_sair:
+                deslogarUsuario(); return true;
+            default: return super.onOptionsItemSelected(item);
+        }
+    }
 }
