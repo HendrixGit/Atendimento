@@ -68,13 +68,13 @@ public class CadastroActivity extends BaseActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
                     FirebaseUser usuarioFirebase = task.getResult().getUser();
-                    String identificadorUsuario = Base64Custom.codificarBase64(usuarioFirebase.getEmail());
+                    String identificadorUsuario  = Base64Custom.codificarBase64(usuarioFirebase.getEmail());
                     usuario.setId(identificadorUsuario);
                     usuario.salvar();
                     Preferencias preferencias = new Preferencias(getApplicationContext());
                     preferencias.salvarDados(identificadorUsuario,usuarioFirebase.getEmail());
+                    mudarTelaFinish(getApplicationContext(),MainActivity.class);
                     Toast.makeText(getApplicationContext(),"Sucesso no cadastro Bem-Vindo ",Toast.LENGTH_LONG).show();
-                    mudarTelaFinish(getApplication(),MainActivity.class);
                 }
                 else{
                     String erroExcecao = "";

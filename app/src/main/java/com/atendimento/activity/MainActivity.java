@@ -5,9 +5,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
@@ -17,7 +14,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends BaseActivity {
 
-    private Button botaoSair;
     private FirebaseAuth autenticacao;
     private Toolbar toolbar;
 
@@ -31,13 +27,6 @@ public class MainActivity extends BaseActivity {
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
         setSupportActionBar(toolbar);
 
-        botaoSair = findViewById(R.id.buttonSair);
-        botaoSair.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deslogarUsuario();
-            }
-        });
     }
 
     private void deslogarUsuario() {

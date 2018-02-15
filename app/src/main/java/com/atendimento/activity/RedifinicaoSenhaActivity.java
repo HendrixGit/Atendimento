@@ -37,10 +37,10 @@ public class RedifinicaoSenhaActivity extends BaseActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()){
-                                        mudarTela(getApplication(),LoginActivity.class);
+                                        mudarTelaFinish(getApplication(),LoginActivity.class);
                                         Toast.makeText(getApplicationContext(),
                                                 "Um e-mail para a redifinição foi enviado para você, prossiga com  redefinição de senha por lá",
-                                                Toast.LENGTH_LONG);
+                                                Toast.LENGTH_LONG).show();
                                     }
                                     else{
                                         String erroExececao = "";

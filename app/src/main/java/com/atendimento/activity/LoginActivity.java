@@ -79,8 +79,8 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
-                    Toast.makeText(getApplicationContext(),"Bem vindo ", Toast.LENGTH_LONG).show();
                     mudarTelaFinish(getApplicationContext(), MainActivity.class);
+                    Toast.makeText(getApplicationContext(),"Bem vindo ", Toast.LENGTH_LONG).show();
                 }
                 else{
                     String erroExececao = "";
