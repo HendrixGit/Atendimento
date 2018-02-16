@@ -63,7 +63,9 @@ public class InicioActivity extends BaseActivity {
 
             @Override
             public void onError(FacebookException error) {
-
+                if (verificarConexaoInternet() == false) {
+                    Toast.makeText(getApplicationContext(),"Sem conexão com Internet ",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
