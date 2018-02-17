@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
@@ -28,6 +27,7 @@ public class BaseActivity extends AppCompatActivity {
     };
 
     protected ConnectivityManager cm;
+    protected static String nomeApp = "Atendimento";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

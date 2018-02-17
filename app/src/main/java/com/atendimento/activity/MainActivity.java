@@ -23,7 +23,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Atendimento");
+        toolbar.setTitle(nomeApp);
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
         setSupportActionBar(toolbar);
 
@@ -46,8 +46,8 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.item_sair:
-                deslogarUsuario(); return true;
+            case R.id.item_sair:deslogarUsuario(); return true;
+            case R.id.item_configuracoes:mudarTela(getApplicationContext(),ConfiguracoesActivity.class); return true;
             default: return super.onOptionsItemSelected(item);
         }
     }

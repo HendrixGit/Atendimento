@@ -10,7 +10,7 @@
         android:icon="@drawable/ic_search"
         app:showAsAction="ifRoom"/>
 
-    <item android:id="@+id/item_perfil"
+    <item android:id="@+id/item_configuracoes"
         android:title="@string/configuracoes"
         android:orderInCategory="200"
         app:showAsAction="never"
