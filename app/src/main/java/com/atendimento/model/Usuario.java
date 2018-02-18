@@ -12,6 +12,7 @@ public class Usuario {
     private String senha;
 
     public Usuario() {
+
     }
 
     public void salvar(){
