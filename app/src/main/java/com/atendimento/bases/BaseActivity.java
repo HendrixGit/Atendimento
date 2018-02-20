@@ -23,7 +23,9 @@ import java.util.List;
 public class BaseActivity extends AppCompatActivity {
 
     protected String[]  permissoesNecessarias = new String[]{
-            Manifest.permission.INTERNET
+            Manifest.permission.INTERNET,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
     protected ConnectivityManager cm;
@@ -55,10 +57,11 @@ public class BaseActivity extends AppCompatActivity {
                     listaPermissoes.add(permissao);
                 }
             }
-            if (listaPermissoes.isEmpty()) return true;
+            if (!listaPermissoes.isEmpty()) {
                 String[] novasPermissoes = new String[listaPermissoes.size()];
                 listaPermissoes.toArray(novasPermissoes);
                 ActivityCompat.requestPermissions(activity, novasPermissoes, 1);
+            }
         }
         return true;
     }

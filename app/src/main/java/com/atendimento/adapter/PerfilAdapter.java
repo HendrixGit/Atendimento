@@ -23,8 +23,8 @@ public class PerfilAdapter extends ArrayAdapter {
 
     public PerfilAdapter(Context context, ArrayList<Usuario> objects) {
         super(context, 0, objects);
-        this.usuarios = usuarios;
-        this.context = context;
+        this.usuarios = objects;
+        this.context  = context;
     }
 
     @Override
