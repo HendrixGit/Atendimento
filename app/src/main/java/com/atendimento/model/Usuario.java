@@ -20,7 +20,7 @@ public class Usuario {
         referenciaDatabase.child("usuarios").child(getId()).setValue(this);
     }
 
-    @Exclude
+    //@Exclude
     public String getId() {
         return id;
     }
@@ -45,7 +45,7 @@ public class Usuario {
         this.email = email;
     }
 
-    @Exclude
+    //@Exclude
     public String getSenha() {
         return senha;
     }

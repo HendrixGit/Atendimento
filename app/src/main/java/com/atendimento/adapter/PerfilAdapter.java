@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.atendimento.R;
@@ -36,11 +37,11 @@ public class PerfilAdapter extends ArrayAdapter {
 
             Usuario usuario = usuarios.get(position);
 
-            TextView nome  = view.findViewById(R.id.textViewConfNome);
-            TextView email = view.findViewById(R.id.textViewConfEmail);
+            EditText nome  = view.findViewById(R.id.editNomePerfil);
+            TextView email = view.findViewById(R.id.editEmailPerfil);
 
-            nome.setText("Nome: "    + usuario.getNome());
-            email.setText("E-mail: " + usuario.getEmail());
+            nome.setText(usuario.getNome());
+            email.setText(usuario.getEmail());
 
         }
         return view;

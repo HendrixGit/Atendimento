@@ -3,7 +3,9 @@ package com.atendimento.activity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.atendimento.R;
 import com.atendimento.adapter.PerfilAdapter;
@@ -34,7 +36,7 @@ public class ConfiguracoesActivity extends BaseActivity {
         setContentView(R.layout.activity_configuracoes);
 
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(nomeApp);
+        toolbar.setTitle("Configurações");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -48,9 +50,8 @@ public class ConfiguracoesActivity extends BaseActivity {
         usuarios = new ArrayList<>();
         adapter  = new PerfilAdapter(ConfiguracoesActivity.this,usuarios);
         firebase = ConfiguracaoFirebase.getFirebaseDatabase();
-        firebase.
-                child("usuarios").
-                child(identificadorUsuario);
+        firebase.child("usuarios")
+                .child(identificadorUsuario);
         listView.setAdapter(adapter);
 
         valueEventListenerPerfil = new ValueEventListener() {
@@ -58,7 +59,9 @@ public class ConfiguracoesActivity extends BaseActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 usuarios.clear();
                 for (DataSnapshot dados : dataSnapshot.getChildren()){
-                    Usuario usuario = dados.getValue(Usuario.class);
+                    Usuario usuario = new Usuario();//dados.getValue(Usuario.class);
+                    usuario.setNome(dataSnapshot.child("usuarios").child(identificadorUsuario).child("nome").getValue().toString());
+                    usuario.setEmail(dataSnapshot.child("usuarios").child(identificadorUsuario).child("email").getValue().toString());
                     usuarios.add(usuario);
                 }
                 adapter.notifyDataSetChanged();
@@ -70,20 +73,37 @@ public class ConfiguracoesActivity extends BaseActivity {
             }
         };
         firebase.addValueEventListener(valueEventListenerPerfil);
-
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        removeListener();
+    }
+
+    private void removeListener() {
         firebase.removeEventListener(valueEventListenerPerfil);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home: mudarTelaFinish(getApplicationContext(), MainActivity.class);return true;
+            case android.R.id.home: salvarDados();return true;
             default: return super.onOptionsItemSelected(item);
         }
     }
+
+    private void salvarDados(){
+        EditText nome = findViewById(R.id.editNomePerfil);
+        if (!nome.getText().equals("")) {
+            firebase.child("usuarios")
+                    .child(identificadorUsuario)
+                    .child("nome").setValue(nome.getText().toString());
+            mudarTelaFinish(getApplicationContext(), MainActivity.class);
+        }
+        else{
+            Toast.makeText(getApplicationContext(),"Favor Preencha o nome",Toast.LENGTH_LONG).show();
+        }
+    }
+
 }
