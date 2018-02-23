@@ -12,12 +12,16 @@ import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Usuario;
+import com.atendimento.util.Base64Custom;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends BaseActivity {
 
@@ -27,6 +31,7 @@ public class LoginActivity extends BaseActivity {
     private EditText email;
     private EditText senha;
     private FirebaseAuth autenticacao;
+    private DatabaseReference firebase;
     private Usuario usuario;
 
     @Override
@@ -37,6 +42,7 @@ public class LoginActivity extends BaseActivity {
         email = findViewById(R.id.editEmail);
         senha = findViewById(R.id.editSenha);
         botaoLogar = findViewById(R.id.buttonLoginEntrar);
+        firebase = ConfiguracaoFirebase.getFirebaseDatabase();
 
         botaoLogar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +85,8 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
+                    FirebaseUser usuarioFirebase = task.getResult().getUser();
+                    String identificadorUsuario  = Base64Custom.codificarBase64(usuarioFirebase.getEmail());
                     mudarTelaFinish(getApplicationContext(), MainActivity.class);
                     Toast.makeText(getApplicationContext(),"Bem vindo ", Toast.LENGTH_LONG).show();
                 }

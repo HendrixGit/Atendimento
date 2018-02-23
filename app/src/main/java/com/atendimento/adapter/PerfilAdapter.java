@@ -1,12 +1,9 @@
 package com.atendimento.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,7 +12,6 @@ import com.atendimento.R;
 import com.atendimento.model.Usuario;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class PerfilAdapter extends ArrayAdapter {
 
@@ -37,7 +33,7 @@ public class PerfilAdapter extends ArrayAdapter {
 
             Usuario usuario = usuarios.get(position);
 
-            EditText nome  = view.findViewById(R.id.editNomePerfil);
+            EditText nome  = view.findViewById(R.id.editNomeConf);
             TextView email = view.findViewById(R.id.editEmailPerfil);
 
             nome.setText(usuario.getNome());

@@ -29,20 +29,23 @@ public class ConfiguracoesActivity extends BaseActivity {
     private ArrayList<Usuario> usuarios;
     private ArrayAdapter<Usuario> adapter;
     private ValueEventListener valueEventListenerPerfil;
+    private EditText nome;
+    private EditText email;
+    private Usuario usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuracoes);
 
+        nome  = findViewById(R.id.editNomeConf);
+        email = findViewById(R.id.editEmailConf);
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Configurações");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-        listView = findViewById(R.id.listViewConfiguracoes);
 
         Preferencias preferencias = new Preferencias(getApplicationContext());
         identificadorUsuario = preferencias.getIdentificador();
@@ -52,19 +55,17 @@ public class ConfiguracoesActivity extends BaseActivity {
         firebase = ConfiguracaoFirebase.getFirebaseDatabase();
         firebase.child("usuarios")
                 .child(identificadorUsuario);
-        listView.setAdapter(adapter);
 
         valueEventListenerPerfil = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                usuarios.clear();
                 for (DataSnapshot dados : dataSnapshot.getChildren()){
-                    Usuario usuario = new Usuario();//dados.getValue(Usuario.class);
+                    usuario = new Usuario();
                     usuario.setNome(dataSnapshot.child("usuarios").child(identificadorUsuario).child("nome").getValue().toString());
                     usuario.setEmail(dataSnapshot.child("usuarios").child(identificadorUsuario).child("email").getValue().toString());
-                    usuarios.add(usuario);
                 }
-                adapter.notifyDataSetChanged();
+                nome.setText(usuario.getNome().toString());
+                email.setText(usuario.getEmail().toString());
             }
 
             @Override
@@ -94,8 +95,7 @@ public class ConfiguracoesActivity extends BaseActivity {
     }
 
     private void salvarDados(){
-        EditText nome = findViewById(R.id.editNomePerfil);
-        if (!nome.getText().equals("")) {
+        if (!nome.getText().toString().equals("")) {
             firebase.child("usuarios")
                     .child(identificadorUsuario)
                     .child("nome").setValue(nome.getText().toString());
