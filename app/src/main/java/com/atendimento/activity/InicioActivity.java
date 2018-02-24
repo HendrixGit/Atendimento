@@ -103,7 +103,7 @@ public class InicioActivity extends BaseActivity {
                             usuario = new Usuario();
                             usuario.setId(identificadorUsuario);
                             usuario.setEmail(usuarioFirebase.getEmail());
-                            usuario.setNome(usuarioFirebase.getEmail());
+                            usuario.setNome(usuarioFirebase.getDisplayName());
                             usuario.salvar();
                             Preferencias preferencias = new Preferencias(getApplicationContext());
                             preferencias.salvarDados(identificadorUsuario,usuarioFirebase.getEmail());
