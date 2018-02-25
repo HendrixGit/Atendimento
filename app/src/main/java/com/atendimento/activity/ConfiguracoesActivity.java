@@ -13,6 +13,8 @@ import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Usuario;
 import com.atendimento.util.Preferencias;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +27,7 @@ public class ConfiguracoesActivity extends BaseActivity {
     private android.support.v7.widget.Toolbar toolbar;
     private String identificadorUsuario;
     private DatabaseReference firebase;
+    private FirebaseAuth autenticacao;
     private ListView listView;
     private ArrayList<Usuario> usuarios;
     private ArrayAdapter<Usuario> adapter;
@@ -74,6 +77,22 @@ public class ConfiguracoesActivity extends BaseActivity {
             }
         };
         firebase.addValueEventListener(valueEventListenerPerfil);
+        if (verificarProviderLogin() == true){
+            nome.setEnabled(false);
+            email.setEnabled(false);
+            Toast.makeText(getApplicationContext(), "Login Feito pelo facebook", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private boolean verificarProviderLogin() {
+        boolean result = false;
+        autenticacao = ConfiguracaoFirebase.getAutenticacao();
+        for (UserInfo userInfo : autenticacao.getCurrentUser().getProviderData()) {
+            if (userInfo.getProviderId().equals("facebook.com")) {
+                result = true;
+            }
+        }
+        return result;
     }
 
     @Override
