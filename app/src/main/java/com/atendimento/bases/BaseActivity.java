@@ -25,7 +25,8 @@ public class BaseActivity extends AppCompatActivity {
     protected String[]  permissoesNecessarias = new String[]{
             Manifest.permission.INTERNET,
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
     };
 
     protected ConnectivityManager cm;
