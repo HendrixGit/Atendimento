@@ -2,7 +2,6 @@ package com.atendimento.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -35,11 +34,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public class ConfiguracoesActivity extends BaseActivity {
@@ -48,6 +44,7 @@ public class ConfiguracoesActivity extends BaseActivity {
     private String identificadorUsuario;
     private DatabaseReference firebase;
     private FirebaseAuth autenticacao;
+    private StorageReference storageReference;
     private ListView listView;
     private ArrayList<Usuario> usuarios;
     private ArrayAdapter<Usuario> adapter;
@@ -102,6 +99,9 @@ public class ConfiguracoesActivity extends BaseActivity {
 
             }
         };
+
+        carregarFoto();
+
         firebase.addValueEventListener(valueEventListenerPerfil);
         if (verificarProviderLogin() == true){
             nome.setEnabled(false);
@@ -119,9 +119,23 @@ public class ConfiguracoesActivity extends BaseActivity {
     }
 
     private void carregarFoto(){
-
+        storageReference = ConfiguracaoFirebase.getStorage().child(identificadorUsuario);
+        if (storageReference != null){
+            long dim = 48 * 48;
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    imageViewPerfil.setImageURI(uri);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), "Falha ao carregar foto", Toast.LENGTH_LONG).show();
+                    Log.i("erroFotoCarregar", e.toString() + " " + e.getCause().toString());
+                }
+            });
+        }
     }
-
 
     private boolean verificarProviderLogin() {
         boolean result = false;
@@ -135,6 +149,11 @@ public class ConfiguracoesActivity extends BaseActivity {
     }
 
     private void salvarDados(){
+        salvarNome();
+        salvarImagem();
+    }
+
+    private void salvarNome() {
         if (!nome.getText().toString().equals("")) {
             firebase.child("usuarios")
                     .child(identificadorUsuario)
@@ -146,6 +165,28 @@ public class ConfiguracoesActivity extends BaseActivity {
         }
     }
 
+    private void salvarImagem(){
+        if (imagemPerfil != null) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            imagemPerfil.compress(Bitmap.CompressFormat.PNG, 75, stream);
+            byte[] byteArray = stream.toByteArray();
+
+            storageReference = ConfiguracaoFirebase.getStorage().child(identificadorUsuario);
+            UploadTask uploadTask = storageReference.putBytes(byteArray);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Toast.makeText(getApplicationContext(), "Falha ao enviar foto", Toast.LENGTH_LONG).show();
+                    Log.i("erroFoto", exception.toString() + " " + exception.getCause().toString());
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                }
+            });
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -153,28 +194,7 @@ public class ConfiguracoesActivity extends BaseActivity {
             Uri localImagemSelecionada = data.getData();
             try {
                 imagemPerfil = MediaStore.Images.Media.getBitmap(getContentResolver(),localImagemSelecionada);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                imagemPerfil.compress(Bitmap.CompressFormat.PNG,75,stream);
                 imageViewPerfil.setImageBitmap(imagemPerfil);
-                byte[] byteArray = stream.toByteArray();
-
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageReference = storage.getReferenceFromUrl("gs://atendimento-23915.appspot.com").child(identificadorUsuario);
-
-                UploadTask uploadTask = storageReference.putBytes(byteArray);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Toast.makeText(getApplicationContext(),"Falhou",Toast.LENGTH_LONG).show();
-                        Log.i("erroFoto",exception.toString() + " " + exception.getMessage() );
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    }
-                });
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
