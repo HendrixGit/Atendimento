@@ -2,6 +2,7 @@ package com.atendimento.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -120,17 +121,21 @@ public class ConfiguracoesActivity extends BaseActivity {
 
     private void carregarFoto(){
         storageReference = ConfiguracaoFirebase.getStorage().child(identificadorUsuario);
-        if (storageReference != null){
-            long dim = 48 * 48;
-            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        if (storageReference != null) {
+            long dim = 1024 * 1024;
+            storageReference.getBytes(dim).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
-                public void onSuccess(Uri uri) {
-                    imageViewPerfil.setImageURI(uri);
+                public void onSuccess(byte[] bytes) {
+                    imagemPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    imageViewPerfil.setImageBitmap(Bitmap.createScaledBitmap(imagemPerfil,
+                            imageViewPerfil.getWidth(),
+                            imageViewPerfil.getHeight(),
+                            false));
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getApplicationContext(), "Falha ao carregar foto", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Erro ao Carregar Foto ",Toast.LENGTH_LONG).show();
                     Log.i("erroFotoCarregar", e.toString() + " " + e.getCause().toString());
                 }
             });
@@ -168,7 +173,7 @@ public class ConfiguracoesActivity extends BaseActivity {
     private void salvarImagem(){
         if (imagemPerfil != null) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            imagemPerfil.compress(Bitmap.CompressFormat.PNG, 75, stream);
+            imagemPerfil.compress(Bitmap.CompressFormat.PNG, 50, stream);
             byte[] byteArray = stream.toByteArray();
 
             storageReference = ConfiguracaoFirebase.getStorage().child(identificadorUsuario);
