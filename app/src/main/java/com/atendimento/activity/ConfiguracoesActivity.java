@@ -1,8 +1,12 @@
 package com.atendimento.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -36,6 +40,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -56,6 +61,8 @@ public class ConfiguracoesActivity extends BaseActivity {
     private ImageButton foto;
     private ImageView   imageViewPerfil;
     private Bitmap      imagemPerfil;
+    private Bitmap      imagemPerfilParametro;
+    private AlertDialog opcoes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,11 +93,9 @@ public class ConfiguracoesActivity extends BaseActivity {
         valueEventListenerPerfil = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot dados : dataSnapshot.getChildren()){
-                    usuario = new Usuario();
-                    usuario.setNome(dataSnapshot.child("usuarios").child(identificadorUsuario).child("nome").getValue().toString());
-                    usuario.setEmail(dataSnapshot.child("usuarios").child(identificadorUsuario).child("email").getValue().toString());
-                }
+                usuario = new Usuario();
+                usuario.setNome(dataSnapshot.child("usuarios").child(identificadorUsuario).child("nome").getValue().toString());
+                usuario.setEmail(dataSnapshot.child("usuarios").child(identificadorUsuario).child("email").getValue().toString());
                 nome.setText(usuario.getNome().toString());
                 email.setText(usuario.getEmail().toString());
             }
@@ -100,10 +105,9 @@ public class ConfiguracoesActivity extends BaseActivity {
 
             }
         };
-
         carregarFoto();
-
         firebase.addValueEventListener(valueEventListenerPerfil);
+
         if (verificarProviderLogin() == true){
             nome.setEnabled(false);
             email.setEnabled(false);
@@ -113,10 +117,48 @@ public class ConfiguracoesActivity extends BaseActivity {
         foto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mostrarOpcoes();
+            }
+        });
+    }
+
+    public void mostrarOpcoes(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("De onde deseja, tirar a foto de Perfil");
+        builder.setPositiveButton("Camera", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface arg0, int arg1) {
+                Toast.makeText(ConfiguracoesActivity.this, "camera" + arg1, Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("Galeria", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface arg0, int arg1) {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent,0);
             }
         });
+        opcoes = builder.create();
+        opcoes.show();
+    }
+
+    public Bitmap diminuirImagem(Bitmap bm, int newHeight, int newWidth) {
+
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // RECREATE THE NEW BITMAP
+
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+        return resizedBitmap;
     }
 
     private void carregarFoto(){
@@ -156,6 +198,7 @@ public class ConfiguracoesActivity extends BaseActivity {
     private void salvarDados(){
         salvarNome();
         salvarImagem();
+        mudarTelaFinish(getApplicationContext(), MainActivity.class);
     }
 
     private void salvarNome() {
@@ -163,7 +206,6 @@ public class ConfiguracoesActivity extends BaseActivity {
             firebase.child("usuarios")
                     .child(identificadorUsuario)
                     .child("nome").setValue(nome.getText().toString());
-            mudarTelaFinish(getApplicationContext(), MainActivity.class);
         }
         else{
             Toast.makeText(getApplicationContext(),"Favor Preencha o nome",Toast.LENGTH_LONG).show();
@@ -171,9 +213,9 @@ public class ConfiguracoesActivity extends BaseActivity {
     }
 
     private void salvarImagem(){
-        if (imagemPerfil != null) {
+        if (imagemPerfilParametro != null) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            imagemPerfil.compress(Bitmap.CompressFormat.PNG, 50, stream);
+            imagemPerfilParametro.compress(Bitmap.CompressFormat.PNG, 50, stream);
             byte[] byteArray = stream.toByteArray();
 
             storageReference = ConfiguracaoFirebase.getStorage().child(identificadorUsuario);
@@ -187,6 +229,7 @@ public class ConfiguracoesActivity extends BaseActivity {
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
                 }
             });
         }
@@ -198,8 +241,9 @@ public class ConfiguracoesActivity extends BaseActivity {
         if (requestCode == 0 && resultCode == RESULT_OK && data != null){
             Uri localImagemSelecionada = data.getData();
             try {
-                imagemPerfil = MediaStore.Images.Media.getBitmap(getContentResolver(),localImagemSelecionada);
-                imageViewPerfil.setImageBitmap(imagemPerfil);
+                imagemPerfilParametro = MediaStore.Images.Media.getBitmap(getContentResolver(),localImagemSelecionada);
+                imagemPerfilParametro = diminuirImagem(imagemPerfilParametro, 300,300);
+                imageViewPerfil.setImageBitmap(imagemPerfilParametro);
             } catch (IOException e) {
                 e.printStackTrace();
             }
