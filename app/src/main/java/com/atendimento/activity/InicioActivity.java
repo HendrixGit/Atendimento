@@ -2,7 +2,11 @@ package com.atendimento.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -34,11 +38,17 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
+import static java.lang.System.in;
 
 public class InicioActivity extends BaseActivity {
 
@@ -47,10 +57,14 @@ public class InicioActivity extends BaseActivity {
     private FirebaseAuth autenticacao;
     private CallbackManager mCallbackManager;
     private Usuario usuario;
+    private Bitmap  imagemPerfil = null;
+    private StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.activity_inicio);
 
         verificarUsuarioLogado();
@@ -97,7 +111,35 @@ public class InicioActivity extends BaseActivity {
         }
     }
 
-    private void handleFacebookAccessToken(AccessToken token) {
+    private void salvarFotoPerfil(Uri uri, String identifacorUsuario, String idFacebook){
+        try {
+            URL imageURL = new URL("https://graph.facebook.com/" + idFacebook + "/picture?type=large");
+            imagemPerfil = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+        }catch (Exception e){
+            Log.i("erroFotoInicio", e.getCause().toString() + " " + e.getMessage());
+        }
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        imagemPerfil.compress(Bitmap.CompressFormat.PNG, 50, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        storageReference = ConfiguracaoFirebase.getStorage().child(identifacorUsuario);
+        UploadTask uploadTask = storageReference.putBytes(byteArray);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Falha ao enviar foto", Toast.LENGTH_LONG).show();
+                Log.i("erroFotoInicio", e.toString() + " " + e.getCause().toString());
+            }
+        });
+    }
+
+    private void handleFacebookAccessToken(final AccessToken token) {
         Log.d("Facebook", "handleFacebookAccessToken:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
@@ -109,12 +151,14 @@ public class InicioActivity extends BaseActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Facebook", "signInWithCredential:success");
                             FirebaseUser usuarioFirebase =  task.getResult().getUser();
+                            UserInfo userInfo = task.getResult().getUser();
                             String identificadorUsuario  = Base64Custom.codificarBase64(usuarioFirebase.getEmail());
                             usuario = new Usuario();
                             usuario.setId(identificadorUsuario);
                             usuario.setEmail(usuarioFirebase.getEmail());
                             usuario.setNome(usuarioFirebase.getDisplayName());
                             usuario.salvar();
+                            salvarFotoPerfil(usuarioFirebase.getPhotoUrl(),identificadorUsuario, token.getUserId());
                             Preferencias preferencias = new Preferencias(getApplicationContext());
                             preferencias.salvarDados(identificadorUsuario,usuarioFirebase.getEmail());
                             mudarTelaFinish(getApplicationContext(),MainActivity.class);

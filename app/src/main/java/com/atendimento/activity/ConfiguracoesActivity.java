@@ -38,7 +38,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -111,7 +110,6 @@ public class ConfiguracoesActivity extends BaseActivity {
             email.setEnabled(false);
             Toast.makeText(getApplicationContext(), "Login Feito pelo facebook", Toast.LENGTH_LONG).show();
         }
-
         foto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
