@@ -3,7 +3,6 @@ package com.atendimento.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -35,7 +34,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -105,8 +103,8 @@ public class ConfiguracoesActivity extends BaseActivity {
 
             }
         };
-        carregarFoto();
         firebase.addValueEventListener(valueEventListenerPerfil);
+        carregarFoto();
 
         if (verificarProviderLogin() == true){
             nome.setEnabled(false);
@@ -128,7 +126,13 @@ public class ConfiguracoesActivity extends BaseActivity {
         builder.setTitle("De onde deseja, tirar a foto de Perfil");
         builder.setPositiveButton("Camera", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {
-                Toast.makeText(ConfiguracoesActivity.this, "camera" + arg1, Toast.LENGTH_SHORT).show();
+                try {
+                    Intent camera = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(camera,1);
+                }catch (Exception e){
+                    Log.i("erroCamera",e.getCause().toString());
+                }
+
             }
         });
         builder.setNegativeButton("Galeria", new DialogInterface.OnClickListener() {
@@ -246,6 +250,15 @@ public class ConfiguracoesActivity extends BaseActivity {
                 imageViewPerfil.setImageBitmap(imagemPerfilParametro);
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+        else if (requestCode == 1 && resultCode == RESULT_OK && data != null){
+            try{
+                Bundle extras = data.getExtras();
+                imagemPerfilParametro = (Bitmap) extras.get("data");
+                imageViewPerfil.setImageBitmap(imagemPerfilParametro);
+            }catch (Exception e){
+
             }
         }
     }
