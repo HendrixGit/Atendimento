@@ -6,13 +6,10 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.atendimento.R;
@@ -39,16 +36,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
-import static java.lang.System.in;
 
 public class InicioActivity extends BaseActivity {
 
@@ -73,6 +66,14 @@ public class InicioActivity extends BaseActivity {
         mCallbackManager = CallbackManager.Factory.create();
         botaoLoginFacebook = findViewById(R.id.loginButtonFacebook);
         botaoLoginFacebook.setReadPermissions("email", "public_profile");
+
+        botaoLoginFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                
+            }
+        });
+
         botaoLoginFacebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -115,28 +116,30 @@ public class InicioActivity extends BaseActivity {
         try {
             URL imageURL = new URL("https://graph.facebook.com/" + idFacebook + "/picture?type=large");
             imagemPerfil = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            imagemPerfil.compress(Bitmap.CompressFormat.PNG, 50, stream);
+            byte[] byteArray = stream.toByteArray();
+
+            storageReference = ConfiguracaoFirebase.getStorage().child(identifacorUsuario);
+            UploadTask uploadTask = storageReference.putBytes(byteArray);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), "Falha ao enviar foto", Toast.LENGTH_LONG).show();
+                    Log.i("erroFotoInicio", e.toString() + " " + e.getCause().toString());
+                }
+            });
+
         }catch (Exception e){
             Log.i("erroFotoInicio", e.getCause().toString() + " " + e.getMessage());
         }
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        imagemPerfil.compress(Bitmap.CompressFormat.PNG, 50, stream);
-        byte[] byteArray = stream.toByteArray();
-
-        storageReference = ConfiguracaoFirebase.getStorage().child(identifacorUsuario);
-        UploadTask uploadTask = storageReference.putBytes(byteArray);
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Falha ao enviar foto", Toast.LENGTH_LONG).show();
-                Log.i("erroFotoInicio", e.toString() + " " + e.getCause().toString());
-            }
-        });
     }
 
     private void handleFacebookAccessToken(final AccessToken token) {

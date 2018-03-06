@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -17,7 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.atendimento.R;
@@ -26,6 +25,7 @@ import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Usuario;
 import com.atendimento.util.Preferencias;
+import com.atendimento.util.Util;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,27 +48,29 @@ public class ConfiguracoesActivity extends BaseActivity {
     private DatabaseReference firebase;
     private FirebaseAuth autenticacao;
     private StorageReference storageReference;
-    private ListView listView;
     private ArrayList<Usuario> usuarios;
     private ArrayAdapter<Usuario> adapter;
     private ValueEventListener valueEventListenerPerfil;
     private EditText nome;
     private EditText email;
     private Usuario usuario;
-    private ImageButton foto;
     private ImageView   imageViewPerfil;
     private Bitmap      imagemPerfil;
     private Bitmap      imagemPerfilParametro;
     private AlertDialog opcoes;
+    private Util util;
+    private UploadTask uploadTask;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuracoes);
 
-        foto = findViewById(R.id.imageButton);
         imageViewPerfil = findViewById(R.id.imagePerfil);
 
+        util = new Util();
+        progressBar = findViewById(R.id.progress_bar);
         nome  = findViewById(R.id.editNomeConf);
         email = findViewById(R.id.editEmailConf);
         toolbar = findViewById(R.id.toolbar);
@@ -110,7 +112,7 @@ public class ConfiguracoesActivity extends BaseActivity {
             email.setEnabled(false);
             Toast.makeText(getApplicationContext(), "Login Feito pelo facebook", Toast.LENGTH_LONG).show();
         }
-        foto.setOnClickListener(new View.OnClickListener() {
+        imageViewPerfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mostrarOpcoes();
@@ -141,26 +143,6 @@ public class ConfiguracoesActivity extends BaseActivity {
         });
         opcoes = builder.create();
         opcoes.show();
-    }
-
-    public Bitmap diminuirImagem(Bitmap bm, int newHeight, int newWidth) {
-
-        int width = bm.getWidth();
-        int height = bm.getHeight();
-
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-
-        // CREATE A MATRIX FOR THE MANIPULATION
-        Matrix matrix = new Matrix();
-
-        // RESIZE THE BIT MAP
-        matrix.postScale(scaleWidth, scaleHeight);
-
-        // RECREATE THE NEW BITMAP
-
-        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
-        return resizedBitmap;
     }
 
     private void carregarFoto(){
@@ -199,8 +181,6 @@ public class ConfiguracoesActivity extends BaseActivity {
 
     private void salvarDados(){
         salvarNome();
-        salvarImagem();
-        mudarTelaFinish(getApplicationContext(), MainActivity.class);
     }
 
     private void salvarNome() {
@@ -212,6 +192,7 @@ public class ConfiguracoesActivity extends BaseActivity {
         else{
             Toast.makeText(getApplicationContext(),"Favor Preencha o nome",Toast.LENGTH_LONG).show();
         }
+        mudarTelaFinish(getApplicationContext(), MainActivity.class);
     }
 
     private void salvarImagem(){
@@ -221,7 +202,8 @@ public class ConfiguracoesActivity extends BaseActivity {
             byte[] byteArray = stream.toByteArray();
 
             storageReference = ConfiguracaoFirebase.getStorage().child(identificadorUsuario);
-            UploadTask uploadTask = storageReference.putBytes(byteArray);
+            uploadTask = storageReference.putBytes(byteArray);
+
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
@@ -244,7 +226,7 @@ public class ConfiguracoesActivity extends BaseActivity {
             Uri localImagemSelecionada = data.getData();
             try {
                 imagemPerfilParametro = MediaStore.Images.Media.getBitmap(getContentResolver(),localImagemSelecionada);
-                imagemPerfilParametro = diminuirImagem(imagemPerfilParametro, 300,300);
+                imagemPerfilParametro =  util.diminuirImagem(imagemPerfilParametro, 100,100);
                 imageViewPerfil.setImageBitmap(imagemPerfilParametro);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -259,6 +241,7 @@ public class ConfiguracoesActivity extends BaseActivity {
 
             }
         }
+        salvarImagem();
     }
 
     @Override

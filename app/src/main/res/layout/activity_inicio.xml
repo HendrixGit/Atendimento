@@ -45,6 +45,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             facebook:com_facebook_login_text="Login com Facebook"
+            facebook:com_facebook_logout_text="Login com Facebook"
             facebook:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <Button

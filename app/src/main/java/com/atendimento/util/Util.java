@@ -1,5 +1,8 @@
 package com.atendimento.util;
 
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,4 +28,21 @@ public class Util{
         dataFormatada = sdf.format(data);
         return dataFormatada;
     }
+
+    public Bitmap diminuirImagem(Bitmap bm, int newHeight, int newWidth) {
+
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+
+        Matrix matrix = new Matrix();
+
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+        return resizedBitmap;
+    }
+
 }
