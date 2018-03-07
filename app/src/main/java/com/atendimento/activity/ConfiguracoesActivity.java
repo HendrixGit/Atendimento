@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -14,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -69,8 +69,10 @@ public class ConfiguracoesActivity extends BaseActivity {
 
         imageViewPerfil = findViewById(R.id.imagePerfil);
 
+        progressBar = findViewById(R.id.progressbar);
+        progressBar.setVisibility(View.GONE);
+        progressBar.getIndeterminateDrawable().setColorFilter(Color.BLUE, android.graphics.PorterDuff.Mode.MULTIPLY);
         util = new Util();
-        progressBar = findViewById(R.id.progress_bar);
         nome  = findViewById(R.id.editNomeConf);
         email = findViewById(R.id.editEmailConf);
         toolbar = findViewById(R.id.toolbar);
@@ -146,6 +148,7 @@ public class ConfiguracoesActivity extends BaseActivity {
     }
 
     private void carregarFoto(){
+        progressBar.setVisibility(View.VISIBLE);
         storageReference = ConfiguracaoFirebase.getStorage().child(identificadorUsuario);
         if (storageReference != null) {
             long dim = 1024 * 1024;
@@ -157,6 +160,7 @@ public class ConfiguracoesActivity extends BaseActivity {
                             imageViewPerfil.getWidth(),
                             imageViewPerfil.getHeight(),
                             false));
+                    progressBar.setVisibility(View.GONE);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -195,7 +199,7 @@ public class ConfiguracoesActivity extends BaseActivity {
         mudarTelaFinish(getApplicationContext(), MainActivity.class);
     }
 
-    private void salvarImagem(){
+    private void salvarImagem() {
         if (imagemPerfilParametro != null) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             imagemPerfilParametro.compress(Bitmap.CompressFormat.PNG, 50, stream);
@@ -203,17 +207,16 @@ public class ConfiguracoesActivity extends BaseActivity {
 
             storageReference = ConfiguracaoFirebase.getStorage().child(identificadorUsuario);
             uploadTask = storageReference.putBytes(byteArray);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-            uploadTask.addOnFailureListener(new OnFailureListener() {
+                }
+            }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
                     Toast.makeText(getApplicationContext(), "Falha ao enviar foto", Toast.LENGTH_LONG).show();
                     Log.i("erroFoto", exception.toString() + " " + exception.getCause().toString());
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
                 }
             });
         }
@@ -223,11 +226,13 @@ public class ConfiguracoesActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0 && resultCode == RESULT_OK && data != null){
+            progressBar.setVisibility(View.VISIBLE);
             Uri localImagemSelecionada = data.getData();
             try {
                 imagemPerfilParametro = MediaStore.Images.Media.getBitmap(getContentResolver(),localImagemSelecionada);
-                imagemPerfilParametro =  util.diminuirImagem(imagemPerfilParametro, 100,100);
+                //imagemPerfilParametro =  util.diminuirImagem(imagemPerfilParametro, 100,100);
                 imageViewPerfil.setImageBitmap(imagemPerfilParametro);
+                progressBar.setVisibility(View.GONE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
