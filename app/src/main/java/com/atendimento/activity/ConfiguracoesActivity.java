@@ -112,6 +112,7 @@ public class ConfiguracoesActivity extends BaseActivity {
         if (verificarProviderLogin() == true){
             nome.setEnabled(false);
             email.setEnabled(false);
+            imageViewPerfil.setEnabled(false);
             Toast.makeText(getApplicationContext(), "Login Feito pelo facebook", Toast.LENGTH_LONG).show();
         }
         imageViewPerfil.setOnClickListener(new View.OnClickListener() {
@@ -123,7 +124,6 @@ public class ConfiguracoesActivity extends BaseActivity {
     }
 
     public void mostrarOpcoes(){
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("De onde deseja, tirar a foto de Perfil");
         builder.setPositiveButton("Camera", new DialogInterface.OnClickListener() {
@@ -150,7 +150,6 @@ public class ConfiguracoesActivity extends BaseActivity {
     private void carregarFoto(){
         progressBar.setVisibility(View.VISIBLE);
         storageReference = ConfiguracaoFirebase.getStorage().child(identificadorUsuario);
-        if (storageReference != null) {
             long dim = 1024 * 1024;
             storageReference.getBytes(dim).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
@@ -165,11 +164,12 @@ public class ConfiguracoesActivity extends BaseActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
+                    imageViewPerfil.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_user));
+                    progressBar.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(),"Erro ao Carregar Foto ",Toast.LENGTH_LONG).show();
                     Log.i("erroFotoCarregar", e.toString() + " " + e.getCause().toString());
                 }
             });
-        }
     }
 
     private boolean verificarProviderLogin() {
