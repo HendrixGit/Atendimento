@@ -71,7 +71,6 @@ public class ConfiguracoesActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuracoes);
 
-        imageViewPerfil = findViewById(R.id.imagePerfil);
         circleImageView = findViewById(R.id.circleImagePerfil);
 
         progressBar = findViewById(R.id.progressbar);
@@ -117,10 +116,10 @@ public class ConfiguracoesActivity extends BaseActivity {
         if (verificarProviderLogin() == true){
             nome.setEnabled(false);
             email.setEnabled(false);
-            imageViewPerfil.setEnabled(false);
+            circleImageView.setEnabled(false);
             Toast.makeText(getApplicationContext(), "Login Feito pelo facebook", Toast.LENGTH_LONG).show();
         }
-        imageViewPerfil.setOnClickListener(new View.OnClickListener() {
+        circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mostrarOpcoes();
@@ -160,10 +159,10 @@ public class ConfiguracoesActivity extends BaseActivity {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     imagemPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    imageViewPerfil.setImageBitmap(Bitmap.createScaledBitmap(imagemPerfil,
-                            imageViewPerfil.getWidth(),
-                            imageViewPerfil.getHeight(),
-                            false));
+                    //circleImageView.setImageBitmap(Bitmap.createScaledBitmap(imagemPerfil,
+                      //      imageViewPerfil.getWidth(),
+                        //    imageViewPerfil.getHeight(),
+                          //  false));
 
                     circleImageView.setImageBitmap(imagemPerfil);
                     progressBar.setVisibility(View.GONE);
@@ -171,7 +170,7 @@ public class ConfiguracoesActivity extends BaseActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    imageViewPerfil.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_user));
+                    circleImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_user));
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(),"Erro ao Carregar Foto ",Toast.LENGTH_LONG).show();
                     Log.i("erroFotoCarregar", e.toString() + " " + e.getCause().toString());
@@ -238,7 +237,7 @@ public class ConfiguracoesActivity extends BaseActivity {
             try {
                 imagemPerfilParametro = MediaStore.Images.Media.getBitmap(getContentResolver(),localImagemSelecionada);
                 //imagemPerfilParametro =  util.diminuirImagem(imagemPerfilParametro, 100,100);
-                imageViewPerfil.setImageBitmap(imagemPerfilParametro);
+                circleImageView.setImageBitmap(imagemPerfilParametro);
                 progressBar.setVisibility(View.GONE);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -248,7 +247,7 @@ public class ConfiguracoesActivity extends BaseActivity {
             try{
                 Bundle extras = data.getExtras();
                 imagemPerfilParametro = (Bitmap) extras.get("data");
-                imageViewPerfil.setImageBitmap(imagemPerfilParametro);
+                circleImageView.setImageBitmap(imagemPerfilParametro);
             }catch (Exception e){
 
             }

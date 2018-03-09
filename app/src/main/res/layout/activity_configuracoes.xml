@@ -32,7 +32,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imagePerfil" />
+            app:layout_constraintTop_toBottomOf="@+id/circleImagePerfil" />
 
         <TextView
             android:id="@+id/textView8"
@@ -77,19 +77,6 @@
             app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
 
-        <ImageView
-            android:id="@+id/imagePerfil"
-            android:layout_width="0dp"
-            android:layout_height="152dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:scaleType="fitXY"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
         <include
             android:id="@+id/progressbar"
             layout="@layout/progressbar"
@@ -99,28 +86,25 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imagePerfil"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+            app:layout_constraintBottom_toBottomOf="@+id/circleImagePerfil"
+            app:layout_constraintEnd_toEndOf="@+id/circleImagePerfil"
+            app:layout_constraintStart_toStartOf="@+id/circleImagePerfil"
+            app:layout_constraintTop_toTopOf="@+id/circleImagePerfil" />
 
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/circleImagePerfil"
             android:layout_width="128dp"
             android:layout_height="128dp"
-            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:scaleType="centerInside"
             app:civ_border_color="#FF000000"
             app:civ_border_width="2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editEmailConf" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            tools:ignore="MissingConstraints" />
 
     </android.support.constraint.ConstraintLayout>
 
