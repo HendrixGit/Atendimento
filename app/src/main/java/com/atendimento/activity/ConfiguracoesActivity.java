@@ -38,8 +38,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ConfiguracoesActivity extends BaseActivity {
 
@@ -57,6 +60,7 @@ public class ConfiguracoesActivity extends BaseActivity {
     private ImageView   imageViewPerfil;
     private Bitmap      imagemPerfil;
     private Bitmap      imagemPerfilParametro;
+    private CircleImageView circleImageView;
     private AlertDialog opcoes;
     private Util util;
     private UploadTask uploadTask;
@@ -68,6 +72,7 @@ public class ConfiguracoesActivity extends BaseActivity {
         setContentView(R.layout.activity_configuracoes);
 
         imageViewPerfil = findViewById(R.id.imagePerfil);
+        circleImageView = findViewById(R.id.circleImagePerfil);
 
         progressBar = findViewById(R.id.progressbar);
         progressBar.setVisibility(View.GONE);
@@ -159,6 +164,8 @@ public class ConfiguracoesActivity extends BaseActivity {
                             imageViewPerfil.getWidth(),
                             imageViewPerfil.getHeight(),
                             false));
+
+                    circleImageView.setImageBitmap(imagemPerfil);
                     progressBar.setVisibility(View.GONE);
                 }
             }).addOnFailureListener(new OnFailureListener() {
