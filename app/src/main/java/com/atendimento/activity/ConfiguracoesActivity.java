@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -38,7 +37,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -57,7 +55,6 @@ public class ConfiguracoesActivity extends BaseActivity {
     private EditText nome;
     private EditText email;
     private Usuario usuario;
-    private ImageView   imageViewPerfil;
     private Bitmap      imagemPerfil;
     private Bitmap      imagemPerfilParametro;
     private CircleImageView circleImageView;
@@ -159,11 +156,6 @@ public class ConfiguracoesActivity extends BaseActivity {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     imagemPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    //circleImageView.setImageBitmap(Bitmap.createScaledBitmap(imagemPerfil,
-                      //      imageViewPerfil.getWidth(),
-                        //    imageViewPerfil.getHeight(),
-                          //  false));
-
                     circleImageView.setImageBitmap(imagemPerfil);
                     progressBar.setVisibility(View.GONE);
                 }
@@ -208,7 +200,7 @@ public class ConfiguracoesActivity extends BaseActivity {
     private void salvarImagem() {
         if (imagemPerfilParametro != null) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            imagemPerfilParametro.compress(Bitmap.CompressFormat.PNG, 50, stream);
+            imagemPerfilParametro.compress(Bitmap.CompressFormat.PNG, 75, stream);
             byte[] byteArray = stream.toByteArray();
 
             storageReference = ConfiguracaoFirebase.getStorage().child(identificadorUsuario);
@@ -234,13 +226,16 @@ public class ConfiguracoesActivity extends BaseActivity {
         if (requestCode == 0 && resultCode == RESULT_OK && data != null){
             progressBar.setVisibility(View.VISIBLE);
             Uri localImagemSelecionada = data.getData();
+
             try {
                 imagemPerfilParametro = MediaStore.Images.Media.getBitmap(getContentResolver(),localImagemSelecionada);
-                //imagemPerfilParametro =  util.diminuirImagem(imagemPerfilParametro, 100,100);
+                imagemPerfilParametro =  util.diminuirImagem(imagemPerfilParametro, 100,100);
+
                 circleImageView.setImageBitmap(imagemPerfilParametro);
                 progressBar.setVisibility(View.GONE);
             } catch (IOException e) {
                 e.printStackTrace();
+                circleImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_user));
             }
         }
         else if (requestCode == 1 && resultCode == RESULT_OK && data != null){
@@ -248,8 +243,9 @@ public class ConfiguracoesActivity extends BaseActivity {
                 Bundle extras = data.getExtras();
                 imagemPerfilParametro = (Bitmap) extras.get("data");
                 circleImageView.setImageBitmap(imagemPerfilParametro);
-            }catch (Exception e){
-
+            }
+            catch (Exception e){
+                circleImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_user));
             }
         }
         salvarImagem();

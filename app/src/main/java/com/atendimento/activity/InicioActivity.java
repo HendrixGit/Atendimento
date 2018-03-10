@@ -137,7 +137,8 @@ public class InicioActivity extends BaseActivity {
                 }
             });
 
-        }catch (Exception e){
+        }
+        catch (Exception e){
             Log.i("erroFotoInicio", e.getCause().toString() + " " + e.getMessage());
         }
     }

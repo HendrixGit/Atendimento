@@ -41,7 +41,7 @@ public class Util{
 
         matrix.postScale(scaleWidth, scaleHeight);
 
-        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
         return resizedBitmap;
     }
 
