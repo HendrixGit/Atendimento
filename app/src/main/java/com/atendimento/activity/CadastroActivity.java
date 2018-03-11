@@ -68,7 +68,7 @@ public class CadastroActivity extends BaseActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
                     FirebaseUser usuarioFirebase = task.getResult().getUser();
-                    String identificadorUsuario  = Base64Custom.codificarBase64(usuarioFirebase.getEmail());
+                    String identificadorUsuario  = usuarioFirebase.getUid();
                     usuario.setId(identificadorUsuario);
                     usuario.salvar();
                     Preferencias preferencias = new Preferencias(getApplicationContext());

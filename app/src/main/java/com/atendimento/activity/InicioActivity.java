@@ -18,6 +18,7 @@ import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Usuario;
 import com.atendimento.util.Base64Custom;
 import com.atendimento.util.Preferencias;
+import com.atendimento.util.Util;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -52,6 +53,7 @@ public class InicioActivity extends BaseActivity {
     private Usuario usuario;
     private Bitmap  imagemPerfil = null;
     private StorageReference storageReference;
+    private Util util;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class InicioActivity extends BaseActivity {
         StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.activity_inicio);
 
+        util = new Util();
         verificarUsuarioLogado();
 
         botaoEmail    = findViewById(R.id.buttonLoginEmail);
@@ -115,11 +118,11 @@ public class InicioActivity extends BaseActivity {
     private void salvarFotoPerfil(Uri uri, String identifacorUsuario, String idFacebook){
         try {
             URL imageURL = new URL("https://graph.facebook.com/" + idFacebook + "/picture?type=large");
-            imagemPerfil = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
-
+            imagemPerfil = util.diminuirImagem(BitmapFactory.decodeStream(imageURL.openConnection().getInputStream()),200,200);
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             imagemPerfil.compress(Bitmap.CompressFormat.PNG, 50, stream);
+
             byte[] byteArray = stream.toByteArray();
 
             storageReference = ConfiguracaoFirebase.getStorage().child(identifacorUsuario);
@@ -155,8 +158,7 @@ public class InicioActivity extends BaseActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Facebook", "signInWithCredential:success");
                             FirebaseUser usuarioFirebase =  task.getResult().getUser();
-                            UserInfo userInfo = task.getResult().getUser();
-                            String identificadorUsuario  = Base64Custom.codificarBase64(usuarioFirebase.getEmail());
+                            String identificadorUsuario  =  usuarioFirebase.getUid();
                             usuario = new Usuario();
                             usuario.setId(identificadorUsuario);
                             usuario.setEmail(usuarioFirebase.getEmail());

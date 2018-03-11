@@ -13,6 +13,7 @@ import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Usuario;
 import com.atendimento.util.Base64Custom;
+import com.atendimento.util.Preferencias;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -86,7 +87,9 @@ public class LoginActivity extends BaseActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
                     FirebaseUser usuarioFirebase = task.getResult().getUser();
-                    String identificadorUsuario  = Base64Custom.codificarBase64(usuarioFirebase.getEmail());
+                    String identificadorUsuario  = usuarioFirebase.getUid();
+                    Preferencias preferencias = new Preferencias(getApplicationContext());
+                    preferencias.salvarDados(identificadorUsuario, usuarioFirebase.getEmail());
                     mudarTelaFinish(getApplicationContext(), MainActivity.class);
                     Toast.makeText(getApplicationContext(),"Bem vindo ", Toast.LENGTH_LONG).show();
                 }
