@@ -72,7 +72,7 @@ public class CadastroActivity extends BaseActivity {
                     usuario.setId(identificadorUsuario);
                     usuario.salvar();
                     Preferencias preferencias = new Preferencias(getApplicationContext());
-                    preferencias.salvarDados(identificadorUsuario,usuarioFirebase.getEmail());
+                    preferencias.salvarDados(identificadorUsuario,"", usuarioFirebase.getEmail());
                     mudarTelaFinish(getApplicationContext(),MainActivity.class);
                     Toast.makeText(getApplicationContext(),"Sucesso no cadastro Bem-Vindo ",Toast.LENGTH_LONG).show();
                 }

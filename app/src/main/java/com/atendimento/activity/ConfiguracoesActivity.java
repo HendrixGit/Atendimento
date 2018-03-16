@@ -62,6 +62,7 @@ public class ConfiguracoesActivity extends BaseActivity {
     private Util util;
     private UploadTask uploadTask;
     private ProgressBar progressBar;
+    private Preferencias preferencias;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,33 +84,35 @@ public class ConfiguracoesActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        Preferencias preferencias = new Preferencias(getApplicationContext());
+        preferencias = new Preferencias(getApplicationContext());
         identificadorUsuario = preferencias.getIdentificador();
 
         usuarios = new ArrayList<>();
         adapter  = new PerfilAdapter(ConfiguracoesActivity.this,usuarios);
         firebase = ConfiguracaoFirebase.getFirebaseDatabase();
-        firebase.child("usuarios")
-                .child(identificadorUsuario);
-
-        valueEventListenerPerfil = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                usuario = new Usuario();
-                usuario.setNome(dataSnapshot.child("usuarios").child(identificadorUsuario).child("nome").getValue().toString());
-                usuario.setEmail(dataSnapshot.child("usuarios").child(identificadorUsuario).child("email").getValue().toString());
-                //nome.setText(usuario.getNome().toString());
-                email.setText(usuario.getEmail().toString());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-        firebase.addValueEventListener(valueEventListenerPerfil);
+//        firebase.child("usuarios")
+//                .child(identificadorUsuario);
+//
+//        valueEventListenerPerfil = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                usuario = new Usuario();
+//                usuario.setId(dataSnapshot.child("usuarios").child(identificadorUsuario).child("id").getValue().toString());
+//                usuario.setNome(dataSnapshot.child("usuarios").child(identificadorUsuario).child("nome").getValue().toString());
+//                usuario.setEmail(dataSnapshot.child("usuarios").child(identificadorUsuario).child("email").getValue().toString());
+//                //nome.setText(usuario.getNome().toString());
+//                //email.setText(usuario.getEmail().toString());
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        };
+//        firebase.addValueEventListener(valueEventListenerPerfil);
         carregarFoto();
         nome.setText(preferencias.getNome());
+        email.setText(preferencias.getEmail());
 
         if (verificarProviderLogin() == true){
             nome.setEnabled(false);
@@ -191,6 +194,7 @@ public class ConfiguracoesActivity extends BaseActivity {
             firebase.child("usuarios")
                     .child(identificadorUsuario)
                     .child("nome").setValue(nome.getText().toString());
+            preferencias.salvarDados(identificadorUsuario, nome.getText().toString(), email.getText().toString());
         }
         else{
             Toast.makeText(getApplicationContext(),"Favor Preencha o nome",Toast.LENGTH_LONG).show();
@@ -255,7 +259,7 @@ public class ConfiguracoesActivity extends BaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        removeListener();
+        //removeListener();
     }
 
     private void removeListener() {

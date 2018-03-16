@@ -51,8 +51,10 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Usuario usuario = new Usuario();
+                usuario.setId(dataSnapshot.child("usuarios").child(identificadorUsuario).child("id").getValue().toString());
                 usuario.setNome(dataSnapshot.child("usuarios").child(identificadorUsuario).child("nome").getValue().toString());
-                preferencias.salvarDados(identificadorUsuario, usuario.getNome());
+                usuario.setEmail(dataSnapshot.child("usuarios").child(identificadorUsuario).child("email").getValue().toString());
+                preferencias.salvarDados(identificadorUsuario, usuario.getNome(), usuario.getEmail());
             }
 
             @Override
