@@ -98,7 +98,7 @@ public class ConfiguracoesActivity extends BaseActivity {
                 usuario = new Usuario();
                 usuario.setNome(dataSnapshot.child("usuarios").child(identificadorUsuario).child("nome").getValue().toString());
                 usuario.setEmail(dataSnapshot.child("usuarios").child(identificadorUsuario).child("email").getValue().toString());
-                nome.setText(usuario.getNome().toString());
+                //nome.setText(usuario.getNome().toString());
                 email.setText(usuario.getEmail().toString());
             }
 
@@ -109,6 +109,7 @@ public class ConfiguracoesActivity extends BaseActivity {
         };
         firebase.addValueEventListener(valueEventListenerPerfil);
         carregarFoto();
+        nome.setText(preferencias.getNome());
 
         if (verificarProviderLogin() == true){
             nome.setEnabled(false);

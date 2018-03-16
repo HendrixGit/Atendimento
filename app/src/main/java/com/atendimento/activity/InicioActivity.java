@@ -166,7 +166,7 @@ public class InicioActivity extends BaseActivity {
                             usuario.salvar();
                             salvarFotoPerfil(usuarioFirebase.getPhotoUrl(),identificadorUsuario, token.getUserId());
                             Preferencias preferencias = new Preferencias(getApplicationContext());
-                            preferencias.salvarDados(identificadorUsuario,usuarioFirebase.getEmail());
+                            preferencias.salvarDados(identificadorUsuario,usuarioFirebase.getDisplayName());
                             mudarTelaFinish(getApplicationContext(),MainActivity.class);
                             Toast.makeText(getApplicationContext(),"Sucesso no cadastro Bem-Vindo ",Toast.LENGTH_LONG).show();
                         }

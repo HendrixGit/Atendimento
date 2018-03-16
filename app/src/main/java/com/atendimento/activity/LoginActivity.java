@@ -89,7 +89,7 @@ public class LoginActivity extends BaseActivity {
                     FirebaseUser usuarioFirebase = task.getResult().getUser();
                     String identificadorUsuario  = usuarioFirebase.getUid();
                     Preferencias preferencias = new Preferencias(getApplicationContext());
-                    preferencias.salvarDados(identificadorUsuario, usuarioFirebase.getEmail());
+                    preferencias.salvarDados(identificadorUsuario, "");
                     mudarTelaFinish(getApplicationContext(), MainActivity.class);
                     Toast.makeText(getApplicationContext(),"Bem vindo ", Toast.LENGTH_LONG).show();
                 }
