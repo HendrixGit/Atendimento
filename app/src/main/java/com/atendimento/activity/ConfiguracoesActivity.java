@@ -19,7 +19,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.atendimento.R;
-import com.atendimento.adapter.PerfilAdapter;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Usuario;
@@ -29,10 +28,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserInfo;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -51,10 +47,8 @@ public class ConfiguracoesActivity extends BaseActivity {
     private StorageReference storageReference;
     private ArrayList<Usuario> usuarios;
     private ArrayAdapter<Usuario> adapter;
-    private ValueEventListener valueEventListenerPerfil;
     private EditText nome;
     private EditText email;
-    private Usuario usuario;
     private Bitmap      imagemPerfil;
     private Bitmap      imagemPerfilParametro;
     private CircleImageView circleImageView;
@@ -87,29 +81,8 @@ public class ConfiguracoesActivity extends BaseActivity {
         preferencias = new Preferencias(getApplicationContext());
         identificadorUsuario = preferencias.getIdentificador();
 
-        usuarios = new ArrayList<>();
-        adapter  = new PerfilAdapter(ConfiguracoesActivity.this,usuarios);
         firebase = ConfiguracaoFirebase.getFirebaseDatabase();
-//        firebase.child("usuarios")
-//                .child(identificadorUsuario);
-//
-//        valueEventListenerPerfil = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                usuario = new Usuario();
-//                usuario.setId(dataSnapshot.child("usuarios").child(identificadorUsuario).child("id").getValue().toString());
-//                usuario.setNome(dataSnapshot.child("usuarios").child(identificadorUsuario).child("nome").getValue().toString());
-//                usuario.setEmail(dataSnapshot.child("usuarios").child(identificadorUsuario).child("email").getValue().toString());
-//                //nome.setText(usuario.getNome().toString());
-//                //email.setText(usuario.getEmail().toString());
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        };
-//        firebase.addValueEventListener(valueEventListenerPerfil);
+
         carregarFoto();
         nome.setText(preferencias.getNome());
         email.setText(preferencias.getEmail());
@@ -255,17 +228,7 @@ public class ConfiguracoesActivity extends BaseActivity {
         }
         salvarImagem();
     }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        //removeListener();
-    }
-
-    private void removeListener() {
-        firebase.removeEventListener(valueEventListenerPerfil);
-    }
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

@@ -16,7 +16,6 @@ import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Usuario;
-import com.atendimento.util.Base64Custom;
 import com.atendimento.util.Preferencias;
 import com.atendimento.util.Util;
 import com.facebook.AccessToken;
@@ -36,7 +35,6 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
