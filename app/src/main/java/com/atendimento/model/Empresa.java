@@ -1,0 +1,66 @@
+package com.atendimento.model;
+
+
+import com.atendimento.config.ConfiguracaoFirebase;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
+
+public class Empresa {
+
+    private String id;
+    private String nome;
+    private String email;
+    private String senha;
+    private String Categoria;
+
+    public Empresa() {
+    }
+
+
+    public void salvar(){
+        DatabaseReference referenciaDatabase = ConfiguracaoFirebase.getFirebaseDatabase();
+        referenciaDatabase.child("empresas").child(getId()).setValue(this);
+    }
+
+    public String getCategoria() {
+        return Categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        Categoria = categoria;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Exclude
+    public String getSenha() {
+        return senha;
+    }
+
+    @Exclude
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+}
