@@ -1,6 +1,7 @@
 package com.atendimento.activity;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -15,7 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atendimento.R;
@@ -52,6 +56,8 @@ public class ConfiguracoesActivity extends BaseActivity {
     private Bitmap      imagemPerfil;
     private Bitmap      imagemPerfilParametro;
     private CircleImageView circleImageView;
+    private ImageView imageViewEditNome;
+    private ImageView imageViewEditEmail;
     private AlertDialog opcoes;
     private Util util;
     private UploadTask uploadTask;
@@ -78,6 +84,21 @@ public class ConfiguracoesActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        imageViewEditNome  = findViewById(R.id.imageViewEditNome);
+        imageViewEditNome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mudarTela(getApplicationContext(),EditPreferenciasActivity.class);
+            }
+        });
+        imageViewEditEmail = findViewById(R.id.imageViewEditEmail);
+        imageViewEditEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                email.setEnabled(true);
+            }
+        });
+
         preferencias = new Preferencias(getApplicationContext());
         identificadorUsuario = preferencias.getIdentificador();
 
@@ -86,19 +107,51 @@ public class ConfiguracoesActivity extends BaseActivity {
         carregarFoto();
         nome.setText(preferencias.getNome());
         email.setText(preferencias.getEmail());
+        nome.setEnabled(false);
+        email.setEnabled(false);
 
         if (verificarProviderLogin() == true){
-            nome.setEnabled(false);
-            email.setEnabled(false);
             circleImageView.setEnabled(false);
+            imageViewEditEmail.setVisibility(View.GONE);
+            imageViewEditNome.setVisibility(View.GONE);
             Toast.makeText(getApplicationContext(), "Login Feito pelo facebook", Toast.LENGTH_LONG).show();
         }
+        else{
+            email.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(ConfiguracoesActivity.this);
+                    builder.setTitle("Trocar e-mail");
+                    builder.setMessage("Favor insira o novo e-mail abaixo");
+                    final EditText editText = new EditText(ConfiguracoesActivity.this);
+                    builder.setView(editText);
+                    builder.setPositiveButton("Redefinir", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (editText.getText().toString().equals("")){
+                                Toast.makeText(getApplicationContext(),"Favor Insira o e-mail",Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                    builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+                    opcoes = builder.create();
+                    opcoes.show();
+                }
+            });
+        }
+
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mostrarOpcoes();
             }
         });
+
     }
 
     public void mostrarOpcoes(){
@@ -207,7 +260,7 @@ public class ConfiguracoesActivity extends BaseActivity {
 
             try {
                 imagemPerfilParametro = MediaStore.Images.Media.getBitmap(getContentResolver(),localImagemSelecionada);
-                imagemPerfilParametro =  util.diminuirImagem(imagemPerfilParametro, 100,100);
+                imagemPerfilParametro =  util.diminuirImagem(imagemPerfilParametro, 200,200);
 
                 circleImageView.setImageBitmap(imagemPerfilParametro);
                 progressBar.setVisibility(View.GONE);

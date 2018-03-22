@@ -5,9 +5,9 @@
     <!-- To auto-complete the email text field in logoogin form with the user's emails -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -49,7 +49,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.RedifinicaoSenhaActivity" />
-        <activity android:name=".activity.ConfiguracoesActivity"></activity>
+        <activity android:name=".activity.ConfiguracoesActivity" />
+        <activity android:name=".activity.EditPreferenciasActivity"></activity>
     </application>
 
 </manifest>
