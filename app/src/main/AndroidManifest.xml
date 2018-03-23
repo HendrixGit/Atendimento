@@ -50,7 +50,8 @@
         </activity>
         <activity android:name=".activity.RedifinicaoSenhaActivity" />
         <activity android:name=".activity.ConfiguracoesActivity" />
-        <activity android:name=".activity.EditPreferenciasActivity"></activity>
+        <activity android:name=".activity.EditPreferenciasActivity" />
+        <activity android:name=".activity.EditEmailActivity"></activity>
     </application>
 
 </manifest>

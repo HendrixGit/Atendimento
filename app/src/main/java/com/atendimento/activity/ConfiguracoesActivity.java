@@ -1,7 +1,6 @@
 package com.atendimento.activity;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -19,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atendimento.R;
@@ -95,7 +92,7 @@ public class ConfiguracoesActivity extends BaseActivity {
         imageViewEditEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                email.setEnabled(true);
+                mudarTela(getApplicationContext(),EditEmailActivity.class);
             }
         });
 

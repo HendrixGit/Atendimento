@@ -1,7 +1,6 @@
 package com.atendimento.activity;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,7 +11,6 @@ import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.util.Preferencias;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class EditPreferenciasActivity extends BaseActivity {
 
@@ -23,12 +21,15 @@ public class EditPreferenciasActivity extends BaseActivity {
     private Button cancelar;
     private DatabaseReference firebase;
     private String identificadorUsuario;
+    private EditText email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_preferencias);
 
+        email = findViewById(R.id.editTextEmail);
+        email.setVisibility(View.GONE);
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Favor Digite o seu nome");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
