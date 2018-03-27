@@ -152,7 +152,7 @@ public class ConfiguracoesActivity extends BaseActivity {
     }
 
     public void mostrarOpcoes(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.dialog);
         builder.setTitle("De onde deseja, tirar a foto de Perfil");
         builder.setPositiveButton("Camera", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {

@@ -13,10 +13,9 @@ import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.util.Preferencias;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
@@ -71,6 +70,9 @@ public class EditEmailActivity extends BaseActivity {
                             else{String erroExcecao = "";
                                 try {
                                     throw task.getException();
+                                }
+                                catch (FirebaseAuthRecentLoginRequiredException recentLogin){
+                                    erroExcecao = "Erro Login Recente";
                                 }
                                 catch (FirebaseAuthInvalidCredentialsException e){
                                     erroExcecao = "E-mail digitado inválido";
