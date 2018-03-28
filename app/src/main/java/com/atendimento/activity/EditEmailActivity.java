@@ -1,10 +1,16 @@
 package com.atendimento.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.atendimento.R;
@@ -13,6 +19,8 @@ import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.util.Preferencias;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
@@ -64,15 +72,77 @@ public class EditEmailActivity extends BaseActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){
+                                firebase.child("usuarios")
+                                        .child(identificadorUsuario)
+                                        .child("email").setValue(email.getText().toString());
                                 preferencias.salvarDados(identificadorUsuario,nome.getText().toString(),email.getText().toString());
                                 mudarTelaFinish(getApplicationContext(),ConfiguracoesActivity.class);
                             }
-                            else{String erroExcecao = "";
+                            else{
+                                String erroExcecao = "";
                                 try {
                                     throw task.getException();
                                 }
                                 catch (FirebaseAuthRecentLoginRequiredException recentLogin){
                                     erroExcecao = "Erro Login Recente";
+
+                                    LinearLayout layout = new LinearLayout(getApplicationContext());
+                                    layout.setOrientation(LinearLayout.VERTICAL);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(EditEmailActivity.this, R.style.dialog);
+                                    builder.setTitle("Favor Insira a Senha");
+                                    final EditText senha = new EditText(getApplicationContext());
+                                    senha.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                                    senha.setTextColor(Color.WHITE);
+                                    final CheckBox checkBoxSenha = new CheckBox(getApplicationContext());
+                                    checkBoxSenha.setText("MostrarSenha");
+                                    checkBoxSenha.setTextColor(Color.WHITE);
+                                    checkBoxSenha.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            if (checkBoxSenha.isChecked()){
+                                                senha.setTransformationMethod(null);
+                                            }
+                                            else{
+                                                senha.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                                            }
+                                            senha.setSelection(senha.getText().length());
+                                        }
+                                    });
+                                    layout.addView(senha);
+                                    layout.addView(checkBoxSenha);
+                                    builder.setView(layout);
+                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            if (senha.getText().toString().equals("")) {
+                                                Toast.makeText(getApplicationContext(),"Senha Inválida", Toast.LENGTH_LONG).show();
+                                            }
+                                            else {
+                                                AuthCredential credential = EmailAuthProvider.
+                                                        getCredential(usuarioFirebase.getEmail(), senha.getText().toString());
+                                                usuarioFirebase.reauthenticate(credential)
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    ok.performClick();
+                                                                } else {
+                                                                    Toast.makeText(getApplicationContext(), "Senha Inválida", Toast.LENGTH_LONG).show();
+                                                                }
+                                                            }
+                                                        });
+                                            }
+                                        }
+                                    });
+                                    builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        }
+                                    });
+                                    AlertDialog dialog = builder.create();
+                                    dialog.show();
+
                                 }
                                 catch (FirebaseAuthInvalidCredentialsException e){
                                     erroExcecao = "E-mail digitado inválido";

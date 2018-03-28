@@ -208,23 +208,6 @@ public class ConfiguracoesActivity extends BaseActivity {
         return result;
     }
 
-    private void salvarDados(){
-        salvarNome();
-    }
-
-    private void salvarNome() {
-        if (!nome.getText().toString().equals("")) {
-            firebase.child("usuarios")
-                    .child(identificadorUsuario)
-                    .child("nome").setValue(nome.getText().toString());
-            preferencias.salvarDados(identificadorUsuario, nome.getText().toString(), email.getText().toString());
-        }
-        else{
-            Toast.makeText(getApplicationContext(),"Favor Preencha o nome",Toast.LENGTH_LONG).show();
-        }
-        mudarTelaFinish(getApplicationContext(), MainActivity.class);
-    }
-
     private void salvarImagem() {
         if (imagemPerfilParametro != null) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -282,7 +265,7 @@ public class ConfiguracoesActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home: salvarDados();return true;
+            case android.R.id.home: mudarTelaFinish(getApplicationContext(), MainActivity.class); return true;
             default: return super.onOptionsItemSelected(item);
         }
     }
