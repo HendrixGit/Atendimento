@@ -3,6 +3,7 @@ package com.atendimento.util;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.method.PasswordTransformationMethod;
@@ -33,7 +34,9 @@ public class SenhaDialog extends DialogFragment {
         inflater      = getActivity().getLayoutInflater();
         viewSenha     = inflater.inflate(R.layout.senha_dialog, null, false);
         senha         = viewSenha.findViewById(R.id.editSenhaDialog);
+        senha.setTextColor(Color.WHITE);
         checkBoxSenha = viewSenha.findViewById(R.id.checkBoxSenha);
+        checkBoxSenha.setTextColor(Color.WHITE);
         checkBoxSenha.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -62,5 +65,4 @@ public class SenhaDialog extends DialogFragment {
                 });
         return builder.create();
     }
-
 }

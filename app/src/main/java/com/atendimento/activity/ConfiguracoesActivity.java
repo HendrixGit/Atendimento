@@ -1,7 +1,6 @@
 package com.atendimento.activity;
 
 import android.app.AlertDialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -25,7 +24,6 @@ import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Usuario;
 import com.atendimento.util.Preferencias;
-import com.atendimento.util.SenhaDialog;
 import com.atendimento.util.Util;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -147,9 +145,7 @@ public class ConfiguracoesActivity extends BaseActivity {
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment dialogFragment = new SenhaDialog();
-                dialogFragment.show(getFragmentManager(),"senha");
-                //mostrarOpcoes();
+                mostrarOpcoes();
             }
         });
 
