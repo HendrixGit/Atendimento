@@ -32,4 +32,6 @@
     <string name="entrar">Entrar</string>
     <string name="cadastrar">Cadastrar</string>
     <string name="configuracoes">Configurações</string>
+    <string name="mostrarSenha">Mostrar Senha</string>
+    <string name="favorSenha">Favor Insira a Senha</string>
 </resources>

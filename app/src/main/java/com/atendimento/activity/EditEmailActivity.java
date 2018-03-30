@@ -72,9 +72,7 @@ public class EditEmailActivity extends BaseActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){
-                                firebase.child("usuarios")
-                                        .child(identificadorUsuario)
-                                        .child("email").setValue(email.getText().toString());
+                                firebase.child("usuarios").child(identificadorUsuario).child("email").setValue(email.getText().toString());
                                 preferencias.salvarDados(identificadorUsuario,nome.getText().toString(),email.getText().toString());
                                 mudarTelaFinish(getApplicationContext(),ConfiguracoesActivity.class);
                             }
@@ -94,7 +92,7 @@ public class EditEmailActivity extends BaseActivity {
                                     senha.setTransformationMethod(PasswordTransformationMethod.getInstance());
                                     senha.setTextColor(Color.WHITE);
                                     final CheckBox checkBoxSenha = new CheckBox(getApplicationContext());
-                                    checkBoxSenha.setText("MostrarSenha");
+                                    checkBoxSenha.setText("Mostrar Senha");
                                     checkBoxSenha.setTextColor(Color.WHITE);
                                     checkBoxSenha.setOnClickListener(new View.OnClickListener() {
                                         @Override
