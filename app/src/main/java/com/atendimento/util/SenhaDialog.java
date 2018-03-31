@@ -1,10 +1,12 @@
 package com.atendimento.util;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -14,6 +16,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.atendimento.R;
+import com.atendimento.config.ConfiguracaoFirebase;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseUser;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -24,11 +32,16 @@ public class SenhaDialog extends DialogFragment {
     private View viewSenha;
     private AlertDialog.Builder builder;
     private LayoutInflater inflater;
+    private FirebaseUser usuarioFirebase;
+    private AuthCredential credential;
+    private Preferencias preferencias;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
         //ContextThemeWrapper context = new ContextThemeWrapper(getActivity(), android.R.style.Theme_Holo_Dialog_NoActionBar);
+        preferencias = new Preferencias(getApplicationContext());
+        usuarioFirebase = ConfiguracaoFirebase.getAutenticacao().getCurrentUser();
         builder = new AlertDialog.Builder(getActivity(), R.style.dialog);
         builder.setCancelable(false);
         inflater      = getActivity().getLayoutInflater();
@@ -55,6 +68,23 @@ public class SenhaDialog extends DialogFragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (senha.getText().toString().equals("")){
                             Toast.makeText(getApplicationContext(),R.string.favorSenha,Toast.LENGTH_LONG).show();
+                            preferencias.setProcessadoSucesso(false);
+                        }
+                        else{
+                            credential = EmailAuthProvider.getCredential(usuarioFirebase.getEmail(), senha.getText().toString());
+                            usuarioFirebase.reauthenticate(credential)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                preferencias.setProcessadoSucesso(true);
+                                            }
+                                            else {
+                                                Toast.makeText(getApplicationContext(), "Senha Inválida", Toast.LENGTH_LONG).show();
+                                                preferencias.setProcessadoSucesso(false);
+                                            }
+                                        }
+                                    });
                         }
                     }
                 })
@@ -64,5 +94,15 @@ public class SenhaDialog extends DialogFragment {
                     }
                 });
         return builder.create();
+    }
+
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        final Activity activity = getActivity();
+        if (activity instanceof DialogInterface.OnDismissListener) {
+            ((DialogInterface.OnDismissListener) activity).onDismiss(dialog);
+        }
     }
 }

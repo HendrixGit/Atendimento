@@ -13,6 +13,7 @@ public class Preferencias {
     private String CHAVE_IDENTIFICADOR = "identificadorUsuarioLogado";
     private String CHAVE_NOME  = "nomeUsuarioLogado";
     private String CHAVE_EMAIL = "emailUsuarioLogado";
+    private Boolean processadoSucesso;
 
 
     public Preferencias(Context contextoParametro){
@@ -40,4 +41,11 @@ public class Preferencias {
         return sharedPreferences.getString(CHAVE_EMAIL, null);
     }
 
+    public Boolean getProcessadoSucesso() {
+        return processadoSucesso;
+    }
+
+    public void setProcessadoSucesso(Boolean processadoSucesso) {
+        this.processadoSucesso = processadoSucesso;
+    }
 }
