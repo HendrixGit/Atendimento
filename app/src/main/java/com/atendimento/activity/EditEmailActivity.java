@@ -13,7 +13,7 @@ import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.util.Preferencias;
-import com.atendimento.util.SenhaDialog;
+import com.atendimento.fragment.SenhaDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,6 +36,7 @@ public class EditEmailActivity extends BaseActivity implements DialogInterface.O
     private Button ok;
     private DialogFragment dialogFragment;
     private FirebaseAuth autenticacao;
+    private Boolean resultadoDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class EditEmailActivity extends BaseActivity implements DialogInterface.O
         toolbar.setTitle("Favor Digite o novo e-mail");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
         preferencias = new Preferencias(getApplicationContext());
+        resultadoDialog = ConfiguracaoFirebase.getProcessadoSucesso();
         firebase        = ConfiguracaoFirebase.getFirebaseDatabase();
         usuarioFirebase = ConfiguracaoFirebase.getAutenticacao().getCurrentUser();
         identificadorUsuario = usuarioFirebase.getUid();
@@ -84,64 +86,6 @@ public class EditEmailActivity extends BaseActivity implements DialogInterface.O
                                     erroExcecao = "Erro Login Recente";
                                     dialogFragment = new SenhaDialog();
                                     dialogFragment.show(getFragmentManager(),"senha");
-
-//                                    LinearLayout layout = new LinearLayout(getApplicationContext());
-//                                    layout.setOrientation(LinearLayout.VERTICAL);
-//                                    AlertDialog.Builder builder = new AlertDialog.Builder(EditEmailActivity.this, R.style.dialog);
-//                                    builder.setTitle("Favor Insira a Senha");
-//                                    final EditText senha = new EditText(getApplicationContext());
-//                                    senha.setTransformationMethod(PasswordTransformationMethod.getInstance());
-//                                    senha.setTextColor(Color.WHITE);
-//                                    final CheckBox checkBoxSenha = new CheckBox(getApplicationContext());
-//                                    checkBoxSenha.setText("Mostrar Senha");
-//                                    checkBoxSenha.setTextColor(Color.WHITE);
-//                                    checkBoxSenha.setOnClickListener(new View.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(View view) {
-//                                            if (checkBoxSenha.isChecked()){
-//                                                senha.setTransformationMethod(null);
-//                                            }
-//                                            else{
-//                                                senha.setTransformationMethod(PasswordTransformationMethod.getInstance());
-//                                            }
-//                                            senha.setSelection(senha.getText().length());
-//                                        }
-//                                    });
-//                                    layout.addView(senha);
-//                                    layout.addView(checkBoxSenha);
-//                                    builder.setView(layout);
-//                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(DialogInterface dialogInterface, int i) {
-//                                            if (senha.getText().toString().equals("")) {
-//                                                Toast.makeText(getApplicationContext(),"Senha Inválida", Toast.LENGTH_LONG).show();
-//                                            }
-//                                            else {
-//                                                AuthCredential credential = EmailAuthProvider.
-//                                                        getCredential(usuarioFirebase.getEmail(), senha.getText().toString());
-//                                                usuarioFirebase.reauthenticate(credential)
-//                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                                            @Override
-//                                                            public void onComplete(@NonNull Task<Void> task) {
-//                                                                if (task.isSuccessful()) {
-//                                                                    ok.performClick();
-//                                                                } else {
-//                                                                    Toast.makeText(getApplicationContext(), "Senha Inválida", Toast.LENGTH_LONG).show();
-//                                                                }
-//                                                            }
-//                                                        });
-//                                            }
-//                                        }
-//                                    });
-//                                    builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(DialogInterface dialogInterface, int i) {
-//
-//                                        }
-//                                    });
-//                                    AlertDialog dialog = builder.create();
-//                                    dialog.show();
-
                                 }
                                 catch (FirebaseAuthInvalidCredentialsException e){
                                     erroExcecao = "E-mail digitado inválido";
@@ -172,7 +116,7 @@ public class EditEmailActivity extends BaseActivity implements DialogInterface.O
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
-        if (preferencias.getProcessadoSucesso() == true) {
+        if (ConfiguracaoFirebase.getProcessadoSucesso() == true) {
             ok.performClick();
         }
     }

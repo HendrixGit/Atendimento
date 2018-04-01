@@ -1,4 +1,4 @@
-package com.atendimento.util;
+package com.atendimento.fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -34,13 +34,12 @@ public class SenhaDialog extends DialogFragment {
     private LayoutInflater inflater;
     private FirebaseUser usuarioFirebase;
     private AuthCredential credential;
-    private Preferencias preferencias;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
         //ContextThemeWrapper context = new ContextThemeWrapper(getActivity(), android.R.style.Theme_Holo_Dialog_NoActionBar);
-        preferencias = new Preferencias(getApplicationContext());
+        ConfiguracaoFirebase.setProcessadoSucesso(false);
         usuarioFirebase = ConfiguracaoFirebase.getAutenticacao().getCurrentUser();
         builder = new AlertDialog.Builder(getActivity(), R.style.dialog);
         builder.setCancelable(false);
@@ -68,7 +67,6 @@ public class SenhaDialog extends DialogFragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (senha.getText().toString().equals("")){
                             Toast.makeText(getApplicationContext(),R.string.favorSenha,Toast.LENGTH_LONG).show();
-                            preferencias.setProcessadoSucesso(false);
                         }
                         else{
                             credential = EmailAuthProvider.getCredential(usuarioFirebase.getEmail(), senha.getText().toString());
@@ -77,11 +75,10 @@ public class SenhaDialog extends DialogFragment {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                preferencias.setProcessadoSucesso(true);
+                                                ConfiguracaoFirebase.setProcessadoSucesso(true);
                                             }
                                             else {
                                                 Toast.makeText(getApplicationContext(), "Senha Inválida", Toast.LENGTH_LONG).show();
-                                                preferencias.setProcessadoSucesso(false);
                                             }
                                         }
                                     });

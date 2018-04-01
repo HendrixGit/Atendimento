@@ -13,7 +13,7 @@ import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.util.Preferencias;
-import com.atendimento.util.SenhaDialog;
+import com.atendimento.fragment.SenhaDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -83,7 +83,7 @@ public class RedifinicaoSenhaActivity extends BaseActivity implements DialogInte
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
-        if (preferencias.getProcessadoSucesso() == true) {
+        if (ConfiguracaoFirebase.getProcessadoSucesso() == true) {
             botaoRedefinir.performClick();
         }
     }
