@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
-import com.atendimento.model.Usuario;
 import com.atendimento.util.Preferencias;
 import com.atendimento.util.Util;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,7 +33,6 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -46,8 +43,6 @@ public class ConfiguracoesActivity extends BaseActivity {
     private DatabaseReference firebase;
     private FirebaseAuth autenticacao;
     private StorageReference storageReference;
-    private ArrayList<Usuario> usuarios;
-    private ArrayAdapter<Usuario> adapter;
     private EditText nome;
     private EditText email;
     private Bitmap      imagemPerfil;

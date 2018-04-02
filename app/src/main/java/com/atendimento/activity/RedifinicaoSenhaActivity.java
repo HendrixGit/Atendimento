@@ -1,7 +1,5 @@
 package com.atendimento.activity;
 
-import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -13,20 +11,18 @@ import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.util.Preferencias;
-import com.atendimento.fragment.SenhaDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 
-public class RedifinicaoSenhaActivity extends BaseActivity implements DialogInterface.OnDismissListener {
+public class RedifinicaoSenhaActivity extends BaseActivity {
 
     private Button botaoRedefinir;
     private EditText email;
     private FirebaseAuth autenticacao;
     private Preferencias preferencias;
-    private DialogFragment dialogFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +54,8 @@ public class RedifinicaoSenhaActivity extends BaseActivity implements DialogInte
                                         }
                                         catch (FirebaseAuthRecentLoginRequiredException recentLogin){
                                             erroExececao = "Erro Login Recente";
-                                            dialogFragment = new SenhaDialog();
-                                            dialogFragment.show(getFragmentManager(),"senha");
+//                                            dialogFragment = new SenhaDialog();
+//                                            dialogFragment.show(getFragmentManager(),"senha");
                                         }
 
                                         catch (FirebaseAuthInvalidCredentialsException e){
@@ -81,10 +77,4 @@ public class RedifinicaoSenhaActivity extends BaseActivity implements DialogInte
         });
     }
 
-    @Override
-    public void onDismiss(DialogInterface dialogInterface) {
-        if (ConfiguracaoFirebase.getProcessadoSucesso() == true) {
-            botaoRedefinir.performClick();
-        }
-    }
 }

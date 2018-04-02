@@ -1,34 +1,10 @@
 package com.atendimento.util;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.support.annotation.NonNull;
-import android.text.method.PasswordTransformationMethod;
-import android.view.View;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Toast;
-
-import com.atendimento.R;
-import com.atendimento.activity.ConfiguracoesActivity;
-import com.atendimento.activity.EditEmailActivity;
-import com.atendimento.config.ConfiguracaoFirebase;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
-import com.google.firebase.auth.FirebaseUser;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import bolts.Bolts;
 
 public class Util{
 

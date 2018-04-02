@@ -1,7 +1,6 @@
 package com.atendimento.activity;
 
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -12,18 +11,20 @@ import android.widget.Toast;
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
+import com.atendimento.util.MyDialogFragmentListener;
 import com.atendimento.util.Preferencias;
 import com.atendimento.fragment.SenhaDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
-public class EditEmailActivity extends BaseActivity implements DialogInterface.OnDismissListener {
+public class EditEmailActivity extends BaseActivity implements MyDialogFragmentListener {
 
     private android.support.v7.widget.Toolbar toolbar;
     private Preferencias preferencias;
@@ -35,20 +36,17 @@ public class EditEmailActivity extends BaseActivity implements DialogInterface.O
     private Button cancelar;
     private Button ok;
     private DialogFragment dialogFragment;
-    private FirebaseAuth autenticacao;
-    private Boolean resultadoDialog;
+    private AuthCredential credential;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_preferencias);
 
-        autenticacao = ConfiguracaoFirebase.getAutenticacao();
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Favor Digite o novo e-mail");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
         preferencias = new Preferencias(getApplicationContext());
-        resultadoDialog = ConfiguracaoFirebase.getProcessadoSucesso();
         firebase        = ConfiguracaoFirebase.getFirebaseDatabase();
         usuarioFirebase = ConfiguracaoFirebase.getAutenticacao().getCurrentUser();
         identificadorUsuario = usuarioFirebase.getUid();
@@ -115,9 +113,21 @@ public class EditEmailActivity extends BaseActivity implements DialogInterface.O
     }
 
     @Override
-    public void onDismiss(DialogInterface dialogInterface) {
-        if (ConfiguracaoFirebase.getProcessadoSucesso() == true) {
-            ok.performClick();
+    public void onReturnValue(String resultadoParametro) {
+        if (!resultadoParametro.equals("")){
+            credential = EmailAuthProvider.getCredential(usuarioFirebase.getEmail(), resultadoParametro);
+            usuarioFirebase.reauthenticate(credential)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful() == true){
+                                ok.performClick();
+                            }
+                            else{
+                                Toast.makeText(getApplicationContext(),"Senha inválida",Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
         }
     }
 }

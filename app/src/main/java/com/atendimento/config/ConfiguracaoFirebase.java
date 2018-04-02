@@ -13,7 +13,6 @@ final public class ConfiguracaoFirebase {
     private static StorageReference  storage;
     private static FirebaseStorage   firebaseStorage;
     private static String            storageUrl = "gs://atendimento-23915.appspot.com/";
-    private static Boolean           processadoSucesso;
 
     public static DatabaseReference getFirebaseDatabase(){
         if (referenciaDatabase == null) {
@@ -35,13 +34,5 @@ final public class ConfiguracaoFirebase {
             storage = firebaseStorage.getReferenceFromUrl(storageUrl);
         }
         return storage;
-    }
-
-    public static Boolean getProcessadoSucesso() {
-        return processadoSucesso;
-    }
-
-    public static void setProcessadoSucesso(Boolean processadoSucesso) {
-        ConfiguracaoFirebase.processadoSucesso = processadoSucesso;
     }
 }
