@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -55,9 +56,10 @@ public class ConfiguracoesActivity extends BaseActivity {
     private UploadTask uploadTask;
     private ProgressBar progressBar;
     private Preferencias preferencias;
+    private Button botaoCancelar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuracoes);
 
@@ -65,6 +67,7 @@ public class ConfiguracoesActivity extends BaseActivity {
 
         progressBar = findViewById(R.id.progressbar);
         progressBar.setVisibility(View.GONE);
+        botaoCancelar = findViewById(R.id.buttonCancelarConta);
         progressBar.getIndeterminateDrawable().setColorFilter(Color.BLUE, android.graphics.PorterDuff.Mode.MULTIPLY);
         util = new Util();
         nome  = findViewById(R.id.editNomeConf);
@@ -141,6 +144,18 @@ public class ConfiguracoesActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 mostrarOpcoes();
+            }
+        });
+
+        botaoCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (verificarProviderLogin() == true){
+
+                }
+                else{
+
+                }
             }
         });
 

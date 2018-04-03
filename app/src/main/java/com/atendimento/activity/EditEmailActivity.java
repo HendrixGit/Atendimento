@@ -1,11 +1,13 @@
 package com.atendimento.activity;
 
 import android.app.DialogFragment;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.atendimento.R;
@@ -37,12 +39,16 @@ public class EditEmailActivity extends BaseActivity implements MyDialogFragmentL
     private Button ok;
     private DialogFragment dialogFragment;
     private AuthCredential credential;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_preferencias);
 
+        progressBar = findViewById(R.id.progressBarEditPref);
+        progressBar.setVisibility(View.GONE);
+        progressBar.getIndeterminateDrawable().setColorFilter(Color.BLUE, android.graphics.PorterDuff.Mode.MULTIPLY);
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Favor Digite o novo e-mail");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
@@ -67,6 +73,7 @@ public class EditEmailActivity extends BaseActivity implements MyDialogFragmentL
             @Override
             public void onClick(View view) {
                 if (!email.getText().toString().equals("")){
+                    progressBar.setVisibility(View.VISIBLE);
                     usuarioFirebase.updateEmail(email.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -74,6 +81,7 @@ public class EditEmailActivity extends BaseActivity implements MyDialogFragmentL
                                 firebase.child("usuarios").child(identificadorUsuario).child("email").setValue(email.getText().toString());
                                 preferencias.salvarDados(identificadorUsuario,nome.getText().toString(),email.getText().toString());
                                 mudarTelaFinish(getApplicationContext(),ConfiguracoesActivity.class);
+                                progressBar.setVisibility(View.GONE);
                             }
                             else{
                                 String erroExcecao = "";
@@ -95,7 +103,7 @@ public class EditEmailActivity extends BaseActivity implements MyDialogFragmentL
                                     erroExcecao = "Erro ao atualizar e-mail";
                                     e.printStackTrace();
                                 }
-
+                                progressBar.setVisibility(View.GONE);
                                 Toast.makeText(getApplicationContext(),erroExcecao,Toast.LENGTH_LONG).show();
                             }
                         }
@@ -103,6 +111,7 @@ public class EditEmailActivity extends BaseActivity implements MyDialogFragmentL
                 }
                 else{
                     Toast.makeText(getApplicationContext(),"Favor Insira o email",Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.GONE);
                 }
             }
         });
@@ -115,6 +124,7 @@ public class EditEmailActivity extends BaseActivity implements MyDialogFragmentL
     @Override
     public void onReturnValue(String resultadoParametro) {
         if (!resultadoParametro.equals("")){
+            progressBar.setVisibility(View.VISIBLE);
             credential = EmailAuthProvider.getCredential(usuarioFirebase.getEmail(), resultadoParametro);
             usuarioFirebase.reauthenticate(credential)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -125,6 +135,7 @@ public class EditEmailActivity extends BaseActivity implements MyDialogFragmentL
                             }
                             else{
                                 Toast.makeText(getApplicationContext(),"Senha inválida",Toast.LENGTH_LONG).show();
+                                progressBar.setVisibility(View.GONE);
                             }
                         }
                     });

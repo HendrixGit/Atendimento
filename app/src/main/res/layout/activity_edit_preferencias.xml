@@ -76,6 +76,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextNome" />
 
+        <ProgressBar
+            android:id="@+id/progressBarEditPref"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="0dp"
+            android:layout_height="88dp"
+            android:layout_marginBottom="300dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
+
     </android.support.constraint.ConstraintLayout>
 
 
