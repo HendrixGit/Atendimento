@@ -1,6 +1,7 @@
 package com.atendimento.activity;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,9 +25,12 @@ import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.util.Preferencias;
 import com.atendimento.util.Util;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
@@ -42,6 +46,7 @@ public class ConfiguracoesActivity extends BaseActivity {
     private android.support.v7.widget.Toolbar toolbar;
     private String identificadorUsuario;
     private DatabaseReference firebase;
+    private FirebaseUser firebaseUser;
     private FirebaseAuth autenticacao;
     private StorageReference storageReference;
     private EditText nome;
@@ -98,6 +103,7 @@ public class ConfiguracoesActivity extends BaseActivity {
         identificadorUsuario = preferencias.getIdentificador();
 
         firebase = ConfiguracaoFirebase.getFirebaseDatabase();
+        firebaseUser = ConfiguracaoFirebase.getAutenticacao().getCurrentUser();
 
         carregarFoto();
         nome.setText(preferencias.getNome());
@@ -150,16 +156,13 @@ public class ConfiguracoesActivity extends BaseActivity {
         botaoCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (verificarProviderLogin() == true){
-
-                }
-                else{
-
-                }
+                AlertDialog.Builder builder = util.YesNoDialog("Tem certeza que deseja Excluir sua conta ?", ConfiguracoesActivity.this);
+                opcoes = builder.create();
+                opcoes.show();
             }
         });
-
     }
+
 
     public void mostrarOpcoes(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.dialog);
@@ -169,7 +172,8 @@ public class ConfiguracoesActivity extends BaseActivity {
                 try {
                     Intent camera = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(camera,1);
-                }catch (Exception e){
+                }
+                catch (Exception e){
                     Log.i("erroCamera",e.getCause().toString());
                 }
 

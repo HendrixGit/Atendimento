@@ -1,7 +1,11 @@
 package com.atendimento.util;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import com.atendimento.R;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,4 +47,23 @@ public class Util{
         Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
         return resizedBitmap;
     }
+
+    public AlertDialog.Builder YesNoDialog(String titulo, Context context){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.dialog);
+        builder.setTitle(titulo);
+        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        return builder;
+    }
+
 }
