@@ -2,6 +2,7 @@ package com.atendimento.activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -23,16 +24,24 @@ import android.widget.Toast;
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
+import com.atendimento.fragment.SenhaDialog;
+import com.atendimento.util.MyDialogFragmentListener;
 import com.atendimento.util.Preferencias;
 import com.atendimento.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -41,7 +50,7 @@ import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ConfiguracoesActivity extends BaseActivity {
+public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragmentListener {
 
     private android.support.v7.widget.Toolbar toolbar;
     private String identificadorUsuario;
@@ -62,6 +71,9 @@ public class ConfiguracoesActivity extends BaseActivity {
     private ProgressBar progressBar;
     private Preferencias preferencias;
     private Button botaoCancelar;
+    private DialogFragment dialogFragment;
+    private AuthCredential credential;
+    private Dialog.OnClickListener clickYesDialogCancelarConta;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -117,34 +129,6 @@ public class ConfiguracoesActivity extends BaseActivity {
             imageViewEditNome.setVisibility(View.GONE);
             Toast.makeText(getApplicationContext(), "Login Feito pelo facebook", Toast.LENGTH_LONG).show();
         }
-        else{
-            email.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(ConfiguracoesActivity.this);
-                    builder.setTitle("Trocar e-mail");
-                    builder.setMessage("Favor insira o novo e-mail abaixo");
-                    final EditText editText = new EditText(ConfiguracoesActivity.this);
-                    builder.setView(editText);
-                    builder.setPositiveButton("Redefinir", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            if (editText.getText().toString().equals("")){
-                                Toast.makeText(getApplicationContext(),"Favor Insira o e-mail",Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                    builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                        }
-                    });
-                    opcoes = builder.create();
-                    opcoes.show();
-                }
-            });
-        }
 
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,14 +137,62 @@ public class ConfiguracoesActivity extends BaseActivity {
             }
         });
 
+        clickYesDialogCancelarConta = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(getApplicationContext(),"Worked",Toast.LENGTH_LONG).show();
+                deletarUsuario();
+            }
+        };
+
         botaoCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = util.YesNoDialog("Tem certeza que deseja Excluir sua conta ?", ConfiguracoesActivity.this);
+                AlertDialog.Builder builder = util.YesNoDialog("Tem certeza que deseja Excluir sua conta ?",
+                        ConfiguracoesActivity.this,
+                        clickYesDialogCancelarConta);
                 opcoes = builder.create();
                 opcoes.show();
             }
         });
+    }
+
+    private void deletarUsuario() {
+        firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+
+                    deletaDadosUsuario();
+
+                }
+                else{
+                    String erroExcecao = "";
+                    try {
+                        throw task.getException();
+                    }
+                    catch (FirebaseAuthRecentLoginRequiredException recentLogin) {
+                        erroExcecao = "Erro Login Recente";
+                        dialogFragment = new SenhaDialog();
+                        dialogFragment.show(getFragmentManager(), "senha");
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                        erroExcecao = "Erro ao excluiir conta";
+                    }
+                    Toast.makeText(getApplicationContext(),erroExcecao,Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void deletaDadosUsuario() {
+        try {
+            firebase.child("usuarios").child(identificadorUsuario).removeValue();
+        }
+        finally {
+            mudarTelaFinish(getApplicationContext(),InicioActivity.class);
+        }
     }
 
 
@@ -284,4 +316,21 @@ public class ConfiguracoesActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onReturnValue(String resultadoParametro) {
+        if (!resultadoParametro.equals("")){
+            credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), resultadoParametro);
+            firebaseUser.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        deletarUsuario();
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), "Senha inválida", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+    }
 }

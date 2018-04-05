@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.atendimento.R;
@@ -22,6 +23,7 @@ public class EditPreferenciasActivity extends BaseActivity {
     private DatabaseReference firebase;
     private String identificadorUsuario;
     private EditText email;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,8 @@ public class EditPreferenciasActivity extends BaseActivity {
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Favor Digite o seu nome");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
+        progressBar = findViewById(R.id.progressBarEditPref);
+        progressBar.setVisibility(View.GONE);
 
         preferencias = new Preferencias(getApplicationContext());
         identificadorUsuario = preferencias.getIdentificador();

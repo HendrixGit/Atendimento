@@ -48,15 +48,10 @@ public class Util{
         return resizedBitmap;
     }
 
-    public AlertDialog.Builder YesNoDialog(String titulo, Context context){
+    public AlertDialog.Builder YesNoDialog(String titulo, Context context, DialogInterface.OnClickListener onClickListener){
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.dialog);
         builder.setTitle(titulo);
-        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
+        builder.setPositiveButton("Sim", onClickListener);
         builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
