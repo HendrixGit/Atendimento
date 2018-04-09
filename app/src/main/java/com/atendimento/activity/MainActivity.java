@@ -47,14 +47,16 @@ public class MainActivity extends BaseActivity {
         firebase.child("usuarios")
                 .child(identificadorUsuario);
 
-        valueEventListenerPerfil = new ValueEventListener() {
+         valueEventListenerPerfil = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Usuario usuario = new Usuario();
-                usuario.setId(dataSnapshot.child("usuarios").child(identificadorUsuario).child("id").getValue().toString());
-                usuario.setNome(dataSnapshot.child("usuarios").child(identificadorUsuario).child("nome").getValue().toString());
-                usuario.setEmail(dataSnapshot.child("usuarios").child(identificadorUsuario).child("email").getValue().toString());
-                preferencias.salvarDados(identificadorUsuario, usuario.getNome(), usuario.getEmail());
+                if (dataSnapshot.exists()) {
+                    Usuario usuario = new Usuario();
+                    usuario.setId(dataSnapshot.child("usuarios").child(identificadorUsuario).child("id").getValue().toString());
+                    usuario.setNome(dataSnapshot.child("usuarios").child(identificadorUsuario).child("nome").getValue().toString());
+                    usuario.setEmail(dataSnapshot.child("usuarios").child(identificadorUsuario).child("email").getValue().toString());
+                    preferencias.salvarDados(identificadorUsuario, usuario.getNome(), usuario.getEmail());
+                }
             }
 
             @Override
@@ -62,7 +64,7 @@ public class MainActivity extends BaseActivity {
 
             }
         };
-        firebase.addValueEventListener(valueEventListenerPerfil);
+        firebase.addListenerForSingleValueEvent(valueEventListenerPerfil);
     }
 
     private void deslogarUsuario() {

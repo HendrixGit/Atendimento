@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atendimento.R;
@@ -38,9 +39,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -58,8 +62,8 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
     private FirebaseUser firebaseUser;
     private FirebaseAuth autenticacao;
     private StorageReference storageReference;
-    private EditText nome;
-    private EditText email;
+    private TextView nome;
+    private TextView email;
     private Bitmap      imagemPerfil;
     private Bitmap      imagemPerfilParametro;
     private CircleImageView circleImageView;
@@ -74,6 +78,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
     private DialogFragment dialogFragment;
     private AuthCredential credential;
     private Dialog.OnClickListener clickYesDialogCancelarConta;
+    private ValueEventListener valueEventListener;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -81,14 +86,13 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
         setContentView(R.layout.activity_configuracoes);
 
         circleImageView = findViewById(R.id.circleImagePerfil);
-
         progressBar = findViewById(R.id.progressbar);
         progressBar.setVisibility(View.GONE);
         botaoCancelar = findViewById(R.id.buttonCancelarConta);
         progressBar.getIndeterminateDrawable().setColorFilter(Color.BLUE, android.graphics.PorterDuff.Mode.MULTIPLY);
         util = new Util();
-        nome  = findViewById(R.id.editNomeConf);
-        email = findViewById(R.id.editEmailConf);
+        nome  = findViewById(R.id.textViewNomeConf);
+        email = findViewById(R.id.textViewEmailConf);
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Configurações");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
@@ -114,14 +118,12 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
         preferencias = new Preferencias(getApplicationContext());
         identificadorUsuario = preferencias.getIdentificador();
 
-        firebase = ConfiguracaoFirebase.getFirebaseDatabase();
+        firebase     = ConfiguracaoFirebase.getFirebaseDatabase();
         firebaseUser = ConfiguracaoFirebase.getAutenticacao().getCurrentUser();
 
         carregarFoto();
         nome.setText(preferencias.getNome());
         email.setText(preferencias.getEmail());
-        nome.setEnabled(false);
-        email.setEnabled(false);
 
         if (verificarProviderLogin() == true){
             circleImageView.setEnabled(false);
@@ -140,8 +142,8 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
         clickYesDialogCancelarConta = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(getApplicationContext(),"Worked",Toast.LENGTH_LONG).show();
-                deletarUsuario();
+                //deletarUsuario();
+                deletaDadosUsuario();
             }
         };
 
@@ -161,38 +163,46 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
         firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-
+                if (task.isSuccessful()) {
                     deletaDadosUsuario();
-
                 }
-                else{
+                else {
                     String erroExcecao = "";
                     try {
                         throw task.getException();
-                    }
-                    catch (FirebaseAuthRecentLoginRequiredException recentLogin) {
+                    } catch (FirebaseAuthRecentLoginRequiredException recentLogin) {
                         erroExcecao = "Erro Login Recente";
                         dialogFragment = new SenhaDialog();
                         dialogFragment.show(getFragmentManager(), "senha");
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         erroExcecao = "Erro ao excluiir conta";
                     }
-                    Toast.makeText(getApplicationContext(),erroExcecao,Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), erroExcecao, Toast.LENGTH_LONG).show();
                 }
             }
         });
+
     }
 
     private void deletaDadosUsuario() {
-        try {
-            firebase.child("usuarios").child(identificadorUsuario).removeValue();
-        }
-        finally {
-            mudarTelaFinish(getApplicationContext(),InicioActivity.class);
-        }
+       firebase.child("usuarios").child(identificadorUsuario);
+       firebase.addValueEventListener(new ValueEventListener() {
+           @Override
+           public void onDataChange(DataSnapshot dataSnapshot) {
+               if (dataSnapshot.exists()) {
+                   dataSnapshot.child("usuarios").child(identificadorUsuario).getRef().removeValue();
+               }
+               else{
+                   mudarTelaFinish(getApplicationContext(),InicioActivity.class);
+               }
+           }
+
+           @Override
+           public void onCancelled(DatabaseError databaseError) {
+
+           }
+       });
     }
 
 
@@ -224,23 +234,28 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
     private void carregarFoto(){
         progressBar.setVisibility(View.VISIBLE);
         storageReference = ConfiguracaoFirebase.getStorage().child(identificadorUsuario);
-            long dim = 1024 * 1024;
-            storageReference.getBytes(dim).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    imagemPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    circleImageView.setImageBitmap(imagemPerfil);
-                    progressBar.setVisibility(View.GONE);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    circleImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_user));
-                    progressBar.setVisibility(View.GONE);
-                    Toast.makeText(getApplicationContext(),"Erro ao Carregar Foto ",Toast.LENGTH_LONG).show();
-                    Log.i("erroFotoCarregar", e.toString() + " " + e.getCause().toString());
-                }
-            });
+        long dim = 1024 * 1024;
+        storageReference.getBytes(dim).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                imagemPerfil = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                circleImageView.setImageBitmap(imagemPerfil);
+                progressBar.setVisibility(View.GONE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                imagemPerfilPadrao();
+                Toast.makeText(getApplicationContext(), "Erro ao Carregar Foto ", Toast.LENGTH_LONG).show();
+                Log.i("erroFotoCarregar", e.toString() + " " + e.getCause().toString());
+            }
+        });
+    }
+
+
+    private void imagemPerfilPadrao() {
+        circleImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_user));
+        progressBar.setVisibility(View.GONE);
     }
 
     private boolean verificarProviderLogin() {
@@ -333,4 +348,5 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
             });
         }
     }
+
 }

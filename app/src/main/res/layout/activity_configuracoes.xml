@@ -46,35 +46,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editNomeConf" />
-
-        <EditText
-            android:id="@+id/editNomeConf"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:textColor="@android:color/black"
-            app:layout_constraintEnd_toStartOf="@+id/imageViewEditNome"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView7" />
-
-        <EditText
-            android:id="@+id/editEmailConf"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:textColor="@android:color/black"
-            app:layout_constraintEnd_toStartOf="@+id/imageViewEditEmail"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView8" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewNomeConf" />
 
 
         <include
@@ -108,16 +80,14 @@
 
         <ImageView
             android:id="@+id/imageViewEditEmail"
-            android:layout_width="33dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/editEmailConf"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewEmailConf"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/editEmailConf"
-            app:layout_constraintTop_toTopOf="@+id/editEmailConf"
+            app:layout_constraintTop_toTopOf="@+id/textViewEmailConf"
+            app:layout_constraintVertical_bias="0.38"
             app:srcCompat="@drawable/ic_action_edit" />
 
         <ImageView
@@ -126,26 +96,48 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/editNomeConf"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewNomeConf"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/editNomeConf"
-            app:layout_constraintTop_toTopOf="@+id/editNomeConf"
+            app:layout_constraintTop_toTopOf="@+id/textViewNomeConf"
             app:srcCompat="@drawable/ic_action_edit" />
 
         <Button
             android:id="@+id/buttonCancelarConta"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="170dp"
             android:background="@drawable/com_facebook_button_background"
             android:text="@string/cancelarConta"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewEmailConf" />
+
+        <TextView
+            android:id="@+id/textViewEmailConf"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toStartOf="@+id/imageViewEditEmail"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+        <TextView
+            android:id="@+id/textViewNomeConf"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toStartOf="@+id/imageViewEditNome"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     </android.support.constraint.ConstraintLayout>
 
