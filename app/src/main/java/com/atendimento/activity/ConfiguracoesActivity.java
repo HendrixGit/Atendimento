@@ -142,8 +142,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
         clickYesDialogCancelarConta = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //deletarUsuario();
-                deletaDadosUsuario();
+                deletarUsuario();
             }
         };
 
@@ -164,17 +163,19 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    deletaDadosUsuario();
+                    autenticacao.signOut();
                 }
                 else {
                     String erroExcecao = "";
                     try {
                         throw task.getException();
-                    } catch (FirebaseAuthRecentLoginRequiredException recentLogin) {
+                    }
+                    catch (FirebaseAuthRecentLoginRequiredException recentLogin) {
                         erroExcecao = "Erro Login Recente";
                         dialogFragment = new SenhaDialog();
                         dialogFragment.show(getFragmentManager(), "senha");
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
                         e.printStackTrace();
                         erroExcecao = "Erro ao excluiir conta";
                     }
@@ -182,7 +183,9 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
                 }
             }
         });
-
+        if (autenticacao.getCurrentUser() != null) {
+            deletaDadosUsuario();
+        }
     }
 
     private void deletaDadosUsuario() {
@@ -192,8 +195,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
            public void onDataChange(DataSnapshot dataSnapshot) {
                if (dataSnapshot.exists()) {
                    dataSnapshot.child("usuarios").child(identificadorUsuario).getRef().removeValue();
-               }
-               else{
+                   autenticacao.signOut();
                    mudarTelaFinish(getApplicationContext(),InicioActivity.class);
                }
            }
