@@ -10,13 +10,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,28 +29,28 @@ import com.atendimento.fragment.SenhaDialog;
 import com.atendimento.util.MyDialogFragmentListener;
 import com.atendimento.util.Preferencias;
 import com.atendimento.util.Util;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.concurrent.Callable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -78,13 +78,15 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
     private DialogFragment dialogFragment;
     private AuthCredential credential;
     private Dialog.OnClickListener clickYesDialogCancelarConta;
-    private ValueEventListener valueEventListener;
+    private Task taskDeletaUsuario;
+    private Task taskDeletarDados;
+    private Task<Void> allTask;
+    private Continuation continuation;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuracoes);
-
         circleImageView = findViewById(R.id.circleImagePerfil);
         progressBar = findViewById(R.id.progressbar);
         progressBar.setVisibility(View.GONE);
@@ -158,12 +160,20 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
         });
     }
 
-    private void deletarUsuario() {
-        firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+    private void deletarUsuario(){
+
+        try {
+            continuation.then(taskDeletarDados = firebase.child("usuarios").child(identificadorUsuario).removeValue());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+          taskDeletaUsuario =  firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    autenticacao.signOut();
+
                 }
                 else {
                     String erroExcecao = "";
@@ -182,21 +192,27 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
                     Toast.makeText(getApplicationContext(), erroExcecao, Toast.LENGTH_LONG).show();
                 }
             }
+        }).
+        continueWithTask(continuation);
+
+
+        allTask = Tasks.whenAll(taskDeletarDados);
+        allTask.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                autenticacao.signOut();
+                mudarTelaFinish(getApplicationContext(),InicioActivity.class);
+            }
         });
-        if (autenticacao.getCurrentUser() != null) {
-            deletaDadosUsuario();
-        }
     }
 
     private void deletaDadosUsuario() {
-       firebase.child("usuarios").child(identificadorUsuario);
+       firebase.child("usuarios").child(identificadorUsuario).removeValue();
        firebase.addValueEventListener(new ValueEventListener() {
            @Override
            public void onDataChange(DataSnapshot dataSnapshot) {
                if (dataSnapshot.exists()) {
                    dataSnapshot.child("usuarios").child(identificadorUsuario).getRef().removeValue();
-                   autenticacao.signOut();
-                   mudarTelaFinish(getApplicationContext(),InicioActivity.class);
                }
            }
 
