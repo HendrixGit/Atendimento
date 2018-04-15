@@ -2,8 +2,10 @@ package com.atendimento.activity;
 
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ public class CadastroActivity extends BaseActivity {
     private Button botaoCadastrar;
     private FirebaseAuth autenticacao;
     private Usuario usuario;
+    private CheckBox checkBoxSenha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,19 @@ public class CadastroActivity extends BaseActivity {
         email = findViewById(R.id.editCadEmail);
         senha = findViewById(R.id.editCadSenha);
         botaoCadastrar = findViewById(R.id.buttonCadastrar);
+        checkBoxSenha  = findViewById(R.id.checkBoxSenhaCadastro);
+        checkBoxSenha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkBoxSenha.isChecked()){
+                    senha.setTransformationMethod(null);
+                }
+                else{
+                    senha.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+                senha.setSelection(senha.getText().length());
+            }
+        });
 
         botaoCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -80,6 +80,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
     private Dialog.OnClickListener clickYesDialogCancelarConta;
     private Task taskDeletaUsuario;
     private Task taskDeletarDados;
+    private Task taskResultado;
     private Task<Void> allTask;
     private Continuation continuation;
 
@@ -161,14 +162,6 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
     }
 
     private void deletarUsuario(){
-
-        try {
-            continuation.then(taskDeletarDados = firebase.child("usuarios").child(identificadorUsuario).removeValue());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
           taskDeletaUsuario =  firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -192,11 +185,25 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
                     Toast.makeText(getApplicationContext(), erroExcecao, Toast.LENGTH_LONG).show();
                 }
             }
-        }).
-        continueWithTask(continuation);
+        });
+
+        firebase.child("usuarios").child(identificadorUsuario);
+        firebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if ((dataSnapshot.exists())) {
+                    dataSnapshot.child("usuarios").child(identificadorUsuario).getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
-        allTask = Tasks.whenAll(taskDeletarDados);
+        allTask = Tasks.whenAll(taskDeletaUsuario);
         allTask.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -205,6 +212,16 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
             }
         });
     }
+
+    private void deletarDadosTask() {
+        try {
+            continuation.then(taskDeletarDados = firebase.child("usuarios").child(identificadorUsuario).removeValue());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void deletaDadosUsuario() {
        firebase.child("usuarios").child(identificadorUsuario).removeValue();
