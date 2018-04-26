@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -29,7 +28,6 @@ import com.atendimento.fragment.SenhaDialog;
 import com.atendimento.util.MyDialogFragmentListener;
 import com.atendimento.util.Preferencias;
 import com.atendimento.util.Util;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -50,7 +48,6 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.concurrent.Callable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -79,10 +76,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
     private AuthCredential credential;
     private Dialog.OnClickListener clickYesDialogCancelarConta;
     private Task taskDeletaUsuario;
-    private Task taskDeletarDados;
-    private Task taskResultado;
     private Task<Void> allTask;
-    private Continuation continuation;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -128,7 +122,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
         nome.setText(preferencias.getNome());
         email.setText(preferencias.getEmail());
 
-        if (verificarProviderLogin() == true){
+        if (verificarProviderLogin()){
             circleImageView.setEnabled(false);
             imageViewEditEmail.setVisibility(View.GONE);
             imageViewEditNome.setVisibility(View.GONE);
@@ -145,7 +139,8 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
         clickYesDialogCancelarConta = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                deletarUsuario();
+                dialogFragment = new SenhaDialog();
+                dialogFragment.show(getFragmentManager(), "senha");
             }
         };
 
@@ -162,7 +157,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
     }
 
     private void deletarUsuario(){
-          taskDeletaUsuario =  firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+        taskDeletaUsuario = firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
@@ -187,13 +182,21 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
             }
         });
 
-        firebase.child("usuarios").child(identificadorUsuario);
-        firebase.addValueEventListener(new ValueEventListener() {
+        allTask = Tasks.whenAll(taskDeletaUsuario);
+        allTask.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        });
+
+        firebase.child("banidos").child(identificadorUsuario);
+        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if ((dataSnapshot.exists())) {
-                    dataSnapshot.child("usuarios").child(identificadorUsuario).getRef().removeValue();
-                }
+                dataSnapshot.child("banidos").child(identificadorUsuario).getRef().setValue(true);
+                autenticacao.signOut();
+                mudarTelaFinish(getApplicationContext(), InicioActivity.class);
             }
 
             @Override
@@ -201,45 +204,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
 
             }
         });
-
-
-        allTask = Tasks.whenAll(taskDeletaUsuario);
-        allTask.addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                autenticacao.signOut();
-                mudarTelaFinish(getApplicationContext(),InicioActivity.class);
-            }
-        });
     }
-
-    private void deletarDadosTask() {
-        try {
-            continuation.then(taskDeletarDados = firebase.child("usuarios").child(identificadorUsuario).removeValue());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private void deletaDadosUsuario() {
-       firebase.child("usuarios").child(identificadorUsuario).removeValue();
-       firebase.addValueEventListener(new ValueEventListener() {
-           @Override
-           public void onDataChange(DataSnapshot dataSnapshot) {
-               if (dataSnapshot.exists()) {
-                   dataSnapshot.child("usuarios").child(identificadorUsuario).getRef().removeValue();
-               }
-           }
-
-           @Override
-           public void onCancelled(DatabaseError databaseError) {
-
-           }
-       });
-    }
-
 
     public void mostrarOpcoes(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.dialog);

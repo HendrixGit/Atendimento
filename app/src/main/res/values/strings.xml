@@ -35,4 +35,5 @@
     <string name="mostrarSenha">Mostrar Senha</string>
     <string name="favorSenha">Favor Insira a Senha</string>
     <string name="cancelarConta">Cancelar Conta</string>
+    <string name="alterarSenha">Alterar Senha</string>
 </resources>
