@@ -201,6 +201,16 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
             }
         });
 
+        storageReference = ConfiguracaoFirebase.getStorage().child(identificadorUsuario);
+        storageReference.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    
+                }
+            }
+        });
+
         firebase.child("banidos").child(identificadorUsuario);
         firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
