@@ -72,6 +72,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
     private ProgressBar progressBar;
     private Preferencias preferencias;
     private Button botaoCancelar;
+    private Button botaoAlterarSenha;
     private DialogFragment dialogFragment;
     private AuthCredential credential;
     private Dialog.OnClickListener clickYesDialogCancelarConta;
@@ -86,6 +87,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
         progressBar = findViewById(R.id.progressbar);
         progressBar.setVisibility(View.GONE);
         botaoCancelar = findViewById(R.id.buttonCancelarConta);
+        botaoAlterarSenha = findViewById(R.id.buttonAlterarSenha);
         progressBar.getIndeterminateDrawable().setColorFilter(Color.BLUE, android.graphics.PorterDuff.Mode.MULTIPLY);
         util = new Util();
         nome  = findViewById(R.id.textViewNomeConf);
@@ -126,6 +128,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
             circleImageView.setEnabled(false);
             imageViewEditEmail.setVisibility(View.GONE);
             imageViewEditNome.setVisibility(View.GONE);
+            botaoAlterarSenha.setVisibility(View.GONE);
             Toast.makeText(getApplicationContext(), "Login Feito pelo facebook", Toast.LENGTH_LONG).show();
         }
 
@@ -154,6 +157,13 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
                 opcoes.show();
             }
         });
+
+        botaoAlterarSenha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mudarTela(getApplicationContext(),RedifinirSenhaConfActivity.class);
+            }
+        });
     }
 
     private void deletarUsuario(){
@@ -172,6 +182,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
                         erroExcecao = "Erro Login Recente";
                         dialogFragment = new SenhaDialog();
                         dialogFragment.show(getFragmentManager(), "senha");
+
                     }
                     catch (Exception e) {
                         e.printStackTrace();
