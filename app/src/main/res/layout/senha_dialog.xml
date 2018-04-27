@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:text="@string/favorSenha"
         android:textAlignment="center"
+        android:textColor="@color/colorBranco"
         android:textSize="18sp" />
 
     <EditText

@@ -28,6 +28,7 @@ import com.atendimento.fragment.SenhaDialog;
 import com.atendimento.util.MyDialogFragmentListener;
 import com.atendimento.util.Preferencias;
 import com.atendimento.util.Util;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -117,6 +118,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
         preferencias = new Preferencias(getApplicationContext());
         identificadorUsuario = preferencias.getIdentificador();
 
+        autenticacao = ConfiguracaoFirebase.getAutenticacao();
         firebase     = ConfiguracaoFirebase.getFirebaseDatabase();
         firebaseUser = ConfiguracaoFirebase.getAutenticacao().getCurrentUser();
 
@@ -142,8 +144,13 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
         clickYesDialogCancelarConta = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                dialogFragment = new SenhaDialog();
-                dialogFragment.show(getFragmentManager(), "senha");
+                if (verificarProviderLogin()) {
+                    deletarUsuario();
+                }
+                else{
+                    dialogFragment = new SenhaDialog();
+                    dialogFragment.show(getFragmentManager(), "senha");
+                }
             }
         };
 
@@ -206,7 +213,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-                    
+
                 }
             }
         });
@@ -217,6 +224,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
             public void onDataChange(DataSnapshot dataSnapshot) {
                 dataSnapshot.child("banidos").child(identificadorUsuario).getRef().setValue(true);
                 autenticacao.signOut();
+                LoginManager.getInstance().logOut();
                 mudarTelaFinish(getApplicationContext(), InicioActivity.class);
             }
 
@@ -281,7 +289,6 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
 
     private boolean verificarProviderLogin() {
         boolean result = false;
-        autenticacao = ConfiguracaoFirebase.getAutenticacao();
         for (UserInfo userInfo : autenticacao.getCurrentUser().getProviderData()) {
             if (userInfo.getProviderId().equals("facebook.com")) {
                 result = true;
