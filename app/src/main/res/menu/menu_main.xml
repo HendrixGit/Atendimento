@@ -10,15 +10,21 @@
         android:icon="@drawable/ic_search"
         app:showAsAction="ifRoom"/>
 
+    <item android:id="@+id/item_empresa"
+        android:title="@string/empresas"
+        android:orderInCategory="200"
+        app:showAsAction="never"
+        />
+
     <item android:id="@+id/item_configuracoes"
         android:title="@string/configuracoes"
-        android:orderInCategory="200"
+        android:orderInCategory="300"
         app:showAsAction="never"
         />
 
     <item android:id="@+id/item_sair"
         android:title="@string/sair"
-        android:orderInCategory="300"
+        android:orderInCategory="400"
         app:showAsAction="never" />
 
 </menu>

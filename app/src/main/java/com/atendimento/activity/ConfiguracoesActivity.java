@@ -281,7 +281,6 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
         });
     }
 
-
     private void imagemPerfilPadrao() {
         circleImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_user));
         progressBar.setVisibility(View.GONE);
