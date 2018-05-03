@@ -86,6 +86,7 @@ public class MainActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.item_sair:deslogarUsuario(); return true;
             case R.id.item_configuracoes:mudarTela(getApplicationContext(),ConfiguracoesActivity.class); return true;
+            case R.id.item_empresa:mudarTela(getApplicationContext(), CadastrarEmpresaActivity.class);   return true;
             default: return super.onOptionsItemSelected(item);
         }
     }

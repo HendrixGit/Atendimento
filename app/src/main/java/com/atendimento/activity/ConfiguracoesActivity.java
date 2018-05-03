@@ -208,7 +208,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
             }
         });
 
-        storageReference = ConfiguracaoFirebase.getStorage().child(identificadorUsuario);
+        storageReference = ConfiguracaoFirebase.getStorage().child("usuarios").child(identificadorUsuario);
         storageReference.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -262,7 +262,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
 
     private void carregarFoto(){
         progressBar.setVisibility(View.VISIBLE);
-        storageReference = ConfiguracaoFirebase.getStorage().child(identificadorUsuario);
+        storageReference = ConfiguracaoFirebase.getStorage().child("usuarios").child(identificadorUsuario);
         long dim = 1024 * 1024;
         storageReference.getBytes(dim).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
@@ -302,7 +302,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
             imagemPerfilParametro.compress(Bitmap.CompressFormat.PNG, 75, stream);
             byte[] byteArray = stream.toByteArray();
 
-            storageReference = ConfiguracaoFirebase.getStorage().child(identificadorUsuario);
+            storageReference = ConfiguracaoFirebase.getStorage().child("usuarios").child(identificadorUsuario);
             uploadTask = storageReference.putBytes(byteArray);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override

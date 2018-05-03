@@ -123,7 +123,7 @@ public class InicioActivity extends BaseActivity {
 
             byte[] byteArray = stream.toByteArray();
 
-            storageReference = ConfiguracaoFirebase.getStorage().child(identifacorUsuario);
+            storageReference = ConfiguracaoFirebase.getStorage().child("usuarios").child(identifacorUsuario);
             UploadTask uploadTask = storageReference.putBytes(byteArray);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override

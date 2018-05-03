@@ -37,4 +37,6 @@
     <string name="cancelarConta">Cancelar Conta</string>
     <string name="alterarSenha">Alterar Senha</string>
     <string name="empresas">Empresas</string>
+    <string name="nomeEmpresa">Nome da Empresa</string>
+    <string name="categorias">Categorias</string>
 </resources>
