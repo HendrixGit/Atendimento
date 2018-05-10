@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -77,8 +78,10 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
     private DialogFragment dialogFragment;
     private AuthCredential credential;
     private Dialog.OnClickListener clickYesDialogCancelarConta;
+    private Dialog.OnClickListener clickYesDialogRedifinicaoSenha;
     private Task taskDeletaUsuario;
     private Task<Void> allTask;
+    private Button redefinicaoSenhaEmail;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -89,6 +92,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
         progressBar.setVisibility(View.GONE);
         botaoCancelar = findViewById(R.id.buttonCancelarConta);
         botaoAlterarSenha = findViewById(R.id.buttonAlterarSenha);
+        redefinicaoSenhaEmail = findViewById(R.id.buttonRedifinicaoSenhaEmail);
         progressBar.getIndeterminateDrawable().setColorFilter(Color.BLUE, android.graphics.PorterDuff.Mode.MULTIPLY);
         util = new Util();
         nome  = findViewById(R.id.textViewNomeConf);
@@ -131,6 +135,7 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
             imageViewEditEmail.setVisibility(View.GONE);
             imageViewEditNome.setVisibility(View.GONE);
             botaoAlterarSenha.setVisibility(View.GONE);
+            redefinicaoSenhaEmail.setVisibility(View.GONE);
             Toast.makeText(getApplicationContext(), "Login Feito pelo facebook", Toast.LENGTH_LONG).show();
         }
 
@@ -169,6 +174,17 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
             @Override
             public void onClick(View view) {
                 mudarTela(getApplicationContext(),RedifinirSenhaConfActivity.class);
+            }
+        });
+
+        redefinicaoSenhaEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = util.YesNoDialog("Deseja Prosseguir com o envio do e-mail para redefinição de senha ?",
+                        ConfiguracoesActivity.this,
+                        clickYesDialogRedifinicaoSenha);
+                opcoes = builder.create();
+                opcoes.show();
             }
         });
     }

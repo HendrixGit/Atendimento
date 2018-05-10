@@ -1,17 +1,38 @@
 package com.atendimento.activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Toast;
+
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
+import com.atendimento.config.ConfiguracaoFirebase;
+import com.atendimento.util.Preferencias;
 import com.atendimento.util.Util;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,16 +52,30 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     private EditText nomeEmpresa;
     private Util util;
     private SQLiteDatabase sqLiteDatabasePar;
+    private ProgressBar progressBar;
+    private StorageReference storageReference;
+    private Bitmap      imagemEmpresa;
+    private Bitmap      imagemEmpresaParametro;
+    private Preferencias preferencias;
+    private AlertDialog opcoes;
+    private Dialog.OnClickListener onClickCameraListener;
+    private Dialog.OnClickListener onClickGaleriaListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastrar_empresa);
-        nomeEmpresa      = findViewById(R.id.editTextNomeEmpresa);
+        util = new Util();
+        preferencias = new Preferencias(getApplicationContext());
+        identificadorUsuario = preferencias.getIdentificador();
+        firebase = ConfiguracaoFirebase.getFirebaseDatabase();
+        nomeEmpresa = findViewById(R.id.editTextNomeEmpresa);
         util = new Util();
         spinnerCategoria = findViewById(R.id.spinnerCategoria);
-        circleImageView = findViewById(R.id.circleImageEmpresa);
+        circleImageView  = findViewById(R.id.circleImageEmpresa);
         listaCategoria = new ArrayList<String>();
+        progressBar = findViewById(R.id.progressBarCadEmpresa);
+        progressBar.getIndeterminateDrawable().setColorFilter(Color.BLUE, android.graphics.PorterDuff.Mode.MULTIPLY);
 
         sqLiteDatabasePar = openOrCreateDatabase("databaseCategorias", MODE_PRIVATE, null);
         sqLiteDatabasePar.execSQL("DELETE FROM categorias");
@@ -91,8 +126,87 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                mostrarOpcoes();
             }
         });
+
+        onClickCameraListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent camera = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(camera,1);
+            }
+        };
+
+        onClickGaleriaListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent,0);
+            }
+        };
+
+        carregarFotoEmpresa();
+    }
+
+    private void carregarFotoEmpresa(){
+        progressBar.setVisibility(View.VISIBLE);
+        storageReference = ConfiguracaoFirebase.getStorage().child("empresas").child(identificadorUsuario);
+        long dim = 1024 * 1024;
+        storageReference.getBytes(dim).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                imagemEmpresa = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                circleImageView.setImageBitmap(imagemEmpresa);
+                progressBar.setVisibility(View.GONE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                imagemEmpresaPadrao();
+                Toast.makeText(getApplicationContext(), "Erro ao Carregar Foto ", Toast.LENGTH_LONG).show();
+                Log.i("erroFotoCarregar", e.toString() + " " + e.getCause().toString());
+            }
+        });
+    }
+
+    private void imagemEmpresaPadrao(){
+        circleImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_user));
+        progressBar.setVisibility(View.GONE);
+    }
+
+    public void mostrarOpcoes(){
+        AlertDialog.Builder builder  = util.CustomDialog("De onde deseja, tirar a foto da Empresa", CadastrarEmpresaActivity.this, "Câmera", onClickCameraListener, "Galeria", onClickGaleriaListener);
+        opcoes = builder.create();
+        opcoes.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0 && resultCode == RESULT_OK && data != null){
+            progressBar.setVisibility(View.VISIBLE);
+            Uri localImagemSelecionada = data.getData();
+            try {
+                imagemEmpresaParametro = MediaStore.Images.Media.getBitmap(getContentResolver(),localImagemSelecionada);
+                imagemEmpresaParametro =  util.diminuirImagem(imagemEmpresaParametro, 200,200);
+
+                circleImageView.setImageBitmap(imagemEmpresaParametro);
+                progressBar.setVisibility(View.GONE);
+            } catch (IOException e) {
+                e.printStackTrace();
+                circleImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_user));
+            }
+        }
+        else if (requestCode == 1 && resultCode == RESULT_OK && data != null){
+            try{
+                Bundle extras = data.getExtras();
+                imagemEmpresaParametro = (Bitmap) extras.get("data");
+                circleImageView.setImageBitmap(imagemEmpresaParametro);
+            }
+            catch (Exception e){
+                circleImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_user));
+            }
+        }
     }
 }

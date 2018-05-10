@@ -39,4 +39,5 @@
     <string name="empresas">Empresas</string>
     <string name="nomeEmpresa">Nome da Empresa</string>
     <string name="categorias">Categorias</string>
+    <string name="redefinicaoSenha">Redefinição de senha por E-mail</string>
 </resources>

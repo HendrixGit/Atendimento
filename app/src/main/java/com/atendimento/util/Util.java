@@ -63,4 +63,14 @@ public class Util{
         });
         return builder;
     }
+
+    public AlertDialog.Builder CustomDialog(String titulo, Context context, String textoBotao1, DialogInterface.OnClickListener onClickListenerBotao1,
+                                            String textoBotao2, DialogInterface.OnClickListener onClickListenerBotao2){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.dialog);
+        builder.setTitle(titulo);
+        builder.setPositiveButton(textoBotao1, onClickListenerBotao1);
+        builder.setNegativeButton(textoBotao2, onClickListenerBotao2);
+        return builder;
+    }
+
 }
