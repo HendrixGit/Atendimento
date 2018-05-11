@@ -54,8 +54,6 @@ public class RedifinicaoSenhaActivity extends BaseActivity {
                                         }
                                         catch (FirebaseAuthRecentLoginRequiredException recentLogin){
                                             erroExececao = "Erro Login Recente";
-//                                            dialogFragment = new SenhaDialog();
-//                                            dialogFragment.show(getFragmentManager(),"senha");
                                         }
 
                                         catch (FirebaseAuthInvalidCredentialsException e){

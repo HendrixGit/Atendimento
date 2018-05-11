@@ -25,13 +25,17 @@ import android.widget.Toast;
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
+import com.atendimento.model.Empresa;
 import com.atendimento.util.Preferencias;
 import com.atendimento.util.Util;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +64,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     private AlertDialog opcoes;
     private Dialog.OnClickListener onClickCameraListener;
     private Dialog.OnClickListener onClickGaleriaListener;
+    private UploadTask uploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +113,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
 
             }
         });
+
         ok     = findViewById(R.id.buttonEmpresaOK);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,6 +121,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
 
             }
         });
+
         cancel = findViewById(R.id.buttonEmpresaCancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,6 +186,37 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         AlertDialog.Builder builder  = util.CustomDialog("De onde deseja, tirar a foto da Empresa", CadastrarEmpresaActivity.this, "Câmera", onClickCameraListener, "Galeria", onClickGaleriaListener);
         opcoes = builder.create();
         opcoes.show();
+    }
+
+    private void salvarImagem() {
+        if (imagemEmpresaParametro != null) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            imagemEmpresaParametro.compress(Bitmap.CompressFormat.PNG, 75, stream);
+            byte[] byteArray = stream.toByteArray();
+
+            storageReference = ConfiguracaoFirebase.getStorage().child("empresas").child(identificadorUsuario);
+            uploadTask = storageReference.putBytes(byteArray);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Toast.makeText(getApplicationContext(), "Falha ao enviar foto", Toast.LENGTH_LONG).show();
+                    Log.i("erroFoto", exception.toString() + " " + exception.getCause().toString());
+                }
+            });
+        }
+    }
+
+    private void salvarEmpresa(){
+        Empresa empresa = new Empresa(getApplicationContext());
+        empresa.setId(identificadorUsuario);
+        empresa.setNome(nomeEmpresa.getText().toString());
+        empresa.setCategoria(spinnerCategoria.getSelectedItem().toString());
+        empresa.salvar();
     }
 
     @Override

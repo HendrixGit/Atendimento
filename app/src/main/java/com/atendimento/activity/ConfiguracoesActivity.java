@@ -15,7 +15,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -34,10 +33,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
@@ -177,10 +176,46 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
             }
         });
 
+        clickYesDialogRedifinicaoSenha = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                autenticacao.sendPasswordResetEmail(preferencias.getEmail()).
+                        addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    mudarTelaFinish(getApplication(), LoginActivity.class);
+                                    Toast.makeText(getApplicationContext(),
+                                            "Um e-mail para a redifinição foi enviado para você, prossiga com  redefinição de senha por lá",
+                                            Toast.LENGTH_LONG).show();
+                                }
+                                else{
+                                    String erroExececao = "";
+                                    try{
+                                        throw task.getException();
+                                    }
+                                    catch (FirebaseAuthRecentLoginRequiredException recentLogin){
+                                        erroExececao = "Erro Login Recente";
+                                    }
+
+                                    catch (FirebaseAuthInvalidCredentialsException e){
+                                        erroExececao = "E-mail digitado inválido";
+                                    }
+                                    catch(Exception e){
+                                        erroExececao = "Falha ao enviar e-mail";
+                                        e.printStackTrace();
+                                    }
+                                    Toast.makeText(getApplicationContext(),erroExececao, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+            }
+        };
+
         redefinicaoSenhaEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = util.YesNoDialog("Deseja Prosseguir com o envio do e-mail para redefinição de senha ?",
+                AlertDialog.Builder builder = util.YesNoDialog("Enviar e-mail para redefinição de senha ?",
                         ConfiguracoesActivity.this,
                         clickYesDialogRedifinicaoSenha);
                 opcoes = builder.create();
@@ -213,14 +248,6 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
                     }
                     Toast.makeText(getApplicationContext(), erroExcecao, Toast.LENGTH_LONG).show();
                 }
-            }
-        });
-
-        allTask = Tasks.whenAll(taskDeletaUsuario);
-        allTask.addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-
             }
         });
 
