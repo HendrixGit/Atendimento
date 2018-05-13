@@ -30,7 +30,6 @@ import com.atendimento.util.Preferencias;
 import com.atendimento.util.Util;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -118,7 +117,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                salvarEmpresa();
             }
         });
 
@@ -212,11 +211,12 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     }
 
     private void salvarEmpresa(){
+        String idKey = firebase.child("empresas").child(identificadorUsuario).push().getKey();
         Empresa empresa = new Empresa(getApplicationContext());
-        empresa.setId(identificadorUsuario);
+        empresa.setId(idKey);
         empresa.setNome(nomeEmpresa.getText().toString());
         empresa.setCategoria(spinnerCategoria.getSelectedItem().toString());
-        empresa.salvar();
+        firebase.child("empresas").child(identificadorUsuario).child(idKey).setValue(empresa);
     }
 
     @Override

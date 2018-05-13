@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:ems="10"
             android:hint="@string/nomeEmpresa"
             android:inputType="textPersonName"
@@ -46,7 +46,7 @@
             android:textColor="@android:color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/circleImageEmpresa" />
+            app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
         <Spinner
             android:id="@+id/spinnerCategoria"
@@ -119,6 +119,19 @@
             app:layout_constraintEnd_toEndOf="@+id/circleImageEmpresa"
             app:layout_constraintStart_toStartOf="@+id/circleImageEmpresa"
             app:layout_constraintTop_toTopOf="@+id/circleImageEmpresa" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/nomeEmpresa"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/circleImageEmpresa" />
 
 
     </android.support.constraint.ConstraintLayout>
