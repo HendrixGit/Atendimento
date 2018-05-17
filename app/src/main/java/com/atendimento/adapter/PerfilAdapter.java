@@ -29,7 +29,7 @@ public class PerfilAdapter extends ArrayAdapter {
         View view = null;
         if (usuarios != null){
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.lista_perfil, parent, false);
+            view = inflater.inflate(R.layout.lista_empresas, parent, false);
 
             Usuario usuario = usuarios.get(position);
 

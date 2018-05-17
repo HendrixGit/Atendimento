@@ -212,11 +212,12 @@ public class CadastrarEmpresaActivity extends BaseActivity {
 
     private void salvarEmpresa(){
         String idKey = firebase.child("empresas").child(identificadorUsuario).push().getKey();
-        Empresa empresa = new Empresa(getApplicationContext());
+        Empresa empresa = new Empresa();
+        empresa.setIdUsuario(identificadorUsuario);
         empresa.setId(idKey);
         empresa.setNome(nomeEmpresa.getText().toString());
         empresa.setCategoria(spinnerCategoria.getSelectedItem().toString());
-        firebase.child("empresas").child(identificadorUsuario).child(idKey).setValue(empresa);
+        firebase.child("empresas").setValue(empresa);
     }
 
     @Override
