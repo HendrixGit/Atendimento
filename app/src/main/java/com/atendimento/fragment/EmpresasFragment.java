@@ -51,10 +51,11 @@ public class EmpresasFragment extends Fragment {
         empresas = new ArrayList<>();
         listView = view.findViewById(R.id.listViewEmpresas);
         arrayAdapter = new EmpresasAdapter(getActivity(), empresas);
+        listView.setAdapter(arrayAdapter);
 
         final Preferencias preferencias = new Preferencias(getActivity());
         String idUsuarioLogado = preferencias.getIdentificador();
-        firebaseDatabase = ConfiguracaoFirebase.getFirebaseDatabase().child("empresas");
+        firebaseDatabase = ConfiguracaoFirebase.getFirebaseDatabase().child("empresas").child(idUsuarioLogado);
 
         valueEventListenerEmpresas = new ValueEventListener() {
             @Override
@@ -72,7 +73,7 @@ public class EmpresasFragment extends Fragment {
 
             }
         };
-
+        
         return view;
     }
 }

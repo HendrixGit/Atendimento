@@ -27,17 +27,16 @@ public class EmpresasActivity extends BaseActivity {
         toolbar.setTitle("Empresas");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
         setSupportActionBar(toolbar);
-//        avi = findViewById(R.id.avi_Load);
-//
-//        slidingTabLayout = findViewById(R.id.tabLayoutEmpresa);
-//        slidingTabLayout.setDistributeEvenly(true);//preenche toda a largura
-//        slidingTabLayout.setSelectedIndicatorColors(ContextCompat.getColor(this,R.color.colorPrimary));
-//
-//        TabAdapterEmpresa tabAdapter = new TabAdapterEmpresa(getSupportFragmentManager());
-//        viewPager = findViewById(R.id.vp_paginaEmpresa);
-//        viewPager.setAdapter(tabAdapter);
-//        slidingTabLayout.setViewPager(viewPager);
-//
-//        viewPager.setCurrentItem(0);
+        avi = findViewById(R.id.avi_Empresas);
+
+        slidingTabLayout = findViewById(R.id.tabEmpresas);
+        slidingTabLayout.setDistributeEvenly(true);//preenche toda a largura
+        slidingTabLayout.setSelectedIndicatorColors(ContextCompat.getColor(this,R.color.colorPrimary));
+
+        TabAdapterEmpresa tabAdapter = new TabAdapterEmpresa(getSupportFragmentManager());
+        viewPager = findViewById(R.id.viewPagerEmpresas);
+        viewPager.setAdapter(tabAdapter);
+        slidingTabLayout.setViewPager(viewPager);
+        viewPager.setCurrentItem(0);
     }
 }
