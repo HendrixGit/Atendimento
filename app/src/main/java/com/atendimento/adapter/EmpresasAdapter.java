@@ -17,6 +17,9 @@ public class EmpresasAdapter extends ArrayAdapter {
 
     private ArrayList<Empresa> empresas;
     private Context context;
+    private TextView textViewNome;
+    private TextView textViewCategoria;
+    private View view = null;
 
     public EmpresasAdapter(Context context, ArrayList<Empresa> objects){
         super(context, 0, objects);
@@ -27,18 +30,21 @@ public class EmpresasAdapter extends ArrayAdapter {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View view = null;
-        if (empresas != null){
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.lista_empresas, parent, false);
-            TextView textViewNome      = view.findViewById(R.id.textViewNomeEmpresa);
-            TextView textViewCategoria = view.findViewById(R.id.textViewCategoria);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        view = inflater.inflate(R.layout.lista_empresas, parent, false);
+        textViewNome      = view.findViewById(R.id.textViewNomeEmpresa);
+        textViewCategoria = view.findViewById(R.id.textViewCategoria);
 
+        if (empresas != null){
             Empresa empresa = empresas.get(position);
             textViewNome.setText(empresa.getNome());
             textViewCategoria.setText(empresa.getCategoria());
-
         }
+
+        if (empresas == null){
+            textViewNome.setText("Cadastrar Empresa");
+        }
+
         return view;
     }
 }

@@ -27,11 +27,12 @@ public class EmpresasActivity extends BaseActivity {
         toolbar.setTitle("Empresas");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
         setSupportActionBar(toolbar);
+        getSupportActionBar().setElevation(0);
         avi = findViewById(R.id.avi_Empresas);
 
         slidingTabLayout = findViewById(R.id.tabEmpresas);
         slidingTabLayout.setDistributeEvenly(true);//preenche toda a largura
-        slidingTabLayout.setSelectedIndicatorColors(ContextCompat.getColor(this,R.color.colorPrimary));
+        slidingTabLayout.setSelectedIndicatorColors(ContextCompat.getColor(this,R.color.colorPrimaryDark));
 
         TabAdapterEmpresa tabAdapter = new TabAdapterEmpresa(getSupportFragmentManager());
         viewPager = findViewById(R.id.viewPagerEmpresas);

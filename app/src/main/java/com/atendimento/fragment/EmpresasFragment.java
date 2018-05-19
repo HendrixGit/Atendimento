@@ -73,7 +73,6 @@ public class EmpresasFragment extends Fragment {
 
             }
         };
-        
         return view;
     }
 }

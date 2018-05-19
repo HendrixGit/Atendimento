@@ -1,7 +1,5 @@
 package com.atendimento.model;
 
-
-
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
 
@@ -15,7 +13,6 @@ public class Empresa {
     public Empresa() {
 
     }
-
 
     public void salvar(){
         DatabaseReference referenciaDatabase = ConfiguracaoFirebase.getFirebaseDatabase();
