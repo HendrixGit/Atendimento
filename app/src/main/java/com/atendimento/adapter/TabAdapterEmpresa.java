@@ -21,7 +21,7 @@ public class TabAdapterEmpresa extends FragmentStatePagerAdapter {//usado para l
 
         switch (position){
             case 0: fragment = new EmpresasFragment();
-            break;
+                break;
         }
 
         return fragment;
