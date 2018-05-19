@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -52,6 +53,12 @@ public class EmpresasFragment extends Fragment {
         listView = view.findViewById(R.id.listViewEmpresas);
         arrayAdapter = new EmpresasAdapter(getActivity(), empresas);
         listView.setAdapter(arrayAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                
+            }
+        });
 
         final Preferencias preferencias = new Preferencias(getActivity());
         String idUsuarioLogado = preferencias.getIdentificador();
@@ -63,6 +70,11 @@ public class EmpresasFragment extends Fragment {
                 empresas.clear();
                 for (DataSnapshot dados : dataSnapshot.getChildren()){
                     Empresa empresa = dados.getValue(Empresa.class);
+                    empresas.add(empresa);
+                }
+                if (empresas.isEmpty()){
+                    Empresa empresa = new Empresa();
+                    empresa.setIdUsuario("0");
                     empresas.add(empresa);
                 }
                 arrayAdapter.notifyDataSetChanged();
