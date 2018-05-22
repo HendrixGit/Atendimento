@@ -125,7 +125,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mudarTelaFinish(getApplicationContext(),MainActivity.class);
+                mudarTelaFinish(getApplicationContext(),EmpresasActivity.class);
             }
         });
 
@@ -218,6 +218,8 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         empresa.setNome(nomeEmpresa.getText().toString());
         empresa.setCategoria(spinnerCategoria.getSelectedItem().toString());
         firebase.child("empresas").child(identificadorUsuario).child(idKey).setValue(empresa);
+        salvarImagem();
+        mudarTelaFinish(getApplicationContext(),EmpresasActivity.class);
     }
 
     @Override

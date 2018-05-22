@@ -3,16 +3,16 @@ package com.atendimento.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import com.atendimento.R;
+import com.atendimento.activity.CadastrarEmpresaActivity;
 import com.atendimento.adapter.EmpresasAdapter;
+import com.atendimento.bases.BaseFragment;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Empresa;
 import com.atendimento.util.Preferencias;
@@ -23,7 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class EmpresasFragment extends Fragment {
+public class EmpresasFragment extends BaseFragment {
 
     private ListView listView;
     private ArrayAdapter arrayAdapter;
@@ -56,7 +56,9 @@ public class EmpresasFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                
+                mudarTela(getActivity(), CadastrarEmpresaActivity.class);
+                Empresa empresa = empresas.get(i);
+                mudarTelaObject(getActivity(), CadastrarEmpresaActivity.class, empresa);
             }
         });
 
