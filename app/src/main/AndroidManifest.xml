@@ -54,7 +54,7 @@
         <activity android:name=".activity.EditEmailActivity" />
         <activity android:name=".activity.RedifinirSenhaConfActivity" />
         <activity android:name=".activity.CadastrarEmpresaActivity" />
-        <activity android:name=".activity.EmpresasActivity"></activity>
+        <activity android:name=".activity.EmpresasActivity" />
     </application>
 
 </manifest>

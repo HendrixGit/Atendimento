@@ -47,6 +47,17 @@
                 app:indicatorColor="@android:color/black"
                 android:paddingLeft="150dp" />
 
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/floatButtonCadastrarEmpresa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_margin="@dimen/fab_margin"
+                android:backgroundTint="@color/colorPrimaryDark"
+                app:srcCompat="@drawable/ic_action_add"
+                app:borderWidth="0dp"
+                />
+
         </android.support.v7.widget.LinearLayoutCompat>
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

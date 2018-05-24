@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -64,6 +65,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     private Dialog.OnClickListener onClickCameraListener;
     private Dialog.OnClickListener onClickGaleriaListener;
     private UploadTask uploadTask;
+    private ImageView imageViewEditNomeEmpresa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,15 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         identificadorUsuario = preferencias.getIdentificador();
         firebase = ConfiguracaoFirebase.getFirebaseDatabase();
         nomeEmpresa = findViewById(R.id.editTextNomeEmpresa);
+        nomeEmpresa.setEnabled(false);
+        imageViewEditNomeEmpresa = findViewById(R.id.imageViewEditEmpresaNome);
+        imageViewEditNomeEmpresa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nomeEmpresa.setEnabled(true);
+                imageViewEditNomeEmpresa.setVisibility(View.GONE);
+            }
+        });
         util = new Util();
         spinnerCategoria = findViewById(R.id.spinnerCategoria);
         circleImageView  = findViewById(R.id.circleImageEmpresa);

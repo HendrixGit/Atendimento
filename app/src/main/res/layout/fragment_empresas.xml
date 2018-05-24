@@ -10,7 +10,7 @@
         android:id="@+id/listViewEmpresas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
         android:divider="@color/colorPreto"
-        android:dividerHeight="1dp"
-        android:layout_gravity="center_horizontal|top"/>
+        android:dividerHeight="1dp" />
 </FrameLayout>

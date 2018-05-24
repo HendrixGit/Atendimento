@@ -1,9 +1,11 @@
 package com.atendimento.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.atendimento.R;
 import com.atendimento.adapter.TabAdapterEmpresa;
@@ -17,11 +19,20 @@ public class EmpresasActivity extends BaseActivity {
     private SlidingTabLayout slidingTabLayout;
     private ViewPager viewPager;
     private AVLoadingIndicatorView  avi;
+    private FloatingActionButton cadastrarEmpresaButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_empresas);
+
+        cadastrarEmpresaButton = findViewById(R.id.floatButtonCadastrarEmpresa);
+        cadastrarEmpresaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mudarTela(getApplicationContext(), CadastrarEmpresaActivity.class);
+            }
+        });
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Empresas");

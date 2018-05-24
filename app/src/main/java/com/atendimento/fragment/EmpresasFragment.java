@@ -3,6 +3,7 @@ package com.atendimento.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class EmpresasFragment extends BaseFragment {
     private ArrayList<Empresa> empresas;
     private DatabaseReference firebaseDatabase;
     private ValueEventListener valueEventListenerEmpresas;
+    private FloatingActionButton cadastrarEmpresaButton;
 
     public EmpresasFragment(){}
 
@@ -56,9 +58,8 @@ public class EmpresasFragment extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mudarTela(getActivity(), CadastrarEmpresaActivity.class);
-                Empresa empresa = empresas.get(i);
-                mudarTelaObject(getActivity(), CadastrarEmpresaActivity.class, empresa);
+//                Empresa empresa = empresas.get(i);
+//                mudarTelaObject(getActivity(), CadastrarEmpresaActivity.class, empresa);
             }
         });
 
@@ -72,11 +73,6 @@ public class EmpresasFragment extends BaseFragment {
                 empresas.clear();
                 for (DataSnapshot dados : dataSnapshot.getChildren()){
                     Empresa empresa = dados.getValue(Empresa.class);
-                    empresas.add(empresa);
-                }
-                if (empresas.isEmpty()){
-                    Empresa empresa = new Empresa();
-                    empresa.setIdUsuario("0");
                     empresas.add(empresa);
                 }
                 arrayAdapter.notifyDataSetChanged();

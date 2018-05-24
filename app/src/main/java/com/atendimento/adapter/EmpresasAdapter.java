@@ -37,13 +37,8 @@ public class EmpresasAdapter extends ArrayAdapter {
 
         if (empresas != null){
             Empresa empresa = empresas.get(position);
-            if (!empresa.getIdUsuario().equals("0")) {
-                textViewNome.setText(empresa.getNome());
-                textViewCategoria.setText(empresa.getCategoria());
-            }
-            else{
-                textViewNome.setText("Cadastrar Empresa");
-            }
+            textViewNome.setText(empresa.getNome());
+            textViewCategoria.setText(empresa.getCategoria());
         }
         return view;
     }
