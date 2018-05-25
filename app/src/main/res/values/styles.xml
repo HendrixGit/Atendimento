@@ -16,6 +16,10 @@
         <item name="android:textColor">@color/colorBranco</item>
     </style>
 
+    <style name="editText" parent="android:style/Widget.Holo.EditText" >
+
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

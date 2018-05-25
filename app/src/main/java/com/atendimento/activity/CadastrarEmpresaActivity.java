@@ -66,11 +66,16 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     private Dialog.OnClickListener onClickGaleriaListener;
     private UploadTask uploadTask;
     private ImageView imageViewEditNomeEmpresa;
+    private String idKey = "";
+    private Empresa empresaParametro = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastrar_empresa);
+        Intent intent = getIntent();
+        empresaParametro = (Empresa) intent.getSerializableExtra("objeto");
+        if (empresaParametro != null){ idKey = empresaParametro.getId(); }
         util = new Util();
         preferencias = new Preferencias(getApplicationContext());
         identificadorUsuario = preferencias.getIdentificador();
@@ -167,24 +172,29 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     }
 
     private void carregarFotoEmpresa(){
-        progressBar.setVisibility(View.VISIBLE);
-        storageReference = ConfiguracaoFirebase.getStorage().child("empresas").child(identificadorUsuario);
-        long dim = 1024 * 1024;
-        storageReference.getBytes(dim).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                imagemEmpresa = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                circleImageView.setImageBitmap(imagemEmpresa);
-                progressBar.setVisibility(View.GONE);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                imagemEmpresaPadrao();
-                Toast.makeText(getApplicationContext(), "Erro ao Carregar Foto ", Toast.LENGTH_LONG).show();
-                Log.i("erroFotoCarregar", e.toString() + " " + e.getCause().toString());
-            }
-        });
+        if (!idKey.equals("")) {
+            progressBar.setVisibility(View.VISIBLE);
+            storageReference = ConfiguracaoFirebase.getStorage().child("empresas").child(identificadorUsuario).child(idKey);
+            long dim = 1024 * 1024;
+            storageReference.getBytes(dim).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    imagemEmpresa = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    circleImageView.setImageBitmap(imagemEmpresa);
+                    progressBar.setVisibility(View.GONE);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    imagemEmpresaPadrao();
+                    Toast.makeText(getApplicationContext(), "Erro ao Carregar Foto ", Toast.LENGTH_LONG).show();
+                    Log.i("erroFotoCarregar", e.toString() + " " + e.getCause().toString());
+                }
+            });
+        }
+        else{
+            imagemEmpresaPadrao();
+        }
     }
 
     private void imagemEmpresaPadrao(){
@@ -204,7 +214,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
             imagemEmpresaParametro.compress(Bitmap.CompressFormat.PNG, 75, stream);
             byte[] byteArray = stream.toByteArray();
 
-            storageReference = ConfiguracaoFirebase.getStorage().child("empresas").child(identificadorUsuario);
+            storageReference = ConfiguracaoFirebase.getStorage().child("empresas").child(identificadorUsuario).child(idKey);
             uploadTask = storageReference.putBytes(byteArray);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -222,15 +232,20 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     }
 
     private void salvarEmpresa(){
-        String idKey = firebase.child("empresas").child(identificadorUsuario).push().getKey();
-        Empresa empresa = new Empresa();
-        empresa.setId(idKey);
-        empresa.setIdUsuario(identificadorUsuario);
-        empresa.setNome(nomeEmpresa.getText().toString());
-        empresa.setCategoria(spinnerCategoria.getSelectedItem().toString());
-        firebase.child("empresas").child(identificadorUsuario).child(idKey).setValue(empresa);
-        salvarImagem();
-        mudarTelaFinish(getApplicationContext(),EmpresasActivity.class);
+        if (!nomeEmpresa.getText().toString().equals("")) {
+            if (idKey.equals("")){  idKey = firebase.child("empresas").child(identificadorUsuario).push().getKey();  }
+            Empresa empresa = new Empresa();
+            empresa.setId(idKey);
+            empresa.setIdUsuario(identificadorUsuario);
+            empresa.setNome(nomeEmpresa.getText().toString());
+            empresa.setCategoria(spinnerCategoria.getSelectedItem().toString());
+            firebase.child("empresas").child(identificadorUsuario).child(idKey).setValue(empresa);
+            salvarImagem();
+            mudarTelaFinish(getApplicationContext(), EmpresasActivity.class);
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "Preencha os dados", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
