@@ -16,8 +16,10 @@
         <item name="android:textColor">@color/colorBranco</item>
     </style>
 
-    <style name="editText" parent="android:style/Widget.Holo.EditText" >
-
+    <style name="editText" parent="Base.V7.Theme.AppCompat.Light.Dialog">
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">@color/colorPreto</item>
+        <item name="android:textCursorDrawable">@null</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

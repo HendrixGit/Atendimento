@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
                 android:layout_margin="@dimen/fab_margin"
-                android:backgroundTint="@color/colorPrimaryDark"
+                android:backgroundTint="@color/colorPrimary"
                 app:srcCompat="@drawable/ic_action_add"
                 app:borderWidth="0dp"
                 />

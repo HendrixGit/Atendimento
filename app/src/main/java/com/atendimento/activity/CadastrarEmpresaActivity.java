@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -82,6 +83,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         firebase = ConfiguracaoFirebase.getFirebaseDatabase();
         nomeEmpresa = findViewById(R.id.editTextNomeEmpresa);
         nomeEmpresa.setEnabled(false);
+        nomeEmpresa.getBackground().mutate().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
         imageViewEditNomeEmpresa = findViewById(R.id.imageViewEditEmpresaNome);
         imageViewEditNomeEmpresa.setOnClickListener(new View.OnClickListener() {
             @Override
