@@ -2,6 +2,7 @@ package com.atendimento.activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Service;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,10 +13,13 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -73,6 +77,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        imm = (InputMethodManager)this.getSystemService(Service.INPUT_METHOD_SERVICE);
         setContentView(R.layout.activity_cadastrar_empresa);
         Intent intent = getIntent();
         empresaParametro = (Empresa) intent.getSerializableExtra("objeto");
@@ -83,13 +88,16 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         firebase = ConfiguracaoFirebase.getFirebaseDatabase();
         nomeEmpresa = findViewById(R.id.editTextNomeEmpresa);
         nomeEmpresa.setEnabled(false);
+        imm.hideSoftInputFromWindow(nomeEmpresa.getWindowToken(),0);
         nomeEmpresa.getBackground().mutate().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
         imageViewEditNomeEmpresa = findViewById(R.id.imageViewEditEmpresaNome);
         imageViewEditNomeEmpresa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nomeEmpresa.setEnabled(true);
                 imageViewEditNomeEmpresa.setVisibility(View.GONE);
+                nomeEmpresa.setEnabled(true);
+                nomeEmpresa.requestFocus();
+                imm.showSoftInput(nomeEmpresa, 0);
             }
         });
         util = new Util();
