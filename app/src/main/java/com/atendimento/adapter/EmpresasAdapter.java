@@ -13,12 +13,15 @@ import com.atendimento.R;
 import com.atendimento.model.Empresa;
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class EmpresasAdapter extends ArrayAdapter {
 
     private ArrayList<Empresa> empresas;
     private Context context;
     private TextView textViewNome;
     private TextView textViewCategoria;
+    private CircleImageView circleImageViewEmpresa;
     private View view = null;
 
     public EmpresasAdapter(Context context, ArrayList<Empresa> objects){

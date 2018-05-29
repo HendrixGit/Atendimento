@@ -51,6 +51,12 @@ public class BaseActivity extends AppCompatActivity {
         ActivityCompat.finishAffinity(this);
     }
 
+    protected void mudarTelaFinishTelaAnterior(Context contexto, Class classe) {
+        Intent intent = new Intent(contexto, classe);
+        startActivity(intent);
+        finish();
+    }
+
     public static boolean validaPermissoes(int requestCode, Activity activity, String[] permissoes){
         if (Build.VERSION.SDK_INT >= 23){
             List<String> listaPermissoes = new ArrayList<>();

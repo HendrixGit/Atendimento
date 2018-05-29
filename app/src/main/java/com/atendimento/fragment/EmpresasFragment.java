@@ -44,6 +44,7 @@ public class EmpresasFragment extends BaseFragment {
         firebaseDatabase.removeEventListener(valueEventListenerEmpresas);
     }
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
