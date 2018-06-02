@@ -54,7 +54,6 @@ public class EmpresasActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
         mudarTelaFinish(getApplicationContext(), InicioActivity.class);
     }
 }

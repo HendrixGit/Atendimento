@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.media.Image;
 
 import com.atendimento.R;
 import java.text.ParseException;

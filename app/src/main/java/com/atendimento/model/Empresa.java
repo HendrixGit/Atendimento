@@ -11,6 +11,7 @@ public class Empresa implements Serializable {
     private String id;
     private String nome;
     private String Categoria;
+    private String urlImagem;
 
     public Empresa() {
 
@@ -50,4 +51,7 @@ public class Empresa implements Serializable {
         Categoria = categoria;
     }
 
+    public String getUrlImagem() { return urlImagem; }
+
+    public void setUrlImagem(String urlImagem) { this.urlImagem = urlImagem; }
 }

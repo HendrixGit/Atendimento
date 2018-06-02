@@ -1,6 +1,7 @@
 package com.atendimento.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,6 +12,10 @@ import android.widget.TextView;
 
 import com.atendimento.R;
 import com.atendimento.model.Empresa;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -22,7 +27,13 @@ public class EmpresasAdapter extends ArrayAdapter {
     private TextView textViewNome;
     private TextView textViewCategoria;
     private CircleImageView circleImageViewEmpresa;
+    private ArrayList<Uri> imagensEmpresas;
     private View view = null;
+    private Picasso picassoImagemEmpresa;
+    private StorageReference storageReference;
+    private int i = 0;
+    private Task task;
+    private Tasks tasks;
 
     public EmpresasAdapter(Context context, ArrayList<Empresa> objects){
         super(context, 0, objects);
@@ -30,18 +41,30 @@ public class EmpresasAdapter extends ArrayAdapter {
         this.empresas = objects;
     }
 
+    public void getImages(String imageUrl, CircleImageView circleImageView) {
+        if (imageUrl.equals("")){
+            Picasso.with(getContext()).load(R.drawable.atendimento).error(R.drawable.atendimento).into(circleImageView);
+        }
+        else {
+            Picasso.with(getContext()).load(imageUrl).error(R.drawable.atendimento).into(circleImageView);
+        }
+    }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.lista_empresas, parent, false);
-        textViewNome      = view.findViewById(R.id.textViewNomeEmpresa);
+        textViewNome = view.findViewById(R.id.textViewNomeEmpresa);
         textViewCategoria = view.findViewById(R.id.textViewCategoria);
+        circleImageViewEmpresa = view.findViewById(R.id.circleImageEmpresasAdapter);
 
-        if (empresas != null){
+        if (empresas != null) {
             Empresa empresa = empresas.get(position);
             textViewNome.setText(empresa.getNome());
             textViewCategoria.setText(empresa.getCategoria());
+            getImages(empresa.getUrlImagem(), circleImageViewEmpresa);
+
         }
         return view;
     }

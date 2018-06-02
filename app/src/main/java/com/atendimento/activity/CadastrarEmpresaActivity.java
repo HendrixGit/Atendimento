@@ -32,8 +32,11 @@ import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Empresa;
 import com.atendimento.util.Preferencias;
 import com.atendimento.util.Util;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -70,20 +73,22 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     private UploadTask uploadTask;
     private ImageView imageViewEditNomeEmpresa;
     private String idKey = "";
+    private String urlImagem = "";
     private Empresa empresaParametro = null;
+    private Task taskSalvarEmpresa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        preferencias = new Preferencias(getApplicationContext());
+        identificadorUsuario = preferencias.getIdentificador();
+        firebase = ConfiguracaoFirebase.getFirebaseDatabase();
         imm = (InputMethodManager)this.getSystemService(Service.INPUT_METHOD_SERVICE);
         setContentView(R.layout.activity_cadastrar_empresa);
         Intent intent = getIntent();
         empresaParametro = (Empresa) intent.getSerializableExtra("objeto");
-        if (empresaParametro != null){ idKey = empresaParametro.getId(); }
+        if (empresaParametro != null){ idKey = empresaParametro.getId(); } else { idKey = firebase.child("empresas").child(identificadorUsuario).push().getKey(); }
         util = new Util();
-        preferencias = new Preferencias(getApplicationContext());
-        identificadorUsuario = preferencias.getIdentificador();
-        firebase = ConfiguracaoFirebase.getFirebaseDatabase();
         nomeEmpresa = findViewById(R.id.editTextNomeEmpresa);
         nomeEmpresa.setEnabled(false);
         imm.hideSoftInputFromWindow(nomeEmpresa.getWindowToken(),0);
@@ -227,7 +232,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
+                    urlImagem = taskSnapshot.getDownloadUrl().toString();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -240,19 +245,25 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     }
 
     private void salvarEmpresa(){
-        if (!nomeEmpresa.getText().toString().equals("")) {
-            if (idKey.equals("")){  idKey = firebase.child("empresas").child(identificadorUsuario).push().getKey();  }
-            Empresa empresa = new Empresa();
+        if (!nomeEmpresa.getText().toString().equals("") && imagemEmpresaParametro != null) {
+            if (idKey.equals("")){  salvarImagem();  }
+            final Empresa empresa = new Empresa();
             empresa.setId(idKey);
             empresa.setIdUsuario(identificadorUsuario);
             empresa.setNome(nomeEmpresa.getText().toString());
             empresa.setCategoria(spinnerCategoria.getSelectedItem().toString());
-            firebase.child("empresas").child(identificadorUsuario).child(idKey).setValue(empresa);
-            salvarImagem();
-            mudarTelaFinish(getApplicationContext(), EmpresasActivity.class);
+            empresa.setUrlImagem(urlImagem);
+            taskSalvarEmpresa = firebase.child("empresas").child(identificadorUsuario).child(idKey).setValue(empresa);
+            Tasks.whenAll(uploadTask, taskSalvarEmpresa).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    mudarTelaFinish(getApplicationContext(), EmpresasActivity.class);
+                }
+            });
+
         }
         else{
-            Toast.makeText(getApplicationContext(), "Preencha os dados", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Preencha os dados, e coloque a foto", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -265,9 +276,9 @@ public class CadastrarEmpresaActivity extends BaseActivity {
             try {
                 imagemEmpresaParametro = MediaStore.Images.Media.getBitmap(getContentResolver(),localImagemSelecionada);
                 imagemEmpresaParametro =  util.diminuirImagem(imagemEmpresaParametro, 200,200);
-
                 circleImageView.setImageBitmap(imagemEmpresaParametro);
                 progressBar.setVisibility(View.GONE);
+                salvarImagem();
             } catch (IOException e) {
                 e.printStackTrace();
                 circleImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_user));
@@ -278,6 +289,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                 Bundle extras = data.getExtras();
                 imagemEmpresaParametro = (Bitmap) extras.get("data");
                 circleImageView.setImageBitmap(imagemEmpresaParametro);
+                salvarImagem();
             }
             catch (Exception e){
                 circleImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_user));

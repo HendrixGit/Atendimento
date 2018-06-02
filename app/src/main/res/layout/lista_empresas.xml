@@ -11,13 +11,12 @@
         android:orientation="horizontal"
         android:paddingLeft="5dp"
         android:paddingTop="5dp"
-        >
+        android:paddingBottom="5dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/circleImageEmpresasAdapter"
             android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:background="@drawable/atendimento"
-            />
+            android:layout_height="64dp" />
 
     </LinearLayout>
 

@@ -55,7 +55,6 @@
                 android:layout_margin="@dimen/fab_margin"
                 android:backgroundTint="@color/colorPrimary"
                 app:srcCompat="@drawable/ic_action_add"
-                app:borderWidth="0dp"
                 />
 
         </android.support.v7.widget.LinearLayoutCompat>
