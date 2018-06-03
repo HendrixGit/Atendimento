@@ -1,10 +1,14 @@
 package com.atendimento.activity;
 
+import android.app.AppOpsManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.atendimento.R;
@@ -56,4 +60,19 @@ public class EmpresasActivity extends BaseActivity {
     public void onBackPressed() {
         mudarTelaFinish(getApplicationContext(), InicioActivity.class);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_empresa, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            default: return super.onOptionsItemSelected(item);
+        }
+    }
 }
+

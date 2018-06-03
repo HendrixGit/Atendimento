@@ -1,9 +1,7 @@
 package com.atendimento.fragment;
 
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -18,8 +16,6 @@ import com.atendimento.bases.BaseFragment;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Empresa;
 import com.atendimento.util.Preferencias;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -90,22 +86,6 @@ public class EmpresasFragment extends BaseFragment {
             }
         };
         return view;
-    }
-
-    public void carregarFoto(Empresa empresa){
-        long dim = 48 * 48;
-        storageReference = ConfiguracaoFirebase.getStorage().child("empresas").child(empresa.getIdUsuario()).child(empresa.getId());
-        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                imagensEmpresas.add(uri);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
     }
 
 }

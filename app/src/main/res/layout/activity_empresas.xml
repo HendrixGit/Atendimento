@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:indicatorName="BallPulseIndicator"
-                style="@style/AVLoadingIndicatorView"
+                style="@style/AVLoadingIndicatorView.Small"
                 android:visibility="invisible"
                 app:indicatorColor="@android:color/black"
                 android:paddingLeft="150dp" />
@@ -51,10 +51,11 @@
                 android:id="@+id/floatButtonCadastrarEmpresa"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
-                android:layout_margin="@dimen/fab_margin"
+                android:layout_gravity="end|bottom"
+                android:layout_margin="@dimen/floatButton"
                 android:backgroundTint="@color/colorPrimary"
                 app:srcCompat="@drawable/ic_action_add"
+                android:visibility="gone"
                 />
 
         </android.support.v7.widget.LinearLayoutCompat>
