@@ -1,7 +1,6 @@
 package com.atendimento.adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,9 +11,6 @@ import android.widget.TextView;
 
 import com.atendimento.R;
 import com.atendimento.model.Empresa;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
@@ -27,13 +23,7 @@ public class EmpresasAdapter extends ArrayAdapter {
     private TextView textViewNome;
     private TextView textViewCategoria;
     private CircleImageView circleImageViewEmpresa;
-    private ArrayList<Uri> imagensEmpresas;
     private View view = null;
-    private Picasso picassoImagemEmpresa;
-    private StorageReference storageReference;
-    private int i = 0;
-    private Task task;
-    private Tasks tasks;
 
     public EmpresasAdapter(Context context, ArrayList<Empresa> objects){
         super(context, 0, objects);

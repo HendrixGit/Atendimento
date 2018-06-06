@@ -1,8 +1,8 @@
 package com.atendimento.activity;
 
-import android.app.AppOpsManager;
+import android.app.SearchManager;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -23,20 +23,11 @@ public class EmpresasActivity extends BaseActivity {
     private SlidingTabLayout slidingTabLayout;
     private ViewPager viewPager;
     private AVLoadingIndicatorView  avi;
-    private FloatingActionButton cadastrarEmpresaButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_empresas);
-
-        cadastrarEmpresaButton = findViewById(R.id.floatButtonCadastrarEmpresa);
-        cadastrarEmpresaButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mudarTela(getApplicationContext(), CadastrarEmpresaActivity.class);
-            }
-        });
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Empresas");
@@ -71,8 +62,21 @@ public class EmpresasActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            case R.id.item_sair            : return true;
+            case R.id.item_configuracoes   : return true;
+            case R.id.item_tela_Principal  : mudarTelaFinish(getApplicationContext(),  MainActivity.class);
+            case R.id.item_pesquisaEmpresa : pesqusarEmpresa("");
             default: return super.onOptionsItemSelected(item);
         }
     }
+
+    public void pesqusarEmpresa(String parametroPesquisa){
+        Intent intent = getIntent();
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+        }
+        slidingTabLayout.setVisibility(View.GONE);
+    }
+
 }
 
