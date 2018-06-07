@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
@@ -40,7 +39,6 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -72,7 +70,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     private Dialog.OnClickListener onClickGaleriaListener;
     private UploadTask uploadTask;
     private ImageView imageViewEditNomeEmpresa;
-    private String idKey = "";
+    private String idKey     = "";
     private String urlImagem = "";
     private Empresa empresaParametro = null;
     private Task taskSalvarEmpresa;
@@ -87,7 +85,8 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         setContentView(R.layout.activity_cadastrar_empresa);
         Intent intent = getIntent();
         empresaParametro = (Empresa) intent.getSerializableExtra("objeto");
-        if (empresaParametro != null){ idKey = empresaParametro.getId(); } else { idKey = firebase.child("empresas").child(identificadorUsuario).push().getKey(); }
+        if (empresaParametro != null){ idKey = empresaParametro.getId(); urlImagem = empresaParametro.getUrlImagem(); }
+        else { idKey = firebase.child("empresas").child(identificadorUsuario).push().getKey(); }
         util = new Util();
         nomeEmpresa = findViewById(R.id.editTextNomeEmpresa);
         nomeEmpresa.setEnabled(false);
@@ -154,7 +153,21 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mudarTelaFinish(getApplicationContext(),EmpresasActivity.class);
+                if (empresaParametro != null) { mudarTelaFinish(getApplicationContext(), EmpresasActivity.class); }
+                else{
+                    if (imagemEmpresaParametro == null){ mudarTelaFinish(getApplicationContext(), EmpresasActivity.class); }
+                    else{
+                        storageReference = ConfiguracaoFirebase.getStorage().child("empresas").child(identificadorUsuario).child(idKey);
+                        storageReference.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()){
+                                    mudarTelaFinish(getApplicationContext(), EmpresasActivity.class);
+                                }
+                            }
+                        });
+                    }
+                }
             }
         });
 
@@ -245,16 +258,15 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     }
 
     private void salvarEmpresa(){
-        if (!nomeEmpresa.getText().toString().equals("") && imagemEmpresaParametro != null) {
-            if (idKey.equals("")){  salvarImagem();  }
-            final Empresa empresa = new Empresa();
+        if (!nomeEmpresa.getText().toString().equals("")) {
+            Empresa empresa = new Empresa();
             empresa.setId(idKey);
             empresa.setIdUsuario(identificadorUsuario);
             empresa.setNome(nomeEmpresa.getText().toString());
             empresa.setCategoria(spinnerCategoria.getSelectedItem().toString());
             empresa.setUrlImagem(urlImagem);
             taskSalvarEmpresa = firebase.child("empresas").child(identificadorUsuario).child(idKey).setValue(empresa);
-            Tasks.whenAll(uploadTask, taskSalvarEmpresa).addOnCompleteListener(new OnCompleteListener<Void>() {
+            Tasks.whenAll(taskSalvarEmpresa).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     mudarTelaFinish(getApplicationContext(), EmpresasActivity.class);
