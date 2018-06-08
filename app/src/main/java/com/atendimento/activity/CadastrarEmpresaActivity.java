@@ -43,7 +43,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.RunnableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CadastrarEmpresaActivity extends BaseActivity {
@@ -74,6 +77,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     private String urlImagem = "";
     private Empresa empresaParametro = null;
     private Task taskSalvarEmpresa;
+    private RunnableFuture runnableFuture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,21 +157,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (empresaParametro != null) { mudarTelaFinish(getApplicationContext(), EmpresasActivity.class); }
-                else{
-                    if (imagemEmpresaParametro == null){ mudarTelaFinish(getApplicationContext(), EmpresasActivity.class); }
-                    else{
-                        storageReference = ConfiguracaoFirebase.getStorage().child("empresas").child(identificadorUsuario).child(idKey);
-                        storageReference.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()){
-                                    mudarTelaFinish(getApplicationContext(), EmpresasActivity.class);
-                                }
-                            }
-                        });
-                    }
-                }
+                mudarTelaFinish(getApplicationContext(), EmpresasActivity.class);
             }
         });
 
@@ -234,7 +224,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         opcoes.show();
     }
 
-    private void salvarImagem() {
+    private Task salvarImagem() {
         if (imagemEmpresaParametro != null) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             imagemEmpresaParametro.compress(Bitmap.CompressFormat.PNG, 75, stream);
@@ -255,24 +245,63 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                 }
             });
         }
+        return uploadTask;
     }
 
-    private void salvarEmpresa(){
-        if (!nomeEmpresa.getText().toString().equals("")) {
-            Empresa empresa = new Empresa();
-            empresa.setId(idKey);
-            empresa.setIdUsuario(identificadorUsuario);
-            empresa.setNome(nomeEmpresa.getText().toString());
-            empresa.setCategoria(spinnerCategoria.getSelectedItem().toString());
-            empresa.setUrlImagem(urlImagem);
-            taskSalvarEmpresa = firebase.child("empresas").child(identificadorUsuario).child(idKey).setValue(empresa);
-            Tasks.whenAll(taskSalvarEmpresa).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    mudarTelaFinish(getApplicationContext(), EmpresasActivity.class);
-                }
-            });
 
+    private void salvarEmpresa(){
+        if (!nomeEmpresa.getText().toString().equals("") && imagemEmpresaParametro != null) {
+            runnableFuture = new RunnableFuture() {
+                @Override
+                public void run() {
+                    salvarImagem();
+                    Tasks.whenAll(uploadTask).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            isDone();
+                        }
+                    });
+                }
+
+                @Override
+                public boolean cancel(boolean b) {
+                    return false;
+                }
+
+                @Override
+                public boolean isCancelled() {
+                    return false;
+                }
+
+                @Override
+                public boolean isDone() {
+                    Empresa empresa = new Empresa();
+                    empresa.setId(idKey);
+                    empresa.setIdUsuario(identificadorUsuario);
+                    empresa.setNome(nomeEmpresa.getText().toString());
+                    empresa.setCategoria(spinnerCategoria.getSelectedItem().toString());
+                    empresa.setUrlImagem(urlImagem);
+                    taskSalvarEmpresa = firebase.child("empresas").child(identificadorUsuario).child(idKey).setValue(empresa);
+                    Tasks.whenAll(taskSalvarEmpresa).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            mudarTelaFinish(getApplicationContext(), EmpresasActivity.class);
+                        }
+                    });
+                    return true;
+                }
+
+                @Override
+                public Object get() throws InterruptedException, ExecutionException {
+                    return null;
+                }
+
+                @Override
+                public Object get(long l, @NonNull TimeUnit timeUnit) throws InterruptedException, ExecutionException, TimeoutException {
+                    return null;
+                }
+            };
+            runnableFuture.run();
         }
         else{
             Toast.makeText(getApplicationContext(), "Preencha os dados, e coloque a foto", Toast.LENGTH_LONG).show();
@@ -290,7 +319,6 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                 imagemEmpresaParametro =  util.diminuirImagem(imagemEmpresaParametro, 200,200);
                 circleImageView.setImageBitmap(imagemEmpresaParametro);
                 progressBar.setVisibility(View.GONE);
-                salvarImagem();
             } catch (IOException e) {
                 e.printStackTrace();
                 circleImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_user));
@@ -301,7 +329,6 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                 Bundle extras = data.getExtras();
                 imagemEmpresaParametro = (Bitmap) extras.get("data");
                 circleImageView.setImageBitmap(imagemEmpresaParametro);
-                salvarImagem();
             }
             catch (Exception e){
                 circleImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_user));

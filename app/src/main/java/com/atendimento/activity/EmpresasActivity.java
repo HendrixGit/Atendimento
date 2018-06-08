@@ -63,7 +63,6 @@ public class EmpresasActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.item_sair            : return true;
-            case R.id.item_configuracoes   : return true;
             case R.id.item_tela_Principal  : mudarTelaFinish(getApplicationContext(),  MainActivity.class);
             case R.id.item_pesquisaEmpresa : pesqusarEmpresa("");
             default: return super.onOptionsItemSelected(item);

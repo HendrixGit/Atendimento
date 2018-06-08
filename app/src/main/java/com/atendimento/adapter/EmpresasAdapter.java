@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
 import com.atendimento.R;
 import com.atendimento.model.Empresa;
 import com.squareup.picasso.Picasso;
@@ -36,7 +35,11 @@ public class EmpresasAdapter extends ArrayAdapter {
             Picasso.with(getContext()).load(R.drawable.atendimento).error(R.drawable.atendimento).into(circleImageView);
         }
         else {
-            Picasso.with(getContext()).load(imageUrl).error(R.drawable.atendimento).into(circleImageView);
+            Picasso.with(getContext()).
+                    load(imageUrl).
+                    resize(64,64).
+                    error(R.drawable.atendimento).
+                    into(circleImageView);
         }
     }
 

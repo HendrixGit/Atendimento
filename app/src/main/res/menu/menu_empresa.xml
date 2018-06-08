@@ -16,12 +16,6 @@
         app:showAsAction="never"
         />
 
-    <item android:id="@+id/item_configuracoes"
-        android:title="@string/configuracoes"
-        android:orderInCategory="300"
-        app:showAsAction="never"
-        />
-
     <item android:id="@+id/item_sair"
         android:title="@string/sair"
         android:orderInCategory="400"
