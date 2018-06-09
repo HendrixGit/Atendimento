@@ -9,6 +9,8 @@ import android.widget.ListView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
+
 
 public class BaseFragment extends Fragment {
 
@@ -22,9 +24,9 @@ public class BaseFragment extends Fragment {
         startActivity(intent);
     }
 
-    protected void mudarTelaObject(Context context, Class classe, Object object){
+    protected void mudarTelaObject(Context context, Class classe, Serializable serializable, String nomeObjeto){
         Intent intent = new Intent(context, classe);
-        intent.putExtra("objeto", object.getClass());
+        intent.putExtra(nomeObjeto, serializable);
         startActivity(intent);
     }
 

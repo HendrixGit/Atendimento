@@ -82,17 +82,21 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_cadastrar_empresa);
+        nomeEmpresa      = findViewById(R.id.editTextNomeEmpresa);
+        spinnerCategoria = findViewById(R.id.spinnerCategoria);
+        circleImageView  = findViewById(R.id.circleImageEmpresa);
+        progressBar      = findViewById(R.id.progressBarCadEmpresa);
+        toolbar          = findViewById(R.id.toolbar);
         preferencias = new Preferencias(getApplicationContext());
         identificadorUsuario = preferencias.getIdentificador();
         firebase = ConfiguracaoFirebase.getFirebaseDatabase();
         imm = (InputMethodManager)this.getSystemService(Service.INPUT_METHOD_SERVICE);
-        setContentView(R.layout.activity_cadastrar_empresa);
         Intent intent = getIntent();
-        empresaParametro = (Empresa) intent.getSerializableExtra("objeto");
-        if (empresaParametro != null){ idKey = empresaParametro.getId(); urlImagem = empresaParametro.getUrlImagem(); }
+        empresaParametro = (Empresa) intent.getSerializableExtra("empresa");
+        if (empresaParametro != null){ carregarDados(); }
         else { idKey = firebase.child("empresas").child(identificadorUsuario).push().getKey(); }
         util = new Util();
-        nomeEmpresa = findViewById(R.id.editTextNomeEmpresa);
         nomeEmpresa.setEnabled(false);
         imm.hideSoftInputFromWindow(nomeEmpresa.getWindowToken(),0);
         nomeEmpresa.getBackground().mutate().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
@@ -107,10 +111,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
             }
         });
         util = new Util();
-        spinnerCategoria = findViewById(R.id.spinnerCategoria);
-        circleImageView  = findViewById(R.id.circleImageEmpresa);
         listaCategoria = new ArrayList<String>();
-        progressBar = findViewById(R.id.progressBarCadEmpresa);
         progressBar.getIndeterminateDrawable().setColorFilter(Color.BLUE, android.graphics.PorterDuff.Mode.MULTIPLY);
 
         sqLiteDatabasePar = openOrCreateDatabase("databaseCategorias", MODE_PRIVATE, null);
@@ -134,7 +135,6 @@ public class CadastrarEmpresaActivity extends BaseActivity {
 
         dataCategoria = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, listaCategoria);
         spinnerCategoria.setAdapter(dataCategoria);
-        toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Cadastro de Empresa");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
         circleImageView = findViewById(R.id.circleImageEmpresa);
@@ -248,19 +248,28 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         return uploadTask;
     }
 
+    private void carregarDados(){
+        idKey     = empresaParametro.getId();
+        urlImagem = empresaParametro.getUrlImagem();
+        nomeEmpresa.setText(empresaParametro.getNome());
+    }
+
 
     private void salvarEmpresa(){
         if (!nomeEmpresa.getText().toString().equals("") && imagemEmpresaParametro != null) {
             runnableFuture = new RunnableFuture() {
                 @Override
                 public void run() {
-                    salvarImagem();
-                    Tasks.whenAll(uploadTask).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            isDone();
-                        }
-                    });
+                    if (imagemEmpresaParametro != null) {
+                        salvarImagem();
+                        Tasks.whenAll(uploadTask).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                isDone();
+                            }
+                        });
+                    }
+                    else{ isDone(); }
                 }
 
                 @Override
