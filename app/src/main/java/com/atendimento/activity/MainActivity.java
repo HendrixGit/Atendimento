@@ -10,7 +10,6 @@ import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Usuario;
 import com.atendimento.util.Preferencias;
-import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -67,13 +66,6 @@ public class MainActivity extends BaseActivity {
         firebase.addListenerForSingleValueEvent(valueEventListenerPerfil);
     }
 
-    private void deslogarUsuario() {
-        autenticacao = ConfiguracaoFirebase.getAutenticacao();
-        autenticacao.signOut();
-        LoginManager.getInstance().logOut();
-        mudarTelaFinish(getApplicationContext(),  InicioActivity.class);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -84,7 +76,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.item_sair:deslogarUsuario(); return true;
+            case R.id.item_sair:deslogaSairUsuario(); return true;
             case R.id.item_configuracoes:mudarTela(getApplicationContext(),ConfiguracoesActivity.class); return true;
             case R.id.item_empresa:mudarTela(getApplicationContext(), EmpresasActivity.class);   return true;
             default: return super.onOptionsItemSelected(item);

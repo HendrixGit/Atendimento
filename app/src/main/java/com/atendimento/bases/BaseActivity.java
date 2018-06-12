@@ -17,6 +17,10 @@ import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
 
 import com.atendimento.R;
+import com.atendimento.activity.InicioActivity;
+import com.atendimento.config.ConfiguracaoFirebase;
+import com.facebook.login.LoginManager;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,11 +55,6 @@ public class BaseActivity extends AppCompatActivity {
         ActivityCompat.finishAffinity(this);
     }
 
-    protected void mudarTelaFinishTelaAnterior(Context contexto, Class classe) {
-        Intent intent = new Intent(contexto, classe);
-        startActivity(intent);
-        finish();
-    }
 
     public static boolean validaPermissoes(int requestCode, Activity activity, String[] permissoes){
         if (Build.VERSION.SDK_INT >= 23){
@@ -102,6 +101,14 @@ public class BaseActivity extends AppCompatActivity {
         cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+    public void deslogaSairUsuario() {
+        FirebaseAuth autenticacao;
+        autenticacao = ConfiguracaoFirebase.getAutenticacao();
+        autenticacao.signOut();
+        LoginManager.getInstance().logOut();
+        mudarTelaFinish(getApplicationContext(),  InicioActivity.class);
     }
 
 }
