@@ -127,6 +127,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         Cursor cursor = sqLiteDatabasePar.rawQuery("SELECT codigo, descricao FROM categorias",null);
         int indiceColunaDescricao = cursor.getColumnIndex("descricao");
         cursor.moveToFirst();
+        listaCategoria.add("--  Selecione a Categoria  --");
 
         while (!cursor.isLast()) {
             listaCategoria.add(cursor.getString(indiceColunaDescricao));
@@ -135,6 +136,15 @@ public class CadastrarEmpresaActivity extends BaseActivity {
 
         dataCategoria = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, listaCategoria);
         spinnerCategoria.setAdapter(dataCategoria);
+        if (empresaParametro != null){
+            String[] params = new String[]{empresaParametro.getCategoria()};
+            Cursor cursor2   = sqLiteDatabasePar.rawQuery("SELECT codigo, descricao FROM categorias WHERE descricao = ?", params);
+            int indiceColunaCodigo = cursor.getColumnIndex("codigo");
+            cursor2.moveToFirst();
+            int opcao = Integer.parseInt(cursor2.getString(indiceColunaCodigo));
+            spinnerCategoria.setSelection(opcao);
+        }
+
         toolbar.setTitle("Cadastro de Empresa");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
         circleImageView = findViewById(R.id.circleImageEmpresa);
@@ -145,7 +155,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
             }
         });
 
-        ok     = findViewById(R.id.buttonEmpresaOK);
+        ok = findViewById(R.id.buttonEmpresaOK);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -183,7 +193,6 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                 startActivityForResult(intent,0);
             }
         };
-
         carregarFotoEmpresa();
     }
 
@@ -196,6 +205,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     imagemEmpresa = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    imagemEmpresaParametro = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                     circleImageView.setImageBitmap(imagemEmpresa);
                     progressBar.setVisibility(View.GONE);
                 }
@@ -256,7 +266,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
 
 
     private void salvarEmpresa(){
-        if (!nomeEmpresa.getText().toString().equals("") && imagemEmpresaParametro != null) {
+        if ((!nomeEmpresa.getText().toString().equals("")) && (imagemEmpresaParametro != null) && (spinnerCategoria.getSelectedItemPosition() != 0)) {
             runnableFuture = new RunnableFuture() {
                 @Override
                 public void run() {

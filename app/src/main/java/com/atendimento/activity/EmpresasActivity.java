@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-
 import com.atendimento.R;
 import com.atendimento.adapter.TabAdapterEmpresa;
 import com.atendimento.bases.BaseActivity;
