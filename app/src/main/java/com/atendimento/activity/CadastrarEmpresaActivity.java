@@ -95,7 +95,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         Intent intent = getIntent();
         empresaParametro = (Empresa) intent.getSerializableExtra("empresa");
         if (empresaParametro != null){ carregarDados(); }
-        else { idKey = firebase.child("empresas").child(identificadorUsuario).push().getKey(); }
+        else { idKey = firebase.push().getKey(); }
         util = new Util();
         nomeEmpresa.setEnabled(false);
         imm.hideSoftInputFromWindow(nomeEmpresa.getWindowToken(),0);
@@ -213,7 +213,6 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     imagemEmpresaPadrao();
-                    Toast.makeText(getApplicationContext(), "Erro ao Carregar Foto ", Toast.LENGTH_LONG).show();
                     Log.i("erroFotoCarregar", e.toString() + " " + e.getCause().toString());
                 }
             });

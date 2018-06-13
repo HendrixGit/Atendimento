@@ -20,6 +20,7 @@ import com.atendimento.util.Preferencias;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -32,19 +33,20 @@ public class EmpresasFragment extends BaseFragment {
     private DatabaseReference firebaseDatabase;
     private ValueEventListener valueEventListenerEmpresas;
     private FloatingActionButton cadastrarEmpresaButton;
+    private Query query;
 
     public EmpresasFragment(){}
 
     @Override
     public void onStart() {
         super.onStart();
-        firebaseDatabase.addValueEventListener(valueEventListenerEmpresas);
+        query.addValueEventListener(valueEventListenerEmpresas);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        firebaseDatabase.removeEventListener(valueEventListenerEmpresas);
+        query.removeEventListener(valueEventListenerEmpresas);
     }
 
 
@@ -73,6 +75,7 @@ public class EmpresasFragment extends BaseFragment {
         final Preferencias preferencias = new Preferencias(getActivity());
         String idUsuarioLogado = preferencias.getIdentificador();
         firebaseDatabase = ConfiguracaoFirebase.getFirebaseDatabase().child("empresas").child(idUsuarioLogado);
+        query = firebaseDatabase.orderByChild("nome");
 
         valueEventListenerEmpresas = new ValueEventListener() {
             @Override
