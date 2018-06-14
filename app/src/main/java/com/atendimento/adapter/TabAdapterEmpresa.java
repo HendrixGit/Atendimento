@@ -8,7 +8,7 @@ import com.atendimento.fragment.EmpresasFragment;
 
 public class TabAdapterEmpresa extends FragmentStatePagerAdapter {//usado para listagem de dados
 
-    private String[] tituloAbas = {"EMPRESAS"};
+    private String[] tituloAbas = {"EMPRESAS CADASTRADAS"};
 
     public TabAdapterEmpresa(FragmentManager fm) {
         super(fm);
