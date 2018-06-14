@@ -49,6 +49,10 @@ public class EmpresasFragment extends BaseFragment {
         query.removeEventListener(valueEventListenerEmpresas);
     }
 
+    public void pesquisarConversas(String textoPesquisa){
+
+    }
+
 
     @Nullable
     @Override
@@ -75,7 +79,8 @@ public class EmpresasFragment extends BaseFragment {
         final Preferencias preferencias = new Preferencias(getActivity());
         String idUsuarioLogado = preferencias.getIdentificador();
         firebaseDatabase = ConfiguracaoFirebase.getFirebaseDatabase().child("empresas").child(idUsuarioLogado);
-        query = firebaseDatabase.orderByChild("nome");
+        query = firebaseDatabase.orderByChild("nome");;
+                //.startAt("B").endAt("B" + "\uf8ff")//comeca com b codigo para o firebase entender que o b e o b unicode
 
         valueEventListenerEmpresas = new ValueEventListener() {
             @Override

@@ -37,7 +37,7 @@ public class EmpresasAdapter extends ArrayAdapter {
         else {
             Picasso.with(getContext()).
                     load(imageUrl).
-                    resize(124,124).
+                    resize(80,80).
                     error(R.drawable.atendimento).
                     into(circleImageView);
         }
