@@ -38,12 +38,9 @@ public class EmpresasActivity extends BaseActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText != null && newText.isEmpty()) {
+                if (newText != null && !newText.isEmpty()) {
                     EmpresasFragment fragment = (EmpresasFragment) tabAdapter.getItem(0);
-
-                }
-                else{
-
+                    fragment.pesquisarEmpresa(newText);
                 }
                 return true;
             }
