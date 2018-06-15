@@ -17,6 +17,7 @@ import com.atendimento.bases.BaseFragment;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Empresa;
 import com.atendimento.util.Preferencias;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,9 +30,10 @@ public class EmpresasFragment extends BaseFragment {
 
     private ListView listView;
     private ArrayAdapter arrayAdapter;
-    private ArrayList<Empresa> empresas;
+    private ArrayList<Empresa> empresas = new ArrayList<>();
     private DatabaseReference firebaseDatabase;
     private ValueEventListener valueEventListenerEmpresas;
+    private ChildEventListener childEventListenerEmpresas;
     private FloatingActionButton cadastrarEmpresaButton;
     private Query query;
 
@@ -40,17 +42,49 @@ public class EmpresasFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        query.addValueEventListener(valueEventListenerEmpresas);
+        recuperarEmpresas();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        query.removeEventListener(valueEventListenerEmpresas);
+        query.removeEventListener(childEventListenerEmpresas);
     }
 
     public void pesquisarEmpresa(String textoPesquisa){
 
+    }
+
+    private void recuperarEmpresas(){
+        childEventListenerEmpresas = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Empresa empresa = dataSnapshot.getValue(Empresa.class);
+                empresas.add(empresa);
+                arrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        query.addChildEventListener(childEventListenerEmpresas);
     }
 
 
@@ -65,7 +99,6 @@ public class EmpresasFragment extends BaseFragment {
                 mudarTela(getActivity(), CadastrarEmpresaActivity.class);
             }
         });
-        empresas = new ArrayList<>();
         listView = view.findViewById(R.id.listViewEmpresas);
         arrayAdapter = new EmpresasAdapter(getActivity(), empresas);
         listView.setAdapter(arrayAdapter);
@@ -78,25 +111,8 @@ public class EmpresasFragment extends BaseFragment {
 
         Preferencias preferencias = new Preferencias(getActivity());
         String idUsuarioLogado = preferencias.getIdentificador();
-        firebaseDatabase = ConfiguracaoFirebase.getFirebaseDatabase().child("empresas").child(idUsuarioLogado);
-        query = firebaseDatabase.orderByChild("nome");;
-
-        valueEventListenerEmpresas = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                empresas.clear();
-                for (DataSnapshot dados : dataSnapshot.getChildren()){
-                    Empresa empresa = dados.getValue(Empresa.class);
-                    empresas.add(empresa);
-                }
-                arrayAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
+        firebaseDatabase = ConfiguracaoFirebase.getFirebaseDatabase();
+        query = firebaseDatabase.child("empresas").child(idUsuarioLogado).orderByChild("nome");;
         return view;
     }
 
