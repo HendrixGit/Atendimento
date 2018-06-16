@@ -1,64 +1,75 @@
 package com.atendimento.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import com.atendimento.R;
 import com.atendimento.model.Empresa;
 import com.squareup.picasso.Picasso;
-import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class EmpresasAdapter extends ArrayAdapter {
+public class EmpresasAdapter extends RecyclerView.Adapter<EmpresasAdapter.MyViewHoder> {
 
-    private ArrayList<Empresa> empresas;
+    private List<Empresa> empresas;
     private Context context;
-    private TextView textViewNome;
-    private TextView textViewCategoria;
-    private CircleImageView circleImageViewEmpresa;
-    private View view = null;
 
-    public EmpresasAdapter(Context context, ArrayList<Empresa> objects){
-        super(context, 0, objects);
+    public EmpresasAdapter(List<Empresa> objects, Context context){
         this.context  = context;
         this.empresas = objects;
     }
 
+    public class MyViewHoder extends RecyclerView.ViewHolder {
+
+        private TextView textViewNome;
+        private TextView textViewCategoria;
+        private CircleImageView circleImageViewEmpresa;
+
+        public MyViewHoder(View itemView) {
+            super(itemView);
+
+            textViewNome           = itemView.findViewById(R.id.textViewNomeEmpresa);
+            textViewCategoria      = itemView.findViewById(R.id.textViewCategoria);
+            circleImageViewEmpresa = itemView.findViewById(R.id.circleImageEmpresasAdapter);
+
+        }
+    }
+
+    @Override
+    public MyViewHoder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemLista = LayoutInflater.from(parent.getContext()).inflate(R.layout.lista_empresas,parent,false);
+        return new MyViewHoder(itemLista);
+    }
+
+    @Override
+    public void onBindViewHolder(MyViewHoder holder, int position) {
+        Empresa empresa = empresas.get(position);
+        holder.textViewNome.setText(empresa.getNome());
+        holder.textViewCategoria.setText(empresa.getCategoria());
+        getImages(empresa.getUrlImagem(), holder.circleImageViewEmpresa);
+    }
+
+    @Override
+    public int getItemCount() {
+        return empresas.size();
+    }
+
+
+
     public void getImages(String imageUrl, CircleImageView circleImageView) {
         if (imageUrl.equals("")){
-            Picasso.with(getContext()).load(R.drawable.atendimento).error(R.drawable.atendimento).into(circleImageView);
+            Picasso.with(context).load(R.drawable.atendimento).error(R.drawable.atendimento).into(circleImageView);
         }
         else {
-            Picasso.with(getContext()).
+            Picasso.with(context).
                     load(imageUrl).
                     resize(80,80).
                     error(R.drawable.atendimento).
                     into(circleImageView);
         }
-    }
-
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view = inflater.inflate(R.layout.lista_empresas, parent, false);
-        textViewNome = view.findViewById(R.id.textViewNomeEmpresa);
-        textViewCategoria = view.findViewById(R.id.textViewCategoria);
-        circleImageViewEmpresa = view.findViewById(R.id.circleImageEmpresasAdapter);
-
-        if (empresas != null) {
-            Empresa empresa = empresas.get(position);
-            textViewNome.setText(empresa.getNome());
-            textViewCategoria.setText(empresa.getCategoria());
-            getImages(empresa.getUrlImagem(), circleImageViewEmpresa);
-
-        }
-        return view;
     }
 }
