@@ -13,6 +13,9 @@ import com.atendimento.bases.BaseActivity;
 import com.atendimento.fragment.EmpresasFragment;
 import com.atendimento.util.SlidingTabLayout;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.wang.avi.AVLoadingIndicatorView;
 
 public class EmpresasActivity extends BaseActivity {
@@ -23,11 +26,30 @@ public class EmpresasActivity extends BaseActivity {
     private AVLoadingIndicatorView  avi;
     private MaterialSearchView searchViewEmpresa;
     private TabAdapterEmpresa tabAdapter;
+    private FragmentPagerItemAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_empresas);
+
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Empresas");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setElevation(0);
+
+        adapter = new FragmentPagerItemAdapter(
+                getSupportFragmentManager(),
+                FragmentPagerItems.with(this)
+                        .add("Empresas", EmpresasFragment.class)
+                        .create()
+        );
+        viewPager = findViewById(R.id.viewPagerEmpresas);
+        viewPager.setAdapter( adapter );
+
+        SmartTabLayout viewPagerTab = findViewById(R.id.viewPagerTabEmpresa);
+        viewPagerTab.setViewPager( viewPager );
 
         searchViewEmpresa = findViewById(R.id.search_viewEmpresa);
         searchViewEmpresa.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
@@ -38,29 +60,13 @@ public class EmpresasActivity extends BaseActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                EmpresasFragment fragment = (EmpresasFragment) tabAdapter.getItem(0);
+                EmpresasFragment fragment = (EmpresasFragment) adapter.getPage(0);
                 if (newText != null && !newText.isEmpty()) {
-                    fragment.pesquisarEmpresa(newText.toLowerCase());
+                    fragment.pesquisarEmpresa(newText);
                 }
                 return true;
             }
         });
-        toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Empresas");
-        toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setElevation(0);
-        avi = findViewById(R.id.avi_Empresas);
-
-        slidingTabLayout = findViewById(R.id.tabEmpresas);
-        slidingTabLayout.setDistributeEvenly(true);//preenche toda a largura
-        slidingTabLayout.setSelectedIndicatorColors(ContextCompat.getColor(this,R.color.colorPrimaryDark));
-
-        tabAdapter = new TabAdapterEmpresa(getSupportFragmentManager());
-        viewPager = findViewById(R.id.viewPagerEmpresas);
-        viewPager.setAdapter(tabAdapter);
-        slidingTabLayout.setViewPager(viewPager);
-        viewPager.setCurrentItem(0);
     }
 
     @Override

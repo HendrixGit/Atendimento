@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.atendimento.activity.EmpresasActivity"
-    android:fillViewport="true"
-    android:orientation="vertical">
-
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context="com.atendimento.activity.EmpresasActivity"
+        android:fillViewport="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.LinearLayoutCompat
+        <include layout="@layout/toolbar" />
+
+        <com.ogaclejapan.smarttablayout.SmartTabLayout
+            android:id="@+id/viewPagerTabEmpresa"
+            android:background="@color/colorPrimary"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="48dp"
+            app:stl_indicatorAlwaysInCenter="false"
+            app:stl_indicatorWithoutPadding="false"
+            app:stl_indicatorInFront="false"
+            app:stl_indicatorInterpolation="smart"
+            app:stl_indicatorGravity="bottom"
+            app:stl_indicatorColor="#FFF"
+            app:stl_indicatorThickness="4dp"
+            app:stl_indicatorWidth="auto"
+            app:stl_indicatorCornerRadius="2dp"
+            app:stl_overlineColor="#4D000000"
+            app:stl_overlineThickness="0dp"
+            app:stl_underlineColor="#4D000000"
+            app:stl_underlineThickness="1dp"
+            app:stl_dividerColor="@android:color/transparent"
+            app:stl_dividerThickness="1dp"
+            app:stl_defaultTabTextAllCaps="true"
+            app:stl_defaultTabTextColor="#FFF"
+            app:stl_defaultTabTextSize="12sp"
+            app:stl_defaultTabTextHorizontalPadding="16dp"
+            app:stl_defaultTabTextMinWidth="0dp"
+            app:stl_distributeEvenly="true"
+            app:stl_clickable="true"
+            app:stl_titleOffset="24dp"
+            app:stl_drawDecorationAfterTab="false" />
 
-            <include layout="@layout/toolbar" />
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPagerEmpresas"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-             <com.atendimento.util.SlidingTabLayout
-                 android:id="@+id/tabEmpresas"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:background="@color/colorPrimary">
-             </com.atendimento.util.SlidingTabLayout>
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewPagerEmpresas"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-            </android.support.v4.view.ViewPager>
-
-            <com.wang.avi.AVLoadingIndicatorView
-                android:id="@+id/avi_Empresas"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                app:indicatorName="BallPulseIndicator"
-                style="@style/AVLoadingIndicatorView"
-                android:visibility="invisible"
-                app:indicatorColor="@android:color/black" />
-
-        </android.support.v7.widget.LinearLayoutCompat>
-    </android.support.constraint.ConstraintLayout>
-</ScrollView>
+    </LinearLayout>
