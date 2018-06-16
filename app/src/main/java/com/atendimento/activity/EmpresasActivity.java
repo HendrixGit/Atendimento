@@ -1,32 +1,28 @@
 package com.atendimento.activity;
 
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+
 import com.atendimento.R;
-import com.atendimento.adapter.TabAdapterEmpresa;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.fragment.EmpresasFragment;
-import com.atendimento.util.SlidingTabLayout;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
-import com.wang.avi.AVLoadingIndicatorView;
 
 public class EmpresasActivity extends BaseActivity {
 
     private Toolbar toolbar;
-    private SlidingTabLayout slidingTabLayout;
     private ViewPager viewPager;
-    private AVLoadingIndicatorView  avi;
     private MaterialSearchView searchViewEmpresa;
-    private TabAdapterEmpresa tabAdapter;
     private FragmentPagerItemAdapter adapter;
+    private SmartTabLayout viewPagerTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,31 +38,50 @@ public class EmpresasActivity extends BaseActivity {
         adapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(),
                 FragmentPagerItems.with(this)
-                        .add("Empresas", EmpresasFragment.class)
+                        .add("Empresas Cadastradas", EmpresasFragment.class)
                         .create()
         );
         viewPager = findViewById(R.id.viewPagerEmpresas);
         viewPager.setAdapter( adapter );
 
-        SmartTabLayout viewPagerTab = findViewById(R.id.viewPagerTabEmpresa);
+        viewPagerTab = findViewById(R.id.viewPagerTabEmpresa);
         viewPagerTab.setViewPager( viewPager );
 
         searchViewEmpresa = findViewById(R.id.search_viewEmpresa);
+        searchViewEmpresa.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                EmpresasFragment fragment = (EmpresasFragment) adapter.getPage(0);
+                fragment.recarregarEmpresas();
+                viewPagerTab.setVisibility(View.VISIBLE);
+            }
+        });
         searchViewEmpresa.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                pesquisarEmpresa(query);
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                EmpresasFragment fragment = (EmpresasFragment) adapter.getPage(0);
-                if (newText != null && !newText.isEmpty()) {
-                    fragment.pesquisarEmpresa(newText);
-                }
+                pesquisarEmpresa(newText);
                 return true;
             }
         });
+    }
+
+    private void pesquisarEmpresa(String newText) {
+        viewPagerTab.setVisibility(View.GONE);
+        EmpresasFragment fragment = (EmpresasFragment) adapter.getPage(0);
+        if (newText != null && !newText.isEmpty()) {
+            fragment.pesquisarEmpresa(newText);
+        }
     }
 
     @Override

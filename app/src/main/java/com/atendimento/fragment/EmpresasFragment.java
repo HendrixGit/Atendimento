@@ -71,6 +71,16 @@ public class EmpresasFragment extends BaseFragment {
         query.removeEventListener(childEventListenerEmpresas);
     }
 
+    public void carregarEmpresas(List<Empresa> listaParametro){
+        adapterEmpresa = new EmpresasAdapter(listaParametro, getActivity());
+        recyclerViewEmpresas.setAdapter(adapterEmpresa);
+        adapterEmpresa.notifyDataSetChanged();
+    }
+
+    public void recarregarEmpresas(){
+        carregarEmpresas(empresas);
+    }
+
     public void recuperarEmpresas(){
         childEventListenerEmpresas = query.addChildEventListener(new ChildEventListener() {
             @Override
@@ -109,9 +119,7 @@ public class EmpresasFragment extends BaseFragment {
                 listaEmpresasBusca.add(empresa);
             }
         }
-        adapterEmpresa = new EmpresasAdapter(listaEmpresasBusca, getActivity());
-        recyclerViewEmpresas.setAdapter(adapterEmpresa);
-        adapterEmpresa.notifyDataSetChanged();
+        carregarEmpresas(listaEmpresasBusca);
     }
 
 }
