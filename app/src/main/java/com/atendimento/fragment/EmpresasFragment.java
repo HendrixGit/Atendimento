@@ -2,6 +2,7 @@ package com.atendimento.fragment;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -38,7 +39,7 @@ public class EmpresasFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_empresas, container, false);
         recyclerViewEmpresas = view.findViewById(R.id.recyclerViewEmpresas);
         adapterEmpresa = new EmpresasAdapter(empresas,getContext());
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager layoutManager   = new LinearLayoutManager(getActivity());
         recyclerViewEmpresas.setLayoutManager(layoutManager);
         recyclerViewEmpresas.setHasFixedSize(true);
         recyclerViewEmpresas.setAdapter(adapterEmpresa);
@@ -115,7 +116,7 @@ public class EmpresasFragment extends BaseFragment {
     public void pesquisarEmpresa(String textoPesquisa){
         List<Empresa> listaEmpresasBusca = new ArrayList<>();
         for(Empresa empresa : empresas){
-            if(empresa.getNome().contains(textoPesquisa)){
+            if(empresa.getNome().toLowerCase().contains(textoPesquisa) || empresa.getNome().toUpperCase().contains(textoPesquisa)){
                 listaEmpresasBusca.add(empresa);
             }
         }

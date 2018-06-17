@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.QuickContactBadge;
 
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
@@ -51,20 +53,18 @@ public class EmpresasActivity extends BaseActivity {
         searchViewEmpresa.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
-
+                viewPagerTab.setVisibility(View.GONE);
             }
 
             @Override
             public void onSearchViewClosed() {
-                EmpresasFragment fragment = (EmpresasFragment) adapter.getPage(0);
-                fragment.recarregarEmpresas();
-                viewPagerTab.setVisibility(View.VISIBLE);
+                apareceTabEmpresas();
             }
         });
         searchViewEmpresa.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                pesquisarEmpresa(query);
+
                 return true;
             }
 
@@ -76,12 +76,17 @@ public class EmpresasActivity extends BaseActivity {
         });
     }
 
+    private void apareceTabEmpresas() {
+        viewPagerTab.setVisibility(View.VISIBLE);
+        EmpresasFragment fragment = (EmpresasFragment) adapter.getPage(0);
+        fragment.recarregarEmpresas();
+    }
+
     private void pesquisarEmpresa(String newText) {
-        viewPagerTab.setVisibility(View.GONE);
         EmpresasFragment fragment = (EmpresasFragment) adapter.getPage(0);
         if (newText != null && !newText.isEmpty()) {
             fragment.pesquisarEmpresa(newText);
-        }
+        }else{ fragment.recarregarEmpresas(); }
     }
 
     @Override
