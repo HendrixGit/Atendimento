@@ -7,8 +7,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.QuickContactBadge;
 
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
@@ -64,7 +62,6 @@ public class EmpresasActivity extends BaseActivity {
         searchViewEmpresa.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
                 return true;
             }
 
@@ -86,7 +83,8 @@ public class EmpresasActivity extends BaseActivity {
         EmpresasFragment fragment = (EmpresasFragment) adapter.getPage(0);
         if (newText != null && !newText.isEmpty()) {
             fragment.pesquisarEmpresa(newText);
-        }else{ fragment.recarregarEmpresas(); }
+        }
+        else{ fragment.recarregarEmpresas(); }
     }
 
     @Override

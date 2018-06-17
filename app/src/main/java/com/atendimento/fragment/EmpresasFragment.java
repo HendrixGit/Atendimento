@@ -2,18 +2,20 @@ package com.atendimento.fragment;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+
 import com.atendimento.R;
 import com.atendimento.activity.CadastrarEmpresaActivity;
 import com.atendimento.adapter.EmpresasAdapter;
 import com.atendimento.bases.BaseFragment;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Empresa;
+import com.atendimento.util.RecyclerItemClickListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,6 +45,27 @@ public class EmpresasFragment extends BaseFragment {
         recyclerViewEmpresas.setLayoutManager(layoutManager);
         recyclerViewEmpresas.setHasFixedSize(true);
         recyclerViewEmpresas.setAdapter(adapterEmpresa);
+        recyclerViewEmpresas.addOnItemTouchListener(
+                new RecyclerItemClickListener(
+                        getActivity(),
+                        recyclerViewEmpresas,
+                        new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                mudarTelaObject(getActivity(),CadastrarEmpresaActivity.class,empresas.get(position),"empresa");
+                            }
+
+                            @Override
+                            public void onLongItemClick(View view, int position) {
+
+                            }
+
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                            }
+                        }
+                ));
 
         cadastrarEmpresaButton =  view.findViewById(R.id.floatButtonCadastrarEmpresa);
         cadastrarEmpresaButton.setOnClickListener(new View.OnClickListener() {
