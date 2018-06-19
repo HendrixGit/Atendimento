@@ -82,7 +82,7 @@ public class EmpresasActivity extends BaseActivity {
     private void pesquisarEmpresa(String newText) {
         EmpresasFragment fragment = (EmpresasFragment) adapter.getPage(0);
         if (newText != null && !newText.isEmpty()) {
-            fragment.pesquisarEmpresa(newText);
+            fragment.pesquisarEmpresa(newText.toLowerCase());
         }
         else{ fragment.recarregarEmpresas(); }
     }

@@ -66,7 +66,6 @@ public class EmpresasFragment extends BaseFragment {
                             }
                         }
                 ));
-
         cadastrarEmpresaButton =  view.findViewById(R.id.floatButtonCadastrarEmpresa);
         cadastrarEmpresaButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +138,7 @@ public class EmpresasFragment extends BaseFragment {
     public void pesquisarEmpresa(String textoPesquisa){
         List<Empresa> listaEmpresasBusca = new ArrayList<>();
         for(Empresa empresa : empresas){
-            if(empresa.getNome().toLowerCase().contains(textoPesquisa) || empresa.getNome().toUpperCase().contains(textoPesquisa)){
+            if(empresa.getNome().toLowerCase().contains(textoPesquisa)){
                 listaEmpresasBusca.add(empresa);
             }
         }
