@@ -16,6 +16,7 @@ import com.atendimento.bases.BaseFragment;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Empresa;
 import com.atendimento.util.RecyclerItemClickListener;
+import com.atendimento.util.SimpleDividerItemDecoration;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -66,6 +67,7 @@ public class EmpresasFragment extends BaseFragment {
                             }
                         }
                 ));
+        recyclerViewEmpresas.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
         cadastrarEmpresaButton =  view.findViewById(R.id.floatButtonCadastrarEmpresa);
         cadastrarEmpresaButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,5 +146,4 @@ public class EmpresasFragment extends BaseFragment {
         }
         carregarEmpresas(listaEmpresasBusca);
     }
-
 }

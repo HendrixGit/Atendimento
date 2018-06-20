@@ -51,6 +51,9 @@ public class EmpresasAdapter extends RecyclerView.Adapter<EmpresasAdapter.MyView
         holder.textViewNome.setText(empresa.getNome());
         holder.textViewCategoria.setText(empresa.getCategoria());
         getImages(empresa.getUrlImagem(), holder.circleImageViewEmpresa);
+        if (position == getItemCount()){
+
+        }
     }
 
     @Override
