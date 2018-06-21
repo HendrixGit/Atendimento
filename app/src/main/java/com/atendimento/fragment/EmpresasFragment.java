@@ -1,5 +1,6 @@
 package com.atendimento.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.widget.AdapterView;
 
 import com.atendimento.R;
 import com.atendimento.activity.CadastrarEmpresaActivity;
+import com.atendimento.activity.EmpresasActivity;
 import com.atendimento.adapter.EmpresasAdapter;
 import com.atendimento.bases.BaseFragment;
 import com.atendimento.config.ConfiguracaoFirebase;
@@ -30,10 +32,14 @@ public class EmpresasFragment extends BaseFragment {
     private RecyclerView recyclerViewEmpresas;
     private EmpresasAdapter adapterEmpresa;
     private List<Empresa> empresas = new ArrayList<>();
+    private List<Empresa> empresasSelecionadas = new ArrayList<>();
+    private Integer selecionados = 0;
     private DatabaseReference firebaseDatabase;
     private ChildEventListener childEventListenerEmpresas;
     private FloatingActionButton cadastrarEmpresaButton;
     private Query query;
+    private Boolean modoSelecao = false;
+    private EmpresasActivity empresasActivity;
 
     public EmpresasFragment(){}
 
@@ -53,12 +59,15 @@ public class EmpresasFragment extends BaseFragment {
                         new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
-                                mudarTelaObject(getActivity(),CadastrarEmpresaActivity.class,empresas.get(position),"empresa");
+                                if (!modoSelecao) { mudarTelaObject(getActivity(),CadastrarEmpresaActivity.class,empresas.get(position),"empresa");  }
+                                else{
+                                    selecionarEmpresas(position);
+                                }
                             }
 
                             @Override
                             public void onLongItemClick(View view, int position) {
-
+                                selecionarEmpresas(position);
                             }
 
                             @Override
@@ -67,6 +76,7 @@ public class EmpresasFragment extends BaseFragment {
                             }
                         }
                 ));
+
         recyclerViewEmpresas.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
         cadastrarEmpresaButton =  view.findViewById(R.id.floatButtonCadastrarEmpresa);
         cadastrarEmpresaButton.setOnClickListener(new View.OnClickListener() {
@@ -135,6 +145,25 @@ public class EmpresasFragment extends BaseFragment {
 
             }
         });
+    }
+
+    public void selecionarEmpresas(Integer posicao){
+        modoSelecao = true;
+        if (empresasActivity == null){ empresasActivity = (EmpresasActivity) getActivity(); }
+        if (empresasSelecionadas.size() != empresas.size()){
+            selecionados++;
+            empresasActivity.setTituloToolbar(selecionados.toString());
+            empresasSelecionadas.add(empresas.get(posicao));
+        }
+    }
+
+    public void zerarSelecao(){
+        selecionados = 0;
+        modoSelecao = false;
+    }
+
+    public void deletarEmpresa(){
+
     }
 
     public void pesquisarEmpresa(String textoPesquisa){

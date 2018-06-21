@@ -4,8 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activity.EmpresasActivity">
 
-    <item android:id="@+id/item_pesquisaEmpresa"
-        android:title=""
+    <item
+        android:id="@+id/item_deletarEmpresa"
+        android:title="@string/deletar"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_action_navigation_close_inverted"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/item_pesquisaEmpresa"
+        android:title="@string/pesquisar"
         android:orderInCategory="100"
         android:icon="@drawable/ic_search"
         app:showAsAction="ifRoom"/>

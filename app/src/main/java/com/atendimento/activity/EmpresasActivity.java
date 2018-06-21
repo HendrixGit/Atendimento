@@ -21,8 +21,11 @@ public class EmpresasActivity extends BaseActivity {
     private Toolbar toolbar;
     private ViewPager viewPager;
     private MaterialSearchView searchViewEmpresa;
+    private MenuItem deletarEmpresa;
+    private MenuItem pesquisarEmpresa;
     private FragmentPagerItemAdapter adapter;
     private SmartTabLayout viewPagerTab;
+    private String titulo = "Empresas";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +33,7 @@ public class EmpresasActivity extends BaseActivity {
         setContentView(R.layout.activity_empresas);
 
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Empresas");
+        toolbar.setTitle(titulo);
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
         setSupportActionBar(toolbar);
         getSupportActionBar().setElevation(0);
@@ -71,6 +74,9 @@ public class EmpresasActivity extends BaseActivity {
                 return true;
             }
         });
+
+        deletarEmpresa   = findViewById(R.id.item_deletarEmpresa);
+        pesquisarEmpresa = findViewById(R.id.item_pesquisaEmpresa);
     }
 
     private void apareceTabEmpresas() {
@@ -87,6 +93,26 @@ public class EmpresasActivity extends BaseActivity {
         else{ fragment.recarregarEmpresas(); }
     }
 
+    public void setTituloToolbar(String texto){
+        toolbar.setTitle(texto);
+        pesquisarEmpresa.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        deletarEmpresa.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    public void toolbarPadrao(){
+        toolbar.setTitle(titulo);
+        pesquisarEmpresa.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        deletarEmpresa.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(false);
+        EmpresasFragment fragment = (EmpresasFragment) adapter.getPage(0);
+        fragment.zerarSelecao();
+    }
+
+
+
     @Override
     public void onBackPressed() {
         mudarTelaFinish(getApplicationContext(), InicioActivity.class);
@@ -96,8 +122,11 @@ public class EmpresasActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_empresa, menu);
-        MenuItem menuItem = menu.findItem(R.id.item_pesquisaEmpresa);
+        MenuItem menuItem  = menu.findItem(R.id.item_pesquisaEmpresa);
+        MenuItem menuItem2 = menu.findItem(R.id.item_deletarEmpresa);
         searchViewEmpresa.setMenuItem(menuItem);
+        pesquisarEmpresa = menuItem;
+        deletarEmpresa   = menuItem2;
         return true;
     }
 
@@ -106,6 +135,8 @@ public class EmpresasActivity extends BaseActivity {
         switch (item.getItemId()){
             case R.id.item_sair            : deslogaSairUsuario(); return true;
             case R.id.item_tela_Principal  : mudarTelaFinish(getApplicationContext(),  MainActivity.class);
+            case R.id.item_deletarEmpresa  : return true;
+            case android.R.id.home:  toolbarPadrao();
             default: return super.onOptionsItemSelected(item);
         }
     }
