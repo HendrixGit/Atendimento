@@ -31,11 +31,9 @@ public class EmpresasAdapter extends RecyclerView.Adapter<EmpresasAdapter.MyView
 
         public MyViewHoder(View itemView) {
             super(itemView);
-
             textViewNome           = itemView.findViewById(R.id.textViewNomeEmpresa);
             textViewCategoria      = itemView.findViewById(R.id.textViewCategoria);
             circleImageViewEmpresa = itemView.findViewById(R.id.circleImageEmpresasAdapter);
-
         }
     }
 
