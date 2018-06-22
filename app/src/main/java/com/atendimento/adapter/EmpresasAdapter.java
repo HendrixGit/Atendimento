@@ -3,6 +3,7 @@ package com.atendimento.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -40,6 +41,18 @@ public class EmpresasAdapter extends RecyclerView.Adapter<EmpresasAdapter.MyView
     @Override
     public MyViewHoder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemLista = LayoutInflater.from(parent.getContext()).inflate(R.layout.lista_empresas,parent,false);
+        itemLista.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        view.setPressed(true);
+                        break;
+                    }
+                }
+                return false;
+            }
+        });
         return new MyViewHoder(itemLista);
     }
 
