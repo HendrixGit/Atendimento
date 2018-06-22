@@ -46,6 +46,7 @@ public class EmpresasFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_empresas, container, false);
+        empresasActivity = empresasActivity = (EmpresasActivity) getActivity();
         recyclerViewEmpresas = view.findViewById(R.id.recyclerViewEmpresas);
         adapterEmpresa = new EmpresasAdapter(empresas,getContext());
         RecyclerView.LayoutManager layoutManager   = new LinearLayoutManager(getActivity());
@@ -149,7 +150,6 @@ public class EmpresasFragment extends BaseFragment {
 
     public void selecionarEmpresas(Integer posicao){
         modoSelecao = true;
-        if (empresasActivity == null){ empresasActivity = (EmpresasActivity) getActivity(); }
         if (empresasSelecionadas.size() != empresas.size()){
             selecionados++;
             empresasActivity.setTituloToolbar(selecionados.toString());
@@ -160,6 +160,7 @@ public class EmpresasFragment extends BaseFragment {
     public void zerarSelecao(){
         selecionados = 0;
         modoSelecao = false;
+        empresasSelecionadas.clear();
     }
 
     public void deletarEmpresa(){
