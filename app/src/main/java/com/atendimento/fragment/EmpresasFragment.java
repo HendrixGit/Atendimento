@@ -1,6 +1,5 @@
 package com.atendimento.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,7 +45,7 @@ public class EmpresasFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_empresas, container, false);
-        empresasActivity = empresasActivity = (EmpresasActivity) getActivity();
+        empresasActivity = (EmpresasActivity) getActivity();
         recyclerViewEmpresas = view.findViewById(R.id.recyclerViewEmpresas);
         adapterEmpresa = new EmpresasAdapter(empresas,getContext());
         RecyclerView.LayoutManager layoutManager   = new LinearLayoutManager(getActivity());
@@ -90,7 +89,7 @@ public class EmpresasFragment extends BaseFragment {
 
         String idUsuarioLogado = ConfiguracaoFirebase.getAutenticacao().getCurrentUser().getUid();
         firebaseDatabase = ConfiguracaoFirebase.getFirebaseDatabase();
-        query = firebaseDatabase.child("empresas").child(idUsuarioLogado).orderByChild("nome");;
+        query = firebaseDatabase.child("empresas").child(idUsuarioLogado).orderByChild("nome");
 
         return view;
     }
@@ -104,7 +103,22 @@ public class EmpresasFragment extends BaseFragment {
     @Override
     public void onStop() {
         super.onStop();
+        removerListener();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        removerListener();
+    }
+
+
+    private void removerListener() {
         query.removeEventListener(childEventListenerEmpresas);
+    }
+
+    public void recarregarEmpresas(){
+        carregarEmpresas(empresas);
     }
 
     public void carregarEmpresas(List<Empresa> listaParametro){
@@ -113,11 +127,8 @@ public class EmpresasFragment extends BaseFragment {
         adapterEmpresa.notifyDataSetChanged();
     }
 
-    public void recarregarEmpresas(){
-        carregarEmpresas(empresas);
-    }
-
     public void recuperarEmpresas(){
+        empresas.clear();
         childEventListenerEmpresas = query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -150,11 +161,16 @@ public class EmpresasFragment extends BaseFragment {
 
     public void selecionarEmpresas(Integer posicao){
         modoSelecao = true;
-        if (empresasSelecionadas.size() != empresas.size()){
+        if (!empresasSelecionadas.contains(empresas.get(posicao)) && empresasSelecionadas.size() != empresas.size()) {
             selecionados++;
-            empresasActivity.setTituloToolbar(selecionados.toString());
             empresasSelecionadas.add(empresas.get(posicao));
         }
+        else{
+            selecionados--;
+            empresasSelecionadas.remove(empresas.get(posicao));
+        }
+        empresasActivity.setTituloToolbar(selecionados.toString());
+        if (selecionados == 0){ empresasActivity.toolbarPadrao(); }
     }
 
     public void zerarSelecao(){
