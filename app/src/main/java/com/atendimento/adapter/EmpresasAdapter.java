@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.atendimento.R;
 import com.atendimento.model.Empresa;
 import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -29,12 +30,14 @@ public class EmpresasAdapter extends RecyclerView.Adapter<EmpresasAdapter.MyView
         private TextView textViewNome;
         private TextView textViewCategoria;
         private CircleImageView circleImageViewEmpresa;
+        private CircleImageView circleImageViewSelecao;
 
         public MyViewHoder(View itemView) {
             super(itemView);
             textViewNome           = itemView.findViewById(R.id.textViewNomeEmpresa);
             textViewCategoria      = itemView.findViewById(R.id.textViewCategoria);
             circleImageViewEmpresa = itemView.findViewById(R.id.circleImageEmpresasAdapter);
+            circleImageViewSelecao = itemView.findViewById(R.id.circleImageSelecao);
         }
     }
 
@@ -62,16 +65,14 @@ public class EmpresasAdapter extends RecyclerView.Adapter<EmpresasAdapter.MyView
         holder.textViewNome.setText(empresa.getNome());
         holder.textViewCategoria.setText(empresa.getCategoria());
         getImages(empresa.getUrlImagem(), holder.circleImageViewEmpresa);
-        if (position == getItemCount()){
-
-        }
+        if (empresa.getSelecionado()){  Picasso.with(context).load(R.drawable.atendimento).into(holder.circleImageViewSelecao);  }
+        else{   holder.circleImageViewSelecao.setImageDrawable(null);   }
     }
 
     @Override
     public int getItemCount() {
         return empresas.size();
     }
-
 
 
     public void getImages(String imageUrl, CircleImageView circleImageView) {

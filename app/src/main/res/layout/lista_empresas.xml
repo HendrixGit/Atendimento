@@ -9,7 +9,7 @@
     android:clickable="true"
     android:background="@drawable/listselector">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_height="wrap_content"
         android:layout_width="75dp"
         android:orientation="horizontal"
@@ -23,7 +23,15 @@
             android:layout_width="64dp"
             android:layout_height="64dp" />
 
-    </LinearLayout>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/circleImageSelecao"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="bottom"/>
+
+
+
+    </FrameLayout>
 
     <LinearLayout
         android:layout_height="wrap_content"

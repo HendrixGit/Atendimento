@@ -12,6 +12,7 @@ public class Empresa implements Serializable {
     private String nome;
     private String Categoria;
     private String urlImagem;
+    private Boolean selecionado = false;
 
     public Empresa() {
 
@@ -54,4 +55,8 @@ public class Empresa implements Serializable {
     public String getUrlImagem() { return urlImagem; }
 
     public void setUrlImagem(String urlImagem) { this.urlImagem = urlImagem; }
+
+    public Boolean getSelecionado() { return selecionado; }
+
+    public void setSelecionado(Boolean selecionado) { this.selecionado = selecionado; }
 }

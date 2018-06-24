@@ -23,8 +23,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class EmpresasFragment extends BaseFragment {
 
@@ -47,7 +49,7 @@ public class EmpresasFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_empresas, container, false);
         empresasActivity = (EmpresasActivity) getActivity();
         recyclerViewEmpresas = view.findViewById(R.id.recyclerViewEmpresas);
-        adapterEmpresa = new EmpresasAdapter(empresas,getContext());
+        adapterEmpresa = new EmpresasAdapter(empresas, getContext());
         RecyclerView.LayoutManager layoutManager   = new LinearLayoutManager(getActivity());
         recyclerViewEmpresas.setLayoutManager(layoutManager);
         recyclerViewEmpresas.setHasFixedSize(true);
@@ -90,7 +92,6 @@ public class EmpresasFragment extends BaseFragment {
         String idUsuarioLogado = ConfiguracaoFirebase.getAutenticacao().getCurrentUser().getUid();
         firebaseDatabase = ConfiguracaoFirebase.getFirebaseDatabase();
         query = firebaseDatabase.child("empresas").child(idUsuarioLogado).orderByChild("nome");
-
         return view;
     }
 
@@ -162,13 +163,16 @@ public class EmpresasFragment extends BaseFragment {
     public void selecionarEmpresas(Integer posicao){
         modoSelecao = true;
         if (!empresasSelecionadas.contains(empresas.get(posicao)) && empresasSelecionadas.size() != empresas.size()) {
+            empresas.get(posicao).setSelecionado(true);
             selecionados++;
             empresasSelecionadas.add(empresas.get(posicao));
         }
         else{
+            empresas.get(posicao).setSelecionado(false);
             selecionados--;
             empresasSelecionadas.remove(empresas.get(posicao));
         }
+        adapterEmpresa.notifyDataSetChanged();
         empresasActivity.setTituloToolbar(selecionados.toString());
         if (selecionados == 0){ empresasActivity.toolbarPadrao(); }
     }
@@ -177,6 +181,9 @@ public class EmpresasFragment extends BaseFragment {
         selecionados = 0;
         modoSelecao = false;
         empresasSelecionadas.clear();
+        int i = 0;
+        for(Empresa empresa : empresas) {   empresas.get(i).setSelecionado(false);  i++; }
+        adapterEmpresa.notifyDataSetChanged();
     }
 
     public void deletarEmpresa(){
