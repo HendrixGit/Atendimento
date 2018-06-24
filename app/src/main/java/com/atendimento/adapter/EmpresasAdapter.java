@@ -65,7 +65,7 @@ public class EmpresasAdapter extends RecyclerView.Adapter<EmpresasAdapter.MyView
         holder.textViewNome.setText(empresa.getNome());
         holder.textViewCategoria.setText(empresa.getCategoria());
         getImages(empresa.getUrlImagem(), holder.circleImageViewEmpresa);
-        if (empresa.getSelecionado()){  Picasso.with(context).load(R.drawable.atendimento).into(holder.circleImageViewSelecao);  }
+        if (empresa.getSelecionado()){  Picasso.with(context).load(R.drawable.selectedicon).resize(64,64).into(holder.circleImageViewSelecao);  }
         else{   holder.circleImageViewSelecao.setImageDrawable(null);   }
     }
 

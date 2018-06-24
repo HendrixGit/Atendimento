@@ -95,6 +95,8 @@ public class EmpresasActivity extends BaseActivity {
 
     public void setTituloToolbar(String texto){
         toolbar.setTitle(texto);
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorSelecionado));
+        viewPagerTab.setBackgroundColor(getResources().getColor(R.color.colorSelecionado));
         pesquisarEmpresa.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         deletarEmpresa.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -103,6 +105,8 @@ public class EmpresasActivity extends BaseActivity {
 
     public void toolbarPadrao(){
         toolbar.setTitle(titulo);
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        viewPagerTab.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         pesquisarEmpresa.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         deletarEmpresa.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);

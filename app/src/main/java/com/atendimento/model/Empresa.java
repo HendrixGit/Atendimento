@@ -2,6 +2,7 @@ package com.atendimento.model;
 
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
 
 import java.io.Serializable;
 
@@ -56,7 +57,9 @@ public class Empresa implements Serializable {
 
     public void setUrlImagem(String urlImagem) { this.urlImagem = urlImagem; }
 
+    @Exclude
     public Boolean getSelecionado() { return selecionado; }
 
+    @Exclude
     public void setSelecionado(Boolean selecionado) { this.selecionado = selecionado; }
 }
