@@ -97,7 +97,8 @@ public class EmpresasActivity extends BaseActivity {
         toolbar.setTitle(texto);
         toolbar.setBackgroundColor(getResources().getColor(R.color.colorSelecionado));
         viewPagerTab.setBackgroundColor(getResources().getColor(R.color.colorSelecionado));
-        pesquisarEmpresa.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        pesquisarEmpresa.setVisible(false);
+        deletarEmpresa.setVisible(true);
         deletarEmpresa.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -107,8 +108,9 @@ public class EmpresasActivity extends BaseActivity {
         toolbar.setTitle(titulo);
         toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         viewPagerTab.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        pesquisarEmpresa.setVisible(true);
         pesquisarEmpresa.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        deletarEmpresa.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        deletarEmpresa.setVisible(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(false);
         EmpresasFragment fragment = (EmpresasFragment) adapter.getPage(0);
@@ -131,6 +133,7 @@ public class EmpresasActivity extends BaseActivity {
         searchViewEmpresa.setMenuItem(menuItem);
         pesquisarEmpresa = menuItem;
         deletarEmpresa   = menuItem2;
+        deletarEmpresa.setVisible(false);
         return true;
     }
 
