@@ -1,5 +1,6 @@
 package com.atendimento.activity;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -65,6 +66,7 @@ public class EmpresasActivity extends BaseActivity {
         searchViewEmpresa.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                pesquisarEmpresa(query);
                 return true;
             }
 
@@ -90,7 +92,9 @@ public class EmpresasActivity extends BaseActivity {
         if (newText != null && !newText.isEmpty()) {
             fragment.pesquisarEmpresa(newText.toLowerCase());
         }
-        else{ fragment.recarregarEmpresas(); }
+        else{
+            fragment.recarregarEmpresas();
+        }
     }
 
     public void setTituloToolbar(String texto){
