@@ -16,6 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+
         <activity android:name=".activity.InicioActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,7 +56,9 @@
         <activity android:name=".activity.EditEmailActivity" />
         <activity android:name=".activity.RedifinirSenhaConfActivity" />
         <activity android:name=".activity.CadastrarEmpresaActivity" />
-        <activity android:name=".activity.EmpresasActivity" />
+        <activity android:name=".activity.EmpresasActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden" />
     </application>
 
 </manifest>

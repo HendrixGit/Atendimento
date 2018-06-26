@@ -1,6 +1,5 @@
 package com.atendimento.activity;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -66,7 +65,6 @@ public class EmpresasActivity extends BaseActivity {
         searchViewEmpresa.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                pesquisarEmpresa(query);
                 return true;
             }
 
@@ -132,11 +130,11 @@ public class EmpresasActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_empresa, menu);
-        MenuItem menuItem  = menu.findItem(R.id.item_pesquisaEmpresa);
-        MenuItem menuItem2 = menu.findItem(R.id.item_deletarEmpresa);
-        searchViewEmpresa.setMenuItem(menuItem);
-        pesquisarEmpresa = menuItem;
-        deletarEmpresa   = menuItem2;
+        MenuItem menuItemPesquisa  = menu.findItem(R.id.item_pesquisaEmpresa);
+        MenuItem menuItemDeletar   = menu.findItem(R.id.item_deletarEmpresa);
+        searchViewEmpresa.setMenuItem(menuItemPesquisa);
+        pesquisarEmpresa = menuItemPesquisa;
+        deletarEmpresa   = menuItemDeletar;
         deletarEmpresa.setVisible(false);
         return true;
     }
