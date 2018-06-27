@@ -11,6 +11,7 @@ import android.view.View;
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.fragment.EmpresasFragment;
+import com.atendimento.model.Empresa;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
@@ -136,6 +137,15 @@ public class EmpresasActivity extends BaseActivity {
         pesquisarEmpresa = menuItemPesquisa;
         deletarEmpresa   = menuItemDeletar;
         deletarEmpresa.setVisible(false);
+        deletarEmpresa.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                EmpresasFragment fragment =  (EmpresasFragment) adapter.getPage(0);
+                fragment.deletarEmpresa();
+                toolbarPadrao();
+                return false;
+            }
+        });
         return true;
     }
 

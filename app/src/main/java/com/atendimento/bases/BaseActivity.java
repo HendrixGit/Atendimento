@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -38,6 +39,8 @@ public class BaseActivity extends AppCompatActivity {
     protected ConnectivityManager cm;
     protected static String nomeApp = "Atendimento";
     protected InputMethodManager imm;
+    protected SQLiteDatabase sqLiteDatabasePar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,12 +106,25 @@ public class BaseActivity extends AppCompatActivity {
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
-    public void deslogaSairUsuario() {
+    protected void deslogaSairUsuario() {
         FirebaseAuth autenticacao;
         autenticacao = ConfiguracaoFirebase.getAutenticacao();
         autenticacao.signOut();
         LoginManager.getInstance().logOut();
         mudarTelaFinish(getApplicationContext(),  InicioActivity.class);
+    }
+
+    protected SQLiteDatabase databaseCategorias(){
+        sqLiteDatabasePar = openOrCreateDatabase("databaseCategorias", MODE_PRIVATE, null);
+        sqLiteDatabasePar.execSQL("DELETE FROM categorias");
+        sqLiteDatabasePar.execSQL("CREATE TABLE IF NOT EXISTS categorias(codigo INT(3), descricao VARCHAR)");
+        sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(1, 'Clínicas Médicas')");
+        sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(2, 'Pet Shops')");
+        sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(3, 'Laboratórios')");
+        sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(4, 'Manicure/Pedicuere')");
+        sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(5, 'Salões de Beleza')");
+        sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(6, 'Escritórios Advocacia')");
+        return sqLiteDatabasePar;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.atendimento.fragment;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +23,9 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +40,7 @@ public class EmpresasFragment extends BaseFragment {
     private Integer selecionados = 0;
     private DatabaseReference firebaseDatabase;
     private ChildEventListener childEventListenerEmpresas;
+    private StorageReference storageReferenceEmpresas;
     private FloatingActionButton cadastrarEmpresaButton;
     private Query query;
     private Boolean modoSelecao = false;
@@ -187,7 +191,13 @@ public class EmpresasFragment extends BaseFragment {
     }
 
     public void deletarEmpresa(){
-
+        for (Empresa empresa : empresasSelecionadas){
+            DatabaseReference firebaseDatabaseDeletar = ConfiguracaoFirebase.getFirebaseDatabase();
+            firebaseDatabaseDeletar.child("empresas").child(empresa.getIdUsuario()).child(empresa.getId()).removeValue();
+            storageReferenceEmpresas = ConfiguracaoFirebase.getStorage().child("empresas").child(empresa.getIdUsuario()).child(empresa.getId());
+            storageReferenceEmpresas.delete();
+        }
+        recuperarEmpresas();
     }
 
     public void pesquisarEmpresa(String textoPesquisa){
