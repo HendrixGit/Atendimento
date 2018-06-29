@@ -100,7 +100,9 @@ public class EmpresasFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        recuperarEmpresas();
+        if (empresas.size() <= 0) {
+            recuperarEmpresas();
+        }
     }
 
     @Override
@@ -131,7 +133,6 @@ public class EmpresasFragment extends BaseFragment {
     }
 
     public void recuperarEmpresas(){
-        empresas.clear();
         childEventListenerEmpresas = query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -207,4 +208,15 @@ public class EmpresasFragment extends BaseFragment {
         }
         carregarEmpresas(listaEmpresasBusca);
     }
+
+    public void empresaPorCategoria(String categoria){
+        List<Empresa> listaEmpresasBusca = new ArrayList<>();
+        for(Empresa empresa : empresas){
+            if(empresa.getCategoria().toLowerCase().contains(categoria)){
+                listaEmpresasBusca.add(empresa);
+            }
+        }
+        carregarEmpresas(listaEmpresasBusca);
+    }
+
 }

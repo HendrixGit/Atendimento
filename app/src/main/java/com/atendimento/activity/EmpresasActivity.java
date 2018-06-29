@@ -2,6 +2,7 @@ package com.atendimento.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +33,7 @@ public class EmpresasActivity extends BaseActivity {
     private Util util;
     private DialogInterface.OnClickListener yesEcluirEmpresa;
     private AlertDialog dialogExcluir;
+    private SQLiteDatabase databaseCategorias;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,8 @@ public class EmpresasActivity extends BaseActivity {
         getSupportActionBar().setElevation(0);
 
         util = new Util();
+        databaseCategorias = databaseCategorias;
+
         yesEcluirEmpresa = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -136,6 +140,10 @@ public class EmpresasActivity extends BaseActivity {
     }
 
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 
     @Override
     public void onBackPressed() {

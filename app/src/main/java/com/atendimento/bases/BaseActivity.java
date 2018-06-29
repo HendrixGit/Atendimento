@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -125,6 +126,20 @@ public class BaseActivity extends AppCompatActivity {
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(5, 'Salões de Beleza')");
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(6, 'Escritórios Advocacia')");
         return sqLiteDatabasePar;
+    }
+
+    protected Cursor cursorCategorias(SQLiteDatabase parametroDatabase, String parametros){
+        Cursor cursor;
+        if (parametros.isEmpty()) {
+            cursor = parametroDatabase.rawQuery("SELECT codigo, descricao FROM categorias", null);
+        }
+        else {
+            String[] params = new String[]{parametros};
+            cursor = parametroDatabase.rawQuery("SELECT codigo, descricao FROM categorias WHERE descricao = ?", params);
+        }
+        int indiceColunaDescricao = cursor.getColumnIndex("descricao");
+        cursor.moveToFirst();
+        return cursor;
     }
 
 }
