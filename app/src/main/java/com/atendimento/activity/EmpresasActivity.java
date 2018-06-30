@@ -74,6 +74,8 @@ public class EmpresasActivity extends BaseActivity {
         searchViewEmpresa.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
+                EmpresasFragment fragment = (EmpresasFragment) adapter.getPage(0);
+                fragment.setarPesquisando(true);
                 viewPagerTab.setVisibility(View.GONE);
             }
 

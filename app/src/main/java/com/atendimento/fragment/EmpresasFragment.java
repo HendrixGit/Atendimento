@@ -43,6 +43,7 @@ public class EmpresasFragment extends BaseFragment {
     private Query query;
     private Boolean modoSelecao = false;
     private EmpresasActivity empresasActivity;
+    private Boolean pesquisando = false;
 
     public EmpresasFragment(){}
 
@@ -71,7 +72,7 @@ public class EmpresasFragment extends BaseFragment {
 
                             @Override
                             public void onLongItemClick(View view, int position) {
-                                selecionarEmpresas(position);
+                                if (!pesquisando) { selecionarEmpresas(position);  }
                             }
 
                             @Override
@@ -130,6 +131,7 @@ public class EmpresasFragment extends BaseFragment {
         adapterEmpresa = new EmpresasAdapter(listaParametro, getActivity());
         recyclerViewEmpresas.setAdapter(adapterEmpresa);
         adapterEmpresa.notifyDataSetChanged();
+        pesquisando = false;
     }
 
     public void recuperarEmpresas(){
@@ -196,7 +198,12 @@ public class EmpresasFragment extends BaseFragment {
             storageReferenceEmpresas = ConfiguracaoFirebase.getStorage().child("empresas").child(empresa.getIdUsuario()).child(empresa.getId());
             storageReferenceEmpresas.delete();
         }
+        empresas.clear();
         recuperarEmpresas();
+    }
+
+    public void setarPesquisando(Boolean parametroBoolean){
+        pesquisando = parametroBoolean;
     }
 
     public void pesquisarEmpresa(String textoPesquisa){
