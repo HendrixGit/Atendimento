@@ -137,8 +137,6 @@ public class BaseActivity extends AppCompatActivity {
             String[] params = new String[]{parametros};
             cursor = parametroDatabase.rawQuery("SELECT codigo, descricao FROM categorias WHERE descricao = ?", params);
         }
-        int indiceColunaDescricao = cursor.getColumnIndex("descricao");
-        cursor.moveToFirst();
         return cursor;
     }
 

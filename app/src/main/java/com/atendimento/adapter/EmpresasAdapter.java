@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.atendimento.R;
 import com.atendimento.model.Empresa;
+import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Request;
 
 import java.util.List;
 
@@ -61,6 +63,7 @@ public class EmpresasAdapter extends RecyclerView.Adapter<EmpresasAdapter.MyView
 
     @Override
     public void onBindViewHolder(MyViewHoder holder, int position) {
+        holder.setIsRecyclable(false);
         Empresa empresa = empresas.get(position);
         holder.textViewNome.setText(empresa.getNome());
         holder.textViewCategoria.setText(empresa.getCategoria());

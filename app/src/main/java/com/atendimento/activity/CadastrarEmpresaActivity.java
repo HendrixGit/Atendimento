@@ -77,6 +77,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     private String urlImagem = "";
     private Empresa empresaParametro = null;
     private Task taskSalvarEmpresa;
+    private Task taskSalvarEmpresa2;
     private RunnableFuture runnableFuture;
 
     @Override
@@ -110,13 +111,12 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                 imm.showSoftInput(nomeEmpresa, 0);
             }
         });
-        util = new Util();
         listaCategoria = new ArrayList<String>();
         progressBar.getIndeterminateDrawable().setColorFilter(Color.BLUE, android.graphics.PorterDuff.Mode.MULTIPLY);
 
         sqLiteDatabasePar = databaseCategorias();
 
-        Cursor cursor = sqLiteDatabasePar.rawQuery("SELECT codigo, descricao FROM categorias",null);
+        Cursor cursor = cursorCategorias(sqLiteDatabasePar,"");
         int indiceColunaDescricao = cursor.getColumnIndex("descricao");
         cursor.moveToFirst();
         listaCategoria.add("--  Selecione a Categoria  --");
@@ -129,8 +129,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         dataCategoria = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, listaCategoria);
         spinnerCategoria.setAdapter(dataCategoria);
         if (empresaParametro != null){
-            String[] params = new String[]{empresaParametro.getCategoria()};
-            Cursor cursor2   = sqLiteDatabasePar.rawQuery("SELECT codigo, descricao FROM categorias WHERE descricao = ?", params);
+            Cursor cursor2   = cursorCategorias(sqLiteDatabasePar, empresaParametro.getCategoria());
             int indiceColunaCodigo = cursor.getColumnIndex("codigo");
             cursor2.moveToFirst();
             int opcao = Integer.parseInt(cursor2.getString(indiceColunaCodigo));
@@ -316,6 +315,12 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         else{
             Toast.makeText(getApplicationContext(), "Preencha os dados, e coloque a foto", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        empresaParametro = null;
     }
 
     @Override

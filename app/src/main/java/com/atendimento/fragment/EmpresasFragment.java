@@ -64,7 +64,14 @@ public class EmpresasFragment extends BaseFragment {
                         new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
-                                if (!modoSelecao) { mudarTelaObject(getActivity(),CadastrarEmpresaActivity.class,empresas.get(position),"empresa");  }
+                                if (!modoSelecao) {
+                                    mudarTelaObject(getActivity(), CadastrarEmpresaActivity.class, empresas.get(position), "empresa");
+
+//                                    Empresa empresaSelecionada = empresas.get(position);
+//                                    Intent i = new Intent(getActivity(), CadastrarEmpresaActivity.class);
+//                                    i.putExtra("empresa", empresaSelecionada);
+//                                    startActivity(i);
+                                }
                                 else{
                                     selecionarEmpresas(position);
                                 }
@@ -104,6 +111,7 @@ public class EmpresasFragment extends BaseFragment {
         if (empresas.size() <= 0) {
             recuperarEmpresas();
         }
+
     }
 
     @Override
@@ -132,6 +140,7 @@ public class EmpresasFragment extends BaseFragment {
         recyclerViewEmpresas.setAdapter(adapterEmpresa);
         adapterEmpresa.notifyDataSetChanged();
         pesquisando = false;
+        empresas = listaParametro;
     }
 
     public void recuperarEmpresas(){
@@ -215,15 +224,4 @@ public class EmpresasFragment extends BaseFragment {
         }
         carregarEmpresas(listaEmpresasBusca);
     }
-
-    public void empresaPorCategoria(String categoria){
-        List<Empresa> listaEmpresasBusca = new ArrayList<>();
-        for(Empresa empresa : empresas){
-            if(empresa.getCategoria().toLowerCase().contains(categoria)){
-                listaEmpresasBusca.add(empresa);
-            }
-        }
-        carregarEmpresas(listaEmpresasBusca);
-    }
-
 }
