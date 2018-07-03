@@ -66,11 +66,6 @@ public class EmpresasFragment extends BaseFragment {
                             public void onItemClick(View view, int position) {
                                 if (!modoSelecao) {
                                     mudarTelaObject(getActivity(), CadastrarEmpresaActivity.class, empresas.get(position), "empresa");
-
-//                                    Empresa empresaSelecionada = empresas.get(position);
-//                                    Intent i = new Intent(getActivity(), CadastrarEmpresaActivity.class);
-//                                    i.putExtra("empresa", empresaSelecionada);
-//                                    startActivity(i);
                                 }
                                 else{
                                     selecionarEmpresas(position);
@@ -204,6 +199,7 @@ public class EmpresasFragment extends BaseFragment {
         for (Empresa empresa : empresasSelecionadas){
             DatabaseReference firebaseDatabaseDeletar = ConfiguracaoFirebase.getFirebaseDatabase();
             firebaseDatabaseDeletar.child("empresas").child(empresa.getIdUsuario()).child(empresa.getId()).removeValue();
+            firebaseDatabaseDeletar.child("empresasApp").child(empresa.getId()).removeValue();
             storageReferenceEmpresas = ConfiguracaoFirebase.getStorage().child("empresas").child(empresa.getIdUsuario()).child(empresa.getId());
             storageReferenceEmpresas.delete();
         }

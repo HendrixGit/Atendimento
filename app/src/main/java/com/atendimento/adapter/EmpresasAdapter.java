@@ -9,12 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.atendimento.R;
 import com.atendimento.model.Empresa;
-import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Request;
-
 import java.util.List;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EmpresasAdapter extends RecyclerView.Adapter<EmpresasAdapter.MyViewHoder> {

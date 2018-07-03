@@ -290,7 +290,8 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                     empresa.setNome(nomeEmpresa.getText().toString());
                     empresa.setCategoria(spinnerCategoria.getSelectedItem().toString());
                     empresa.setUrlImagem(urlImagem);
-                    taskSalvarEmpresa = firebase.child("empresas").child(identificadorUsuario).child(idKey).setValue(empresa);
+                    taskSalvarEmpresa  = firebase.child("empresas").child(identificadorUsuario).child(idKey).setValue(empresa);
+                    taskSalvarEmpresa2 = firebase.child("empresasApp").child(idKey).setValue(empresa);
                     Tasks.whenAll(taskSalvarEmpresa).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
