@@ -139,6 +139,7 @@ public class EmpresasFragment extends BaseFragment {
     }
 
     public void recuperarEmpresas(){
+        empresas.clear();
         childEventListenerEmpresas = query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -203,7 +204,6 @@ public class EmpresasFragment extends BaseFragment {
             storageReferenceEmpresas = ConfiguracaoFirebase.getStorage().child("empresas").child(empresa.getIdUsuario()).child(empresa.getId());
             storageReferenceEmpresas.delete();
         }
-        empresas.clear();
         recuperarEmpresas();
     }
 

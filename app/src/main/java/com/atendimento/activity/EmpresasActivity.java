@@ -113,7 +113,7 @@ public class EmpresasActivity extends BaseActivity {
             fragment.pesquisarEmpresa(newText.toLowerCase());
         }
         else{
-            fragment.recarregarEmpresas();
+            fragment.recuperarEmpresas();
         }
     }
 

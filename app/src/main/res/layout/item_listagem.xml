@@ -18,18 +18,15 @@
         android:paddingStart="5dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/circleImageEmpresasAdapter"
+            android:id="@+id/circleImageListagem"
             android:layout_width="64dp"
             android:layout_height="64dp" />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/circleImageSelecao"
+            android:id="@+id/circleImageSelecaoListagem"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="bottom"/>
-
-
-
     </FrameLayout>
 
     <LinearLayout
@@ -38,7 +35,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textViewNomeEmpresa"
+            android:id="@+id/textViewTextoTitulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start"
@@ -49,7 +46,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textViewCategoria"
+            android:id="@+id/textViewSubTexto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="viewStart"
@@ -57,5 +54,4 @@
             android:gravity="start" />
 
     </LinearLayout>
-
 </LinearLayout>

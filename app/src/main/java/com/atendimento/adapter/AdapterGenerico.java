@@ -13,35 +13,35 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class EmpresasAdapter extends RecyclerView.Adapter<EmpresasAdapter.MyViewHoder> {
+public class AdapterGenerico extends RecyclerView.Adapter<AdapterGenerico.MyViewHoder> {
 
-    private List<Empresa> empresas;
+    private List<Object> objects;
     private Context context;
 
-    public EmpresasAdapter(List<Empresa> objects, Context context){
+    public AdapterGenerico(List<Object> objects, Context context){
         this.context  = context;
-        this.empresas = objects;
+        this.objects  = objects;
     }
 
     public class MyViewHoder extends RecyclerView.ViewHolder {
 
-        private TextView textViewNome;
-        private TextView textViewCategoria;
-        private CircleImageView circleImageViewEmpresa;
-        private CircleImageView circleImageViewSelecao;
+        private TextView textViewTitulo;
+        private TextView textViewSubTitulo;
+        private CircleImageView circleImageViewImagemListagem;
+        private CircleImageView circleImageViewSelecaoListagem;
 
         public MyViewHoder(View itemView) {
             super(itemView);
-            textViewNome           = itemView.findViewById(R.id.textViewNomeEmpresa);
-            textViewCategoria      = itemView.findViewById(R.id.textViewCategoria);
-            circleImageViewEmpresa = itemView.findViewById(R.id.circleImageEmpresasAdapter);
-            circleImageViewSelecao = itemView.findViewById(R.id.circleImageSelecao);
+            textViewTitulo                 = itemView.findViewById(R.id.textViewNomeEmpresa);
+            textViewSubTitulo              = itemView.findViewById(R.id.textViewCategoria);
+            circleImageViewImagemListagem  = itemView.findViewById(R.id.circleImageEmpresasAdapter);
+            circleImageViewSelecaoListagem = itemView.findViewById(R.id.circleImageSelecao);
         }
     }
 
     @Override
     public MyViewHoder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemLista = LayoutInflater.from(parent.getContext()).inflate(R.layout.lista_empresas,parent,false);
+        View itemLista = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_listagem,parent,false);
         itemLista.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -59,17 +59,23 @@ public class EmpresasAdapter extends RecyclerView.Adapter<EmpresasAdapter.MyView
 
     @Override
     public void onBindViewHolder(MyViewHoder holder, int position) {
-        Empresa empresa = empresas.get(position);
-        holder.textViewNome.setText(empresa.getNome());
-        holder.textViewCategoria.setText(empresa.getCategoria());
-        getImages(empresa.getUrlImagem(), holder.circleImageViewEmpresa);
-        if (empresa.getSelecionado()){  Picasso.with(context).load(R.drawable.checkmarkblue).resize(64,64).into(holder.circleImageViewSelecao);  }
-        else{   holder.circleImageViewSelecao.setImageDrawable(null);   }
+        if (objects.contains(Empresa.class)) {
+            Empresa empresa = (Empresa) objects.get(position);
+            holder.textViewTitulo.setText(empresa.getNome());
+            holder.textViewSubTitulo.setText(empresa.getCategoria());
+            getImages(empresa.getUrlImagem(), holder.circleImageViewImagemListagem);
+            if (empresa.getSelecionado()) {
+                Picasso.with(context).load(R.drawable.checkmarkblue).resize(64, 64).into(holder.circleImageViewSelecaoListagem);
+            }
+            else {
+                holder.circleImageViewSelecaoListagem.setImageDrawable(null);
+            }
+        }
     }
 
     @Override
     public int getItemCount() {
-        return empresas.size();
+        return objects.size();
     }
 
 
