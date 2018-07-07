@@ -8,34 +8,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.atendimento.R;
-import com.atendimento.model.Empresa;
 import com.squareup.picasso.Picasso;
-import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AdapterGenerico extends RecyclerView.Adapter<AdapterGenerico.MyViewHoder> {
+public abstract class AdapterGenerico extends RecyclerView.Adapter<AdapterGenerico.MyViewHoder> {
 
-    private List<Object> objects;
-    private Context context;
+    protected Context contexto;
 
-    public AdapterGenerico(List<Object> objects, Context context){
-        this.context  = context;
-        this.objects  = objects;
+    public AdapterGenerico(Context context){
+        this.contexto  = context;
     }
 
     public class MyViewHoder extends RecyclerView.ViewHolder {
 
-        private TextView textViewTitulo;
-        private TextView textViewSubTitulo;
-        private CircleImageView circleImageViewImagemListagem;
-        private CircleImageView circleImageViewSelecaoListagem;
+        public TextView textViewTitulo;
+        public TextView textViewSubTitulo;
+        public CircleImageView circleImageViewImagemListagem;
+        public CircleImageView circleImageViewSelecaoListagem;
 
         public MyViewHoder(View itemView) {
             super(itemView);
-            textViewTitulo                 = itemView.findViewById(R.id.textViewNomeEmpresa);
-            textViewSubTitulo              = itemView.findViewById(R.id.textViewCategoria);
-            circleImageViewImagemListagem  = itemView.findViewById(R.id.circleImageEmpresasAdapter);
-            circleImageViewSelecaoListagem = itemView.findViewById(R.id.circleImageSelecao);
+            textViewTitulo                 = itemView.findViewById(R.id.textViewTextoTitulo);
+            textViewSubTitulo              = itemView.findViewById(R.id.textViewSubTexto);
+            circleImageViewImagemListagem  = itemView.findViewById(R.id.circleImageListagem);
+            circleImageViewSelecaoListagem = itemView.findViewById(R.id.circleImageSelecaoListagem);
         }
     }
 
@@ -58,33 +54,18 @@ public class AdapterGenerico extends RecyclerView.Adapter<AdapterGenerico.MyView
     }
 
     @Override
-    public void onBindViewHolder(MyViewHoder holder, int position) {
-        if (objects.contains(Empresa.class)) {
-            Empresa empresa = (Empresa) objects.get(position);
-            holder.textViewTitulo.setText(empresa.getNome());
-            holder.textViewSubTitulo.setText(empresa.getCategoria());
-            getImages(empresa.getUrlImagem(), holder.circleImageViewImagemListagem);
-            if (empresa.getSelecionado()) {
-                Picasso.with(context).load(R.drawable.checkmarkblue).resize(64, 64).into(holder.circleImageViewSelecaoListagem);
-            }
-            else {
-                holder.circleImageViewSelecaoListagem.setImageDrawable(null);
-            }
-        }
-    }
+    public abstract void onBindViewHolder(MyViewHoder holder, int position);
 
     @Override
-    public int getItemCount() {
-        return objects.size();
-    }
+    public abstract int getItemCount();
 
 
     public void getImages(String imageUrl, CircleImageView circleImageView) {
         if (imageUrl.equals("")){
-            Picasso.with(context).load(R.drawable.atendimento).error(R.drawable.atendimento).into(circleImageView);
+            Picasso.with(contexto).load(R.drawable.atendimento).error(R.drawable.atendimento).into(circleImageView);
         }
         else {
-            Picasso.with(context).
+            Picasso.with(contexto).
                     load(imageUrl).
                     resize(80,80).
                     error(R.drawable.atendimento).
