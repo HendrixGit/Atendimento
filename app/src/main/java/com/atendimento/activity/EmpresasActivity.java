@@ -34,12 +34,13 @@ public class EmpresasActivity extends BaseActivity {
     private DialogInterface.OnClickListener yesEcluirEmpresa;
     private AlertDialog dialogExcluir;
     private SQLiteDatabase databaseCategorias;
+    private EmpresasFragment fragment;
+    public  Boolean pesquisando = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_empresas);
-
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(titulo);
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
@@ -74,8 +75,8 @@ public class EmpresasActivity extends BaseActivity {
         searchViewEmpresa.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
-                EmpresasFragment fragment = (EmpresasFragment) adapter.getPage(0);
-                fragment.setarPesquisando(true);
+                criaFragmenteEmpresas();
+                pesquisando = true;
                 viewPagerTab.setVisibility(View.GONE);
             }
 
@@ -99,21 +100,29 @@ public class EmpresasActivity extends BaseActivity {
 
         deletarEmpresa   = findViewById(R.id.item_deletarEmpresa);
         pesquisarEmpresa = findViewById(R.id.item_pesquisaEmpresa);
+        criaFragmenteEmpresas();
     }
 
     private void apareceTabEmpresas() {
+        pesquisando = false;
         viewPagerTab.setVisibility(View.VISIBLE);
-        EmpresasFragment fragment = (EmpresasFragment) adapter.getPage(0);
+        criaFragmenteEmpresas();
         fragment.recarregarEmpresas();
     }
 
     private void pesquisarEmpresa(String newText) {
-        EmpresasFragment fragment = (EmpresasFragment) adapter.getPage(0);
+        criaFragmenteEmpresas();
         if (newText != null && !newText.isEmpty()) {
             fragment.pesquisarEmpresa(newText.toLowerCase());
         }
         else{
-            fragment.recuperarEmpresas();
+            fragment.recarregarEmpresas();
+        }
+    }
+
+    private void criaFragmenteEmpresas() {
+        if (fragment == null) {
+            fragment = (EmpresasFragment) adapter.getPage(0);
         }
     }
 
@@ -137,7 +146,7 @@ public class EmpresasActivity extends BaseActivity {
         deletarEmpresa.setVisible(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(false);
-        EmpresasFragment fragment = (EmpresasFragment) adapter.getPage(0);
+        fragment = (EmpresasFragment) adapter.getPage(0);
         fragment.zerarSelecao();
     }
 
