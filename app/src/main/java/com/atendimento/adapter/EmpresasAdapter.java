@@ -23,6 +23,10 @@ public class EmpresasAdapter extends RecyclerView.Adapter<EmpresasAdapter.MyView
         this.empresas = objects;
     }
 
+    public List<Empresa> getEmpresas(){
+        return this.empresas;
+    }
+
     public class MyViewHoder extends RecyclerView.ViewHolder {
 
         private TextView textViewNome;

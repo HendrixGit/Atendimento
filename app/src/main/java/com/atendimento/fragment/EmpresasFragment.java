@@ -63,6 +63,9 @@ public class EmpresasFragment extends BaseFragment {
                         new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
+                                List<Empresa> listaAtualizada = adapterEmpresa.getEmpresas();
+                                empresas = listaAtualizada;
+
                                 if (!modoSelecao) {
                                     mudarTelaObject(getActivity(), CadastrarEmpresaActivity.class, empresas.get(position), "empresa");
                                 }
