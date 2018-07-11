@@ -35,7 +35,6 @@ public class EmpresasFragment extends BaseFragment {
     private EmpresasAdapter adapterEmpresa;
     private List<Empresa> empresas = new ArrayList<>();
     private List<Empresa> empresasSelecionadas = new ArrayList<>();
-    private List<Empresa> empresasPadrao = new ArrayList<>();
     private Integer selecionados = 0;
     private DatabaseReference firebaseDatabase;
     private ChildEventListener childEventListenerEmpresas;
@@ -75,7 +74,6 @@ public class EmpresasFragment extends BaseFragment {
 
                             @Override
                             public void onLongItemClick(View view, int position) {
-                                atualizarLista();
                                 if (!empresasActivity.pesquisando) {
                                     selecionarEmpresas(position);
                                 }
