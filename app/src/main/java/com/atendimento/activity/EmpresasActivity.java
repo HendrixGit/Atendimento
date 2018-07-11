@@ -20,6 +20,7 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
+
 public class EmpresasActivity extends BaseActivity {
 
     private Toolbar toolbar;
@@ -33,7 +34,7 @@ public class EmpresasActivity extends BaseActivity {
     private Util util;
     private DialogInterface.OnClickListener yesEcluirEmpresa;
     private AlertDialog dialogExcluir;
-    private SQLiteDatabase databaseCategorias;
+    private SQLiteDatabase databaseCategoriasParametro;
     private EmpresasFragment fragment;
     public  Boolean pesquisando = false;
 
@@ -48,7 +49,8 @@ public class EmpresasActivity extends BaseActivity {
         getSupportActionBar().setElevation(0);
 
         util = new Util();
-        databaseCategorias = databaseCategorias;
+        databaseCategoriasParametro = databaseCategorias();
+
 
         yesEcluirEmpresa = new DialogInterface.OnClickListener() {
             @Override
@@ -146,7 +148,7 @@ public class EmpresasActivity extends BaseActivity {
         deletarEmpresa.setVisible(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(false);
-        fragment = (EmpresasFragment) adapter.getPage(0);
+        criaFragmenteEmpresas();
         fragment.zerarSelecao();
     }
 

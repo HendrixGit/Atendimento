@@ -35,6 +35,7 @@ public class EmpresasFragment extends BaseFragment {
     private EmpresasAdapter adapterEmpresa;
     private List<Empresa> empresas = new ArrayList<>();
     private List<Empresa> empresasSelecionadas = new ArrayList<>();
+    private List<Empresa> empresasPadrao = new ArrayList<>();
     private Integer selecionados = 0;
     private DatabaseReference firebaseDatabase;
     private ChildEventListener childEventListenerEmpresas;
@@ -63,9 +64,7 @@ public class EmpresasFragment extends BaseFragment {
                         new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
-                                List<Empresa> listaAtualizada = adapterEmpresa.getEmpresas();
-                                empresas = listaAtualizada;
-
+                                atualizarLista();
                                 if (!modoSelecao) {
                                     mudarTelaObject(getActivity(), CadastrarEmpresaActivity.class, empresas.get(position), "empresa");
                                 }
@@ -76,6 +75,7 @@ public class EmpresasFragment extends BaseFragment {
 
                             @Override
                             public void onLongItemClick(View view, int position) {
+                                atualizarLista();
                                 if (!empresasActivity.pesquisando) {
                                     selecionarEmpresas(position);
                                 }
@@ -104,13 +104,17 @@ public class EmpresasFragment extends BaseFragment {
         return view;
     }
 
+    private void atualizarLista() {
+        List<Empresa> listaAtualizada = adapterEmpresa.getEmpresas();
+        empresas = listaAtualizada;
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         if (empresas.size() <= 0) {
             recuperarEmpresas();
         }
-
     }
 
     @Override
@@ -212,7 +216,7 @@ public class EmpresasFragment extends BaseFragment {
     public void pesquisarEmpresa(String textoPesquisa){
         List<Empresa> listaEmpresasBusca = new ArrayList<>();
         for(Empresa empresa : empresas){
-            if(empresa.getNome().toLowerCase().contains(textoPesquisa)){
+            if(empresa.getNome().toLowerCase().contains(textoPesquisa) || empresa.getCategoria().toLowerCase().contains(textoPesquisa) ){
                 listaEmpresasBusca.add(empresa);
             }
         }
