@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -214,7 +215,9 @@ public class EmpresasFragment extends BaseFragment {
     public void pesquisarEmpresa(String textoPesquisa){
         List<Empresa> listaEmpresasBusca = new ArrayList<>();
         for(Empresa empresa : empresas){
-            if(empresa.getNome().toLowerCase().contains(textoPesquisa) || empresa.getCategoria().toLowerCase().contains(textoPesquisa) ){
+            String nome      = Normalizer.normalize(empresa.getNome(),      Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+            String categoria = Normalizer.normalize(empresa.getCategoria(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+            if(nome.toLowerCase().contains(textoPesquisa) || categoria.toLowerCase().contains(textoPesquisa) ){
                 listaEmpresasBusca.add(empresa);
             }
         }
