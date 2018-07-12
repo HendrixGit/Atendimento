@@ -29,4 +29,9 @@ public class AdapterEmpresasApp extends AdapterGenerico {
     public int getItemCount() {
         return empresas.size();
     }
+
+    @Override
+    public List getList() {
+        return empresas;
+    }
 }

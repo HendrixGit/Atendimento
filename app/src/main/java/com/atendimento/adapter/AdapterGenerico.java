@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.atendimento.R;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public abstract class AdapterGenerico extends RecyclerView.Adapter<AdapterGenerico.MyViewHoder> {
@@ -59,6 +62,7 @@ public abstract class AdapterGenerico extends RecyclerView.Adapter<AdapterGeneri
     @Override
     public abstract int getItemCount();
 
+    public abstract List getList();
 
     public void getImages(String imageUrl, CircleImageView circleImageView) {
         if (imageUrl.equals("")){
