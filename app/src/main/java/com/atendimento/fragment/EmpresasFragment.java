@@ -1,7 +1,6 @@
 package com.atendimento.fragment;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,10 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import com.atendimento.R;
 import com.atendimento.activity.CadastrarEmpresaActivity;
 import com.atendimento.activity.EmpresasActivity;
-import com.atendimento.adapter.EmpresasAdapter;
+import com.atendimento.adapter.AdapterEmpresasApp;
 import com.atendimento.bases.BaseFragment;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Empresa;
@@ -22,8 +20,6 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.google.firebase.storage.StorageReference;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -32,40 +28,31 @@ import java.util.List;
 
 public class EmpresasFragment extends BaseFragment {
 
-    private RecyclerView recyclerViewEmpresas;
-    private EmpresasAdapter adapterEmpresa;
-    private List<Empresa> empresas = new ArrayList<>();
+    private AdapterEmpresasApp adapterEmpresa;
+    private List<Empresa> empresas             = new ArrayList<>();
     private List<Empresa> empresasSelecionadas = new ArrayList<>();
-    private Integer selecionados = 0;
-    private DatabaseReference firebaseDatabase;
-    private ChildEventListener childEventListenerEmpresas;
-    private StorageReference storageReferenceEmpresas;
-    private FloatingActionButton cadastrarEmpresaButton;
-    private Query query;
-    private Boolean modoSelecao = false;
     private EmpresasActivity empresasActivity;
 
     public EmpresasFragment(){}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_empresas, container, false);
+        super.onCreateView(inflater,container,savedInstanceState);
         empresasActivity = (EmpresasActivity) getActivity();
-        recyclerViewEmpresas = view.findViewById(R.id.recyclerViewEmpresas);
-        adapterEmpresa = new EmpresasAdapter(empresas, getContext());
+        adapterEmpresa = new AdapterEmpresasApp(empresas, getContext());
         RecyclerView.LayoutManager layoutManager   = new LinearLayoutManager(getActivity());
-        recyclerViewEmpresas.setLayoutManager(layoutManager);
-        recyclerViewEmpresas.setHasFixedSize(true);
-        recyclerViewEmpresas.setAdapter(adapterEmpresa);
-        recyclerViewEmpresas.addOnItemTouchListener(
+        recyclerViewBase.setLayoutManager(layoutManager);
+        recyclerViewBase.setHasFixedSize(true);
+        recyclerViewBase.setAdapter(adapterEmpresa);
+        recyclerViewBase.addOnItemTouchListener(
                 new RecyclerItemClickListener(
                         getActivity(),
-                        recyclerViewEmpresas,
+                        recyclerViewBase,
                         new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
                                 atualizarLista();
-                                if (!modoSelecao) {
+                                if (!modoSelecaoBase) {
                                     mudarTelaObject(getActivity(), CadastrarEmpresaActivity.class, empresas.get(position), "empresa");
                                 }
                                 else{
@@ -87,9 +74,8 @@ public class EmpresasFragment extends BaseFragment {
                         }
                 ));
 
-        recyclerViewEmpresas.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-        cadastrarEmpresaButton =  view.findViewById(R.id.floatButtonCadastrarEmpresa);
-        cadastrarEmpresaButton.setOnClickListener(new View.OnClickListener() {
+        recyclerViewBase.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+        floatingActionButtonBase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mudarTela(getActivity(), CadastrarEmpresaActivity.class);
@@ -99,12 +85,12 @@ public class EmpresasFragment extends BaseFragment {
 
         String idUsuarioLogado = ConfiguracaoFirebase.getAutenticacao().getCurrentUser().getUid();
         firebaseDatabase = ConfiguracaoFirebase.getFirebaseDatabase();
-        query = firebaseDatabase.child("empresas").child(idUsuarioLogado).orderByChild("nome");
-        return view;
+        queryBase = firebaseDatabase.child("empresas").child(idUsuarioLogado).orderByChild("nome");
+        return viewBase;
     }
 
     private void atualizarLista() {
-        List<Empresa> listaAtualizada = adapterEmpresa.getEmpresas();
+        List<Empresa> listaAtualizada = adapterEmpresa.getList();
         empresas = listaAtualizada;
     }
 
@@ -130,7 +116,7 @@ public class EmpresasFragment extends BaseFragment {
 
 
     private void removerListener() {
-        query.removeEventListener(childEventListenerEmpresas);
+        queryBase.removeEventListener(childEventListenerBase);
     }
 
     public void recarregarEmpresas(){
@@ -138,14 +124,14 @@ public class EmpresasFragment extends BaseFragment {
     }
 
     public void carregarEmpresas(List<Empresa> listaParametro){
-        adapterEmpresa = new EmpresasAdapter(listaParametro, getActivity());
-        recyclerViewEmpresas.setAdapter(adapterEmpresa);
+        adapterEmpresa = new AdapterEmpresasApp(listaParametro, getActivity());
+        recyclerViewBase.setAdapter(adapterEmpresa);
         adapterEmpresa.notifyDataSetChanged();
     }
 
     public void recuperarEmpresas(){
         empresas.clear();
-        childEventListenerEmpresas = query.addChildEventListener(new ChildEventListener() {
+        childEventListenerBase = queryBase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Empresa empresa = dataSnapshot.getValue(Empresa.class);
@@ -176,25 +162,24 @@ public class EmpresasFragment extends BaseFragment {
     }
 
     public void selecionarEmpresas(Integer posicao){
-        modoSelecao = true;
+        modoSelecaoBase = true;
         if (!empresasSelecionadas.contains(empresas.get(posicao)) && empresasSelecionadas.size() != empresas.size()) {
             empresas.get(posicao).setSelecionado(true);
-            selecionados++;
+            selecionadosBase++;
             empresasSelecionadas.add(empresas.get(posicao));
         }
         else{
             empresas.get(posicao).setSelecionado(false);
-            selecionados--;
+            selecionadosBase--;
             empresasSelecionadas.remove(empresas.get(posicao));
         }
         adapterEmpresa.notifyDataSetChanged();
-        empresasActivity.setTituloToolbar(selecionados.toString());
-        if (selecionados == 0){ empresasActivity.toolbarPadrao(); }
+        empresasActivity.setTituloToolbar(selecionadosBase.toString());
+        if (selecionadosBase == 0){ empresasActivity.toolbarPadrao(); }
     }
 
     public void zerarSelecao(){
-        selecionados = 0;
-        modoSelecao = false;
+        super.zerarSelecao();
         empresasSelecionadas.clear();
         int i = 0;
         for(Empresa empresa : empresas) {   empresas.get(i).setSelecionado(false);  i++; }
@@ -206,8 +191,8 @@ public class EmpresasFragment extends BaseFragment {
             DatabaseReference firebaseDatabaseDeletar = ConfiguracaoFirebase.getFirebaseDatabase();
             firebaseDatabaseDeletar.child("empresas").child(empresa.getIdUsuario()).child(empresa.getId()).removeValue();
             firebaseDatabaseDeletar.child("empresasApp").child(empresa.getId()).removeValue();
-            storageReferenceEmpresas = ConfiguracaoFirebase.getStorage().child("empresas").child(empresa.getIdUsuario()).child(empresa.getId());
-            storageReferenceEmpresas.delete();
+            storageReferenceBase = ConfiguracaoFirebase.getStorage().child("empresas").child(empresa.getIdUsuario()).child(empresa.getId());
+            storageReferenceBase.delete();
         }
         recuperarEmpresas();
     }

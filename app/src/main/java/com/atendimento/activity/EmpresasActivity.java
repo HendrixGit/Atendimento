@@ -2,7 +2,6 @@ package com.atendimento.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -34,7 +33,6 @@ public class EmpresasActivity extends BaseActivity {
     private Util util;
     private DialogInterface.OnClickListener yesEcluirEmpresa;
     private AlertDialog dialogExcluir;
-    private SQLiteDatabase databaseCategoriasParametro;
     private EmpresasFragment fragment;
     public  Boolean pesquisando = false;
 
@@ -47,10 +45,7 @@ public class EmpresasActivity extends BaseActivity {
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
         setSupportActionBar(toolbar);
         getSupportActionBar().setElevation(0);
-
         util = new Util();
-        databaseCategoriasParametro = databaseCategorias();
-
 
         yesEcluirEmpresa = new DialogInterface.OnClickListener() {
             @Override

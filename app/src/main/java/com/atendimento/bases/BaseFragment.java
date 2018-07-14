@@ -35,9 +35,9 @@ public class BaseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        viewBase         = inflater.inflate(R.layout.fragment_empresas, container, false);
-        recyclerViewBase = viewBase.findViewById(R.id.recyclerViewEmpresas);
-        floatingActionButtonBase =  viewBase.findViewById(R.id.floatButtonCadastrarEmpresa);
+        viewBase         = inflater.inflate(R.layout.fragment_base, container, false);
+        recyclerViewBase = viewBase.findViewById(R.id.recyclerViewBase);
+        floatingActionButtonBase =  viewBase.findViewById(R.id.floatButtonBase);
         return viewBase;
     }
 
@@ -51,5 +51,14 @@ public class BaseFragment extends Fragment {
         intent.putExtra(nomeObjeto, serializable);
         startActivity(intent);
     }
+
+    protected void selecionarEmpresas(Integer posicao){};
+
+    protected void zerarSelecao(){
+        selecionadosBase = 0;
+        modoSelecaoBase  = false;
+    }
+
+
 
 }
