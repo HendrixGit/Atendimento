@@ -1,8 +1,6 @@
 package com.atendimento.fragment;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +13,6 @@ import com.atendimento.bases.BaseFragment;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Empresa;
 import com.atendimento.util.RecyclerItemClickListener;
-import com.atendimento.util.SimpleDividerItemDecoration;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,9 +37,6 @@ public class EmpresasFragment extends BaseFragment {
         super.onCreateView(inflater,container,savedInstanceState);
         empresasActivity = (EmpresasActivity) getActivity();
         adapterEmpresa = new AdapterEmpresasApp(empresas, getContext());
-        RecyclerView.LayoutManager layoutManager   = new LinearLayoutManager(getActivity());
-        recyclerViewBase.setLayoutManager(layoutManager);
-        recyclerViewBase.setHasFixedSize(true);
         recyclerViewBase.setAdapter(adapterEmpresa);
         recyclerViewBase.addOnItemTouchListener(
                 new RecyclerItemClickListener(
@@ -74,7 +68,6 @@ public class EmpresasFragment extends BaseFragment {
                         }
                 ));
 
-        recyclerViewBase.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
         floatingActionButtonBase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
