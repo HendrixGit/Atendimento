@@ -13,9 +13,11 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.inputmethod.InputMethodManager;
 
 import com.atendimento.R;
@@ -23,6 +25,9 @@ import com.atendimento.activity.InicioActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +41,12 @@ public class BaseActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.CAMERA
     };
+
+    protected Toolbar toolbarBase;
+    protected ViewPager viewPagerBase;
+    protected MaterialSearchView searchViewBase;
+    protected SmartTabLayout viewPagerTab;
+    protected FragmentPagerItemAdapter adapterBase;
 
     protected ConnectivityManager cm;
     protected static String nomeApp = "Atendimento";

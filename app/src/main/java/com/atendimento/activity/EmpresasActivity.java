@@ -3,8 +3,6 @@ package com.atendimento.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,20 +13,14 @@ import com.atendimento.bases.BaseActivity;
 import com.atendimento.fragment.EmpresasFragment;
 import com.atendimento.util.Util;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 
 public class EmpresasActivity extends BaseActivity {
 
-    private Toolbar toolbar;
-    private ViewPager viewPager;
-    private MaterialSearchView searchViewEmpresa;
     private MenuItem deletarEmpresa;
     private MenuItem pesquisarEmpresa;
-    private FragmentPagerItemAdapter adapter;
-    private SmartTabLayout viewPagerTab;
     private String titulo = "Empresas";
     private Util util;
     private DialogInterface.OnClickListener yesEcluirEmpresa;
@@ -40,36 +32,36 @@ public class EmpresasActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_empresas);
-        toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(titulo);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
-        setSupportActionBar(toolbar);
+        toolbarBase = findViewById(R.id.toolbar);
+        toolbarBase.setTitleTextColor(getResources().getColor(R.color.colorBranco));
+        toolbarBase.setTitle(titulo);
+        setSupportActionBar(toolbarBase);
         getSupportActionBar().setElevation(0);
         util = new Util();
 
         yesEcluirEmpresa = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                EmpresasFragment fragment =  (EmpresasFragment) adapter.getPage(0);
+                EmpresasFragment fragment =  (EmpresasFragment) adapterBase.getPage(0);
                 fragment.deletarEmpresa();
                 toolbarPadrao();
             }
         };
 
-        adapter = new FragmentPagerItemAdapter(
+        adapterBase = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(),
                 FragmentPagerItems.with(this)
                         .add("Empresas Cadastradas", EmpresasFragment.class)
                         .create()
         );
-        viewPager = findViewById(R.id.viewPagerEmpresas);
-        viewPager.setAdapter( adapter );
+        viewPagerBase = findViewById(R.id.viewPagerEmpresas);
+        viewPagerBase.setAdapter( adapterBase );
 
         viewPagerTab = findViewById(R.id.viewPagerTabEmpresa);
-        viewPagerTab.setViewPager( viewPager );
+        viewPagerTab.setViewPager( viewPagerBase );
 
-        searchViewEmpresa = findViewById(R.id.search_viewEmpresa);
-        searchViewEmpresa.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+        searchViewBase = findViewById(R.id.search_viewEmpresa);
+        searchViewBase.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
                 criaFragmenteEmpresas();
@@ -82,7 +74,7 @@ public class EmpresasActivity extends BaseActivity {
                 apareceTabEmpresas();
             }
         });
-        searchViewEmpresa.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+        searchViewBase.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return true;
@@ -119,13 +111,13 @@ public class EmpresasActivity extends BaseActivity {
 
     private void criaFragmenteEmpresas() {
         if (fragment == null) {
-            fragment = (EmpresasFragment) adapter.getPage(0);
+            fragment = (EmpresasFragment) adapterBase.getPage(0);
         }
     }
 
     public void setTituloToolbar(String texto){
-        toolbar.setTitle(texto);
-        toolbar.setBackgroundColor(getResources().getColor(R.color.colorSelecionado));
+        toolbarBase.setTitle(texto);
+        toolbarBase.setBackgroundColor(getResources().getColor(R.color.colorSelecionado));
         viewPagerTab.setBackgroundColor(getResources().getColor(R.color.colorSelecionado));
         pesquisarEmpresa.setVisible(false);
         deletarEmpresa.setVisible(true);
@@ -135,8 +127,8 @@ public class EmpresasActivity extends BaseActivity {
     }
 
     public void toolbarPadrao(){
-        toolbar.setTitle(titulo);
-        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        toolbarBase.setTitle(titulo);
+        toolbarBase.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         viewPagerTab.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         pesquisarEmpresa.setVisible(true);
         pesquisarEmpresa.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
@@ -164,7 +156,7 @@ public class EmpresasActivity extends BaseActivity {
         inflater.inflate(R.menu.menu_empresa, menu);
         MenuItem menuItemPesquisa  = menu.findItem(R.id.item_pesquisaEmpresa);
         MenuItem menuItemDeletar   = menu.findItem(R.id.item_deletarEmpresa);
-        searchViewEmpresa.setMenuItem(menuItemPesquisa);
+        searchViewBase.setMenuItem(menuItemPesquisa);
         pesquisarEmpresa = menuItemPesquisa;
         deletarEmpresa   = menuItemDeletar;
         deletarEmpresa.setVisible(false);
