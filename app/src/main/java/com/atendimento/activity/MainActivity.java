@@ -5,6 +5,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
@@ -24,6 +25,7 @@ public class MainActivity extends BaseActivity {
     private DatabaseReference firebase;
     private ValueEventListener valueEventListenerPerfil;
     private Preferencias preferencias;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

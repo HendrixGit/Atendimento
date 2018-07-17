@@ -22,7 +22,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.Serializable;
 
 
-public class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
 
     protected View viewBase;
     protected RecyclerView recyclerViewBase;
@@ -58,13 +58,18 @@ public class BaseFragment extends Fragment {
         startActivity(intent);
     }
 
-
-
     protected void zerarSelecao(){
         selecionadosBase = 0;
         modoSelecaoBase  = false;
     }
 
+    public abstract void  pesquisarEmpresa(String textoPesquisa);
 
+    public abstract void  selecionarEmpresas(Integer posicao);
 
+    public abstract void  removerListener();
+
+    public abstract void  atualizarLista();
+
+    public abstract void recuperarEmpresas();
 }

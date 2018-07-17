@@ -82,7 +82,7 @@ public class EmpresasFragment extends BaseFragment {
         return viewBase;
     }
 
-    private void atualizarLista() {
+    public void atualizarLista() {
         List<Empresa> listaAtualizada = adapterEmpresa.getList();
         empresas = listaAtualizada;
     }
@@ -108,7 +108,7 @@ public class EmpresasFragment extends BaseFragment {
     }
 
 
-    private void removerListener() {
+    public void removerListener() {
         queryBase.removeEventListener(childEventListenerBase);
     }
 
