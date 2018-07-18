@@ -60,7 +60,7 @@ public class EmpresasActivity extends BaseActivity {
         viewPagerTab = findViewById(R.id.viewPagerTabEmpresa);
         viewPagerTab.setViewPager( viewPagerBase );
 
-        searchViewBase = findViewById(R.id.search_viewEmpresa);
+        searchViewBase = findViewById(R.id.search_view);
         searchViewBase.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {

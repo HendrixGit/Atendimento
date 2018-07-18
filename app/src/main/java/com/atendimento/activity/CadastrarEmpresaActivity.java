@@ -58,8 +58,11 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     private Button cancel;
     private CircleImageView circleImageView;
     private Spinner spinnerCategoria;
+    private Spinner spinnerHorarios;
     private List<String> listaCategoria;
+    private List<String> listaHorarios;
     private ArrayAdapter<String> dataCategoria;
+    private ArrayAdapter<String> dataHorarios;
     private EditText nomeEmpresa;
     private Util util;
     private SQLiteDatabase sqLiteDatabasePar;
@@ -86,6 +89,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         setContentView(R.layout.activity_cadastrar_empresa);
         nomeEmpresa      = findViewById(R.id.editTextNomeEmpresa);
         spinnerCategoria = findViewById(R.id.spinnerCategoria);
+        spinnerHorarios  = findViewById(R.id.spinnerHorarios);
         circleImageView  = findViewById(R.id.circleImageEmpresa);
         progressBar      = findViewById(R.id.progressBarCadEmpresa);
         toolbar          = findViewById(R.id.toolbar);
@@ -121,7 +125,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         cursor.moveToFirst();
         listaCategoria.add("--  Selecione a Categoria  --");
 
-        while (!cursor.isLast()) {
+        while (!cursor.isAfterLast()){
             listaCategoria.add(cursor.getString(indiceColunaDescricao));
             cursor.moveToNext();
         }
@@ -135,6 +139,17 @@ public class CadastrarEmpresaActivity extends BaseActivity {
             int opcao = Integer.parseInt(cursor2.getString(indiceColunaCodigo));
             spinnerCategoria.setSelection(opcao);
         }
+
+        listaHorarios = new ArrayList<String>();
+        Cursor cursor3 = cursorHorarios(sqLiteDatabasePar,"");
+        indiceColunaDescricao = cursor3.getColumnIndex("descricao");
+        cursor3.moveToFirst();
+        while (!cursor3.isAfterLast()){
+            listaHorarios.add(cursor3.getString(indiceColunaDescricao));
+            cursor3.moveToNext();
+        }
+        dataHorarios = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, listaHorarios);
+        spinnerHorarios.setAdapter(dataHorarios);
 
         toolbar.setTitle("Cadastro de Empresa");
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorBranco));
@@ -292,7 +307,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                     empresa.setUrlImagem(urlImagem);
                     taskSalvarEmpresa  = firebase.child("empresas").child(identificadorUsuario).child(idKey).setValue(empresa);
                     taskSalvarEmpresa2 = firebase.child("empresasApp").child(idKey).setValue(empresa);
-                    Tasks.whenAll(taskSalvarEmpresa).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    Tasks.whenAll(taskSalvarEmpresa, taskSalvarEmpresa2).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             mudarTelaFinish(getApplicationContext(), EmpresasActivity.class);

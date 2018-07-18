@@ -128,14 +128,21 @@ public class BaseActivity extends AppCompatActivity {
 
     protected SQLiteDatabase databaseCategorias(){
         sqLiteDatabasePar = openOrCreateDatabase("databaseCategorias", MODE_PRIVATE, null);
-        sqLiteDatabasePar.execSQL("DELETE FROM categorias");
         sqLiteDatabasePar.execSQL("CREATE TABLE IF NOT EXISTS categorias(codigo INT(3), descricao VARCHAR)");
+        sqLiteDatabasePar.execSQL("DELETE FROM categorias");
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(1, 'Clínicas Médicas')");
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(2, 'Pet Shops')");
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(3, 'Laboratórios')");
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(4, 'Manicure/Pedicuere')");
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(5, 'Salões de Beleza')");
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(6, 'Escritórios Advocacia')");
+
+        sqLiteDatabasePar.execSQL("CREATE TABLE IF NOT EXISTS horarios(codigo INT(3), descricao VARCHAR)");
+        sqLiteDatabasePar.execSQL("DELETE FROM horarios");
+        sqLiteDatabasePar.execSQL("INSERT INTO horarios(codigo, descricao)  VALUES(1, 'Semanal')");
+        sqLiteDatabasePar.execSQL("INSERT INTO horarios(codigo, descricao)  VALUES(2, 'Fim de Semana')");
+        sqLiteDatabasePar.execSQL("INSERT INTO horarios(codigo, descricao)  VALUES(3, 'Integral')");
+
         return sqLiteDatabasePar;
     }
 
@@ -150,5 +157,18 @@ public class BaseActivity extends AppCompatActivity {
         }
         return cursor;
     }
+
+    protected Cursor cursorHorarios(SQLiteDatabase parametroDatabase, String parametros){
+        Cursor cursor;
+        if (parametros.isEmpty()) {
+            cursor = parametroDatabase.rawQuery("SELECT codigo, descricao FROM horarios", null);
+        }
+        else {
+            String[] params = new String[]{parametros};
+            cursor = parametroDatabase.rawQuery("SELECT codigo, descricao FROM horarios WHERE descricao = ?", params);
+        }
+        return cursor;
+    }
+
 
 }
