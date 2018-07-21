@@ -143,6 +143,12 @@ public class BaseActivity extends AppCompatActivity {
         sqLiteDatabasePar.execSQL("INSERT INTO horarios(codigo, descricao)  VALUES(2, 'Fim de Semana')");
         sqLiteDatabasePar.execSQL("INSERT INTO horarios(codigo, descricao)  VALUES(3, 'Integral')");
 
+        sqLiteDatabasePar.execSQL("CREATE TABLE IF NOT EXISTS horariosFuncionamento(codigo INT(3), descricao VARCHAR)");
+        sqLiteDatabasePar.execSQL("DELETE FROM horariosFuncionamento");
+        sqLiteDatabasePar.execSQL("INSERT INTO horariosFuncionamento(codigo, descricao)  VALUES(1, 'Comercial - 08:00 : 18:00')");
+        sqLiteDatabasePar.execSQL("INSERT INTO horariosFuncionamento(codigo, descricao)  VALUES(2, 'Noturno')");
+        sqLiteDatabasePar.execSQL("INSERT INTO horariosFuncionamento(codigo, descricao)  VALUES(3, 'Integral')");
+
         return sqLiteDatabasePar;
     }
 
