@@ -94,7 +94,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         horarios.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mudarTela(getApplicationContext(), CalendarioActivity.class);
+                mudarTela(getApplicationContext(), HorariosEmpresaActivity.class);
             }
         });
 

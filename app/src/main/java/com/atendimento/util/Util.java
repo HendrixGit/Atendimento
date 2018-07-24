@@ -1,6 +1,7 @@
 package com.atendimento.util;
 
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -72,4 +73,13 @@ public class Util{
         builder.setNegativeButton(textoBotao2, onClickListenerBotao2);
         return builder;
     }
+
+    public AlertDialog.Builder HorarioDialog(String titulo, Context context){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.dialogHorario);
+        builder.setTitle(titulo);
+        builder.setPositiveButton(titulo,null);
+        builder.setNegativeButton("Cancelar",null);
+        return builder;
+    }
+
 }
