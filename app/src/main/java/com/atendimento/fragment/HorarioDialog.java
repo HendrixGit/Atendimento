@@ -23,13 +23,10 @@ public class HorarioDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
         builder = new AlertDialog.Builder(getActivity(),R.style.dialog);
-        //builder.setCancelable(false);
         inflater           = getActivity().getLayoutInflater();
         viewHorarios       = inflater.inflate(R.layout.hora_dialog, null, false);
         timePickerHorarios = viewHorarios.findViewById(R.id.timePickerHorario);
-
-        timePickerHorarios.setEnabled(true);
-        timePickerHorarios.setVisibility(View.VISIBLE);
+        builder.setView(viewHorarios);
         return builder.create();
     }
 }
