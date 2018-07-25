@@ -8,10 +8,11 @@ import android.widget.EditText;
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.fragment.HorarioDialog;
+import com.atendimento.util.MyDialogFragmentListener;
 import com.atendimento.util.Util;
 
 
-public class HorariosEmpresaActivity extends BaseActivity {
+public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFragmentListener {
 
     private Button horaInicio;
     private DialogFragment horariosDialog;
@@ -37,5 +38,10 @@ public class HorariosEmpresaActivity extends BaseActivity {
                 horariosDialog.show(getFragmentManager(), "Horários");
             }
         });
+    }
+
+    @Override
+    public void onReturnValue(String resultadoParametro) {
+
     }
 }
