@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -14,7 +16,11 @@ import android.widget.TimePicker;
 import com.atendimento.R;
 import com.atendimento.util.MyDialogFragmentListener;
 
+import java.sql.Time;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class HorarioDialog extends DialogFragment {
@@ -26,9 +32,8 @@ public class HorarioDialog extends DialogFragment {
     private TimePicker timePickerHorarios;
     private String horaParemetro = "";
 
-    private static final int INTERVAL = 15;
+    private static final int INTERVAL = 60;
     private static final DecimalFormat FORMATTER = new DecimalFormat("00");
-
     private NumberPicker minutePicker;
 
     @Override
@@ -38,7 +43,6 @@ public class HorarioDialog extends DialogFragment {
         inflater           = getActivity().getLayoutInflater();
         viewHorarios       = inflater.inflate(R.layout.hora_dialog, null, false);
         timePickerHorarios = viewHorarios.findViewById(R.id.timePickerHorario);
-
         timePickerHorarios.setIs24HourView(true);
         timePickerHorarios.setCurrentHour(8);
         timePickerHorarios.setCurrentMinute(00);
@@ -48,8 +52,18 @@ public class HorarioDialog extends DialogFragment {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        int hora = timePickerHorarios.getCurrentHour();
-                        horaParemetro = String.valueOf(hora);
+                        Calendar calendar = Calendar.getInstance();
+                        if (Build.VERSION.SDK_INT < 23){
+                            calendar.set(Calendar.HOUR_OF_DAY, timePickerHorarios.getCurrentHour());
+                            calendar.set(Calendar.MINUTE, getMinute());
+                        }
+                        else {
+                            calendar.set(Calendar.HOUR_OF_DAY, timePickerHorarios.getHour());
+                            calendar.set(Calendar.MINUTE, getMinute());
+                        }
+                        Time time = new Time(Location.FORMAT_MINUTES);
+                        DateFormat dateFormat = android.text.format.DateFormat.getTimeFormat(getActivity());
+                        horaParemetro = dateFormat.format(calendar.getTime());
                     }
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -59,6 +73,13 @@ public class HorarioDialog extends DialogFragment {
                     }
                 });
         return builder.create();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        activityChamada = (MyDialogFragmentListener) getActivity();
+        activityChamada.onReturnValue(horaParemetro);
+        super.onDismiss(dialog);
     }
 
     public void setMinutePicker() {

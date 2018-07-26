@@ -50,5 +50,8 @@
     <string name="cadastrarEmpresa">Cadastrar Empresa</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="horarios">Horários</string>
+    <string name="horariosFuncionamento">Período de trabalho(Em Horas)</string>
+    <string name="inicio">Início</string>
+    <string name="Fim">Fim</string>
     <string name="diasSemana">Selecione os dias da semana de funcionamento</string>
 </resources>
