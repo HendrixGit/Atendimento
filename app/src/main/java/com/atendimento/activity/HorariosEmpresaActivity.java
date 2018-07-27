@@ -2,21 +2,29 @@ package com.atendimento.activity;
 
 import android.app.DialogFragment;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
+import android.text.method.DateTimeKeyListener;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.fragment.HorarioDialog;
 import com.atendimento.util.MyDialogFragmentListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.WeekPagerAdapter;
 
 import java.sql.Time;
 import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.temporal.WeekFields;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -61,13 +69,21 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
 
 
         DateFormat dateFormat = new SimpleDateFormat("EEEE");
-        segunda.setText(dateFormat.format(Calendar.SUNDAY).toUpperCase());
+        Calendar calendar = Calendar.getInstance();
+
+
+        segunda.setText("Segunda-Feira");
+
+
 
         horaInicio = findViewById(R.id.buttonHorario);
         horaInicio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 horariosDialog = new HorarioDialog();
+                Bundle bundle = new Bundle();
+                bundle.putString("hora", "8");
+                horariosDialog.setArguments(bundle);
                 horariosDialog.show(getFragmentManager(), "Horários");
             }
         });
