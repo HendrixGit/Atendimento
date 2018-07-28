@@ -16,7 +16,6 @@ import android.widget.TimePicker;
 import com.atendimento.R;
 import com.atendimento.util.MyDialogFragmentListener;
 
-import java.sql.Date;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -49,7 +48,11 @@ public class HorarioDialog extends DialogFragment {
         setMinutePicker();
 
         if (!getArguments().isEmpty()) {
-
+            if (!getArguments().getString("hora").equals("")){
+                String horaParemetro = getArguments().getString("hora");
+                int hora = Integer.parseInt(horaParemetro.substring(0,2));
+                timePickerHorarios.setCurrentHour(hora);
+            }
         }
 
         builder.setView(viewHorarios)
@@ -105,7 +108,8 @@ public class HorarioDialog extends DialogFragment {
     public int getMinute() {
         if (minutePicker != null) {
             return (minutePicker.getValue() * INTERVAL);
-        } else {
+        }
+        else {
             return timePickerHorarios.getCurrentMinute();
         }
     }

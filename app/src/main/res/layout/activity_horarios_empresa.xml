@@ -156,7 +156,7 @@
             app:layout_constraintTop_toBottomOf="@+id/checkBoxSexta" />
 
         <Button
-            android:id="@+id/buttonHorario"
+            android:id="@+id/buttonHorarioInicio"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -165,7 +165,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="Button"
-            app:layout_constraintEnd_toStartOf="@+id/button2"
+            app:layout_constraintEnd_toStartOf="@+id/buttonHorarioFinal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewInicio" />
 
@@ -220,7 +220,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/buttonHorarioFinal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -230,7 +230,7 @@
             android:layout_marginTop="8dp"
             android:text="Button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/buttonHorario"
+            app:layout_constraintStart_toEndOf="@+id/buttonHorarioInicio"
             app:layout_constraintTop_toBottomOf="@+id/textViewFinal" />
 
 

@@ -1,38 +1,27 @@
 package com.atendimento.activity;
 
 import android.app.DialogFragment;
-import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
-import android.text.method.DateTimeKeyListener;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.fragment.HorarioDialog;
 import com.atendimento.util.MyDialogFragmentListener;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.WeekPagerAdapter;
+import com.atendimento.util.Util;
 
-import java.sql.Time;
 import java.text.DateFormat;
-import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.temporal.WeekFields;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 
 public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFragmentListener {
 
     private Button horaInicio;
+    private Button horaFinal;
     private DialogFragment horariosDialog;
     private TextView inicio;
     private TextView fim;
@@ -43,6 +32,8 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
     private CheckBox sexta;
     private CheckBox sabado;
     private CheckBox domingo;
+    private Util util;
+    private Boolean op;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +47,7 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        util = new Util();
         inicio = findViewById(R.id.textViewInicio);
         fim    = findViewById(R.id.textViewFinal);
 
@@ -75,22 +67,48 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
         segunda.setText("Segunda-Feira");
 
 
-
-        horaInicio = findViewById(R.id.buttonHorario);
+        horaInicio = findViewById(R.id.buttonHorarioInicio);
         horaInicio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                horariosDialog = new HorarioDialog();
-                Bundle bundle = new Bundle();
-                bundle.putString("hora", "8");
-                horariosDialog.setArguments(bundle);
-                horariosDialog.show(getFragmentManager(), "Horários");
+                op = false;
+                setHorariosTextViews(inicio,getResources().getString(R.string.inicio));
             }
         });
+
+        horaFinal = findViewById(R.id.buttonHorarioFinal);
+        horaFinal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                op = true;
+                setHorariosTextViews(fim,getResources().getString(R.string.Fim));
+            }
+        });
+
+    }
+
+    private void setHorariosTextViews(TextView textViewParemetro, String textoComparacao){
+        horariosDialog = new HorarioDialog();
+        Bundle bundle;
+        if (textViewParemetro.getText().equals(textoComparacao)){
+            bundle = util.bundleStringGenerico("hora","");
+        }
+        else{
+            bundle = util.bundleStringGenerico("hora",textViewParemetro.getText().toString());
+        }
+        horariosDialog.setArguments(bundle);
+        horariosDialog.show(getFragmentManager(), "Horários");
     }
 
     @Override
     public void onReturnValue(String resultadoParametro) {
-            inicio.setText(resultadoParametro);
+        if (!resultadoParametro.equals("")) {
+            if (op == false) {
+                inicio.setText(resultadoParametro);
+            }
+            else{
+                fim.setText(resultadoParametro);
+            }
+        }
     }
 }

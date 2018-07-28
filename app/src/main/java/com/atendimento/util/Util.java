@@ -1,11 +1,12 @@
 package com.atendimento.util;
 
 import android.app.AlertDialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.os.Bundle;
+
 import com.atendimento.R;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -80,6 +81,12 @@ public class Util{
         builder.setPositiveButton(titulo,null);
         builder.setNegativeButton("Cancelar",null);
         return builder;
+    }
+
+    public Bundle bundleStringGenerico(String nomeParemetro, String valor){
+        Bundle bundle = new Bundle();
+        bundle.putString(nomeParemetro, valor);
+        return bundle;
     }
 
 }
