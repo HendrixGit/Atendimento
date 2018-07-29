@@ -53,5 +53,13 @@
     <string name="horariosFuncionamento">Período de trabalho(Em Horas)</string>
     <string name="inicio">Início</string>
     <string name="Fim">Fim</string>
+    <string name="horarioInicial">00:00</string>
     <string name="diasSemana">Selecione os dias da semana de funcionamento</string>
+    <string name="segunda">Segunda-Feira</string>
+    <string name="terca">Terça-Feira</string>
+    <string name="quarta">Quarta-Feira</string>
+    <string name="quinta">Quinta-Feira</string>
+    <string name="sexta">Sexta-Feira</string>
+    <string name="sabado">Sábado</string>
+    <string name="domingo">Domingo</string>
 </resources>
