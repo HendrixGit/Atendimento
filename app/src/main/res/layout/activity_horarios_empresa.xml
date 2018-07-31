@@ -157,86 +157,6 @@
             app:layout_constraintTop_toBottomOf="@+id/checkBoxSexta" />
 
         <Button
-            android:id="@+id/buttonHorarioInicio"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/com_facebook_button_background"
-            android:text="@string/inicio"
-            app:layout_constraintEnd_toStartOf="@+id/buttonHorarioFinal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewInicio" />
-
-        <TextView
-            android:id="@+id/textViewInicio"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/horarioInicial"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/textViewFinal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView16" />
-
-        <TextView
-            android:id="@+id/textView16"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/horariosFuncionamento"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkBoxDomingo" />
-
-        <TextView
-            android:id="@+id/textViewFinal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/horarioInicial"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textViewInicio"
-            app:layout_constraintTop_toBottomOf="@+id/textView16" />
-
-        <Button
-            android:id="@+id/buttonHorarioFinal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/com_facebook_button_background"
-            android:text="@string/Fim"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/buttonHorarioInicio"
-            app:layout_constraintTop_toBottomOf="@+id/textViewFinal" />
-
-        <Button
             android:id="@+id/buttonConfirmaHorario"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -249,7 +169,7 @@
             android:text="@android:string/ok"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonHorarioInicio" />
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxDomingo" />
 
 
     </android.support.constraint.ConstraintLayout>

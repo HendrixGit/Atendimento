@@ -43,12 +43,12 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:text="@string/horariosFuncionamento"
             android:textAlignment="center"
             android:textColor="@color/colorPreto"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/checkedTextViewDia" />
 
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:text="@string/Fim"
             android:textColor="@color/colorPreto"
             android:textSize="18sp"
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:text="@string/inicio"
             android:textColor="@color/colorPreto"
             android:textSize="18sp"
@@ -79,30 +79,28 @@
             app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
         <TextView
-            android:id="@+id/textView19"
+            android:id="@+id/textViewHorarioFinal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="8dp"
             android:text="@string/horarioPadraoFinal"
             android:textColor="@color/colorPreto"
             android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@+id/textView18"
-            app:layout_constraintTop_toBottomOf="@+id/textView21" />
+            app:layout_constraintTop_toTopOf="@+id/textView18" />
 
         <TextView
-            android:id="@+id/textView21"
+            android:id="@+id/textViewHorarioInicial"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:text="@string/horarioPadraoInicial"
             android:textColor="@color/colorPreto"
             android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@+id/textView20"
-            app:layout_constraintTop_toBottomOf="@+id/textView17" />
+            app:layout_constraintTop_toTopOf="@+id/textView20" />
 
         <Button
             android:id="@+id/buttonOKHorario"
@@ -117,7 +115,7 @@
             android:text="@android:string/ok"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/buttonCancelHorario"
-            app:layout_constraintTop_toBottomOf="@+id/textView19" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewHorarioFinal" />
 
         <Button
             android:id="@+id/buttonCancelHorario"
@@ -132,7 +130,7 @@
             android:text="@android:string/cancel"
             app:layout_constraintEnd_toStartOf="@+id/buttonOKHorario"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView19" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewHorarioFinal" />
 
         <TextView
             android:id="@+id/textView22"
@@ -151,6 +149,30 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/include8" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewHorarioInicial"
+            app:layout_constraintStart_toEndOf="@+id/textViewHorarioInicial"
+            app:layout_constraintTop_toTopOf="@+id/textViewHorarioInicial"
+            app:srcCompat="@drawable/ic_action_edit" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewHorarioFinal"
+            app:layout_constraintStart_toEndOf="@+id/textViewHorarioFinal"
+            app:layout_constraintTop_toTopOf="@+id/textViewHorarioFinal"
+            app:layout_constraintVertical_bias="0.533"
+            app:srcCompat="@drawable/ic_action_edit" />
 
 
     </android.support.constraint.ConstraintLayout>
