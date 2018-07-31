@@ -62,7 +62,8 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.CalendarioActivity" />
-        <activity android:name=".activity.HorariosEmpresaActivity"></activity>
+        <activity android:name=".activity.HorariosEmpresaActivity" />
+        <activity android:name=".activity.HorariosDiasActivity"></activity>
     </application>
 
 </manifest>
