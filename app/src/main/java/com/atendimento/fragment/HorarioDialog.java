@@ -2,6 +2,7 @@ package com.atendimento.fragment;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.location.Location;
@@ -10,7 +11,9 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.NumberPicker;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import com.atendimento.R;
@@ -19,7 +22,9 @@ import com.atendimento.util.MyDialogFragmentListener;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
 public class HorarioDialog extends DialogFragment {
@@ -30,6 +35,9 @@ public class HorarioDialog extends DialogFragment {
     private MyDialogFragmentListener activityChamada;
     private TimePicker timePickerHorarios;
     private String horaParemetro = "";
+    private Spinner spinnerHorarios;
+    private List<String> listaOpHorarios;
+    private ArrayAdapter<String> dataHorarios;
 
     private static final int INTERVAL = 60;
     private static final DecimalFormat FORMATTER = new DecimalFormat("00");
@@ -45,7 +53,15 @@ public class HorarioDialog extends DialogFragment {
         timePickerHorarios.setIs24HourView(true);
         timePickerHorarios.setCurrentHour(8);
         timePickerHorarios.setCurrentMinute(00);
-        setMinutePicker();
+        setMinutePicker(INTERVAL);
+
+        spinnerHorarios = viewHorarios.findViewById(R.id.spinnerDialogHorarios);
+        listaOpHorarios = new ArrayList<String>();
+        listaOpHorarios.add("00");
+        listaOpHorarios.add("15");
+        listaOpHorarios.add("30");
+        dataHorarios = new ArrayAdapter<String>(getActivity(), R.layout.support_simple_spinner_dropdown_item, listaOpHorarios);
+        spinnerHorarios.setAdapter(dataHorarios);
 
         if (!getArguments().isEmpty()) {
             if (!getArguments().getString("hora").equals("")){
@@ -89,8 +105,8 @@ public class HorarioDialog extends DialogFragment {
         super.onDismiss(dialog);
     }
 
-    public void setMinutePicker() {
-        int numValues = 60 / INTERVAL;
+    public void setMinutePicker(Integer intervalo) {
+        int numValues = 60 / intervalo;
         String[] displayedValues = new String[numValues];
         for (int i = 0; i < numValues; i++) {
             displayedValues[i] = FORMATTER.format(i * INTERVAL);

@@ -59,11 +59,8 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     private Button cancel;
     private CircleImageView circleImageView;
     private Spinner spinnerCategoria;
-    private Spinner spinnerHorarios;
     private List<String> listaCategoria;
-    private List<String> listaHorarios;
     private ArrayAdapter<String> dataCategoria;
-    private ArrayAdapter<String> dataHorarios;
     private EditText nomeEmpresa;
     private Util util;
     private SQLiteDatabase sqLiteDatabasePar;
