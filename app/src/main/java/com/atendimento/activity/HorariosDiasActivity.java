@@ -33,7 +33,7 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
         setContentView(R.layout.activity_horarios_dias);
 
         toolbarBase = findViewById(R.id.toolbar);
-        toolbarBase.setTitle("Cadastrar Horários");
+        toolbarBase.setTitle("Definir Horários");
         toolbarBase.setTitleTextColor(getResources().getColor(R.color.colorBranco));
 
         checkBoxDias = findViewById(R.id.checkedTextViewDia);
@@ -64,12 +64,7 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
         horariosDialog = new HorarioDialog();
         util = new Util();
         Bundle bundle;
-        if (textViewParemetro.getText().equals(textoComparacao)){
-            bundle = util.bundleStringGenerico("hora","");
-        }
-        else{
-            bundle = util.bundleStringGenerico("hora",textViewParemetro.getText().toString());
-        }
+        bundle = util.bundleStringGenerico("hora",textViewParemetro.getText().toString());
         horariosDialog.setArguments(bundle);
         horariosDialog.show(getFragmentManager(), "Horários");
     }

@@ -2,8 +2,10 @@ package com.atendimento.activity;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
@@ -16,7 +18,7 @@ public class HorariosEmpresaActivity extends BaseActivity {
     private DialogFragment horariosDialog;
     private TextView inicio;
     private TextView fim;
-    private CheckBox segunda;
+    private LinearLayout segunda;
     private CheckBox terca;
     private CheckBox quarta;
     private CheckBox quinta;
@@ -34,26 +36,12 @@ public class HorariosEmpresaActivity extends BaseActivity {
         toolbarBase.setTitle("Cadastrar Horários");
         toolbarBase.setTitleTextColor(getResources().getColor(R.color.colorBranco));
 
-        segunda = findViewById(R.id.checkBoxSegunda);
-        terca   = findViewById(R.id.checkBoxTerca);
-        quarta  = findViewById(R.id.checkBoxQuarta);
-        quinta  = findViewById(R.id.checkBoxQuinta);
-        sexta   = findViewById(R.id.checkBoxSexta);
-        sabado  = findViewById(R.id.checkBoxSabado);
-        domingo = findViewById(R.id.checkBoxDomingo);
-
-        segunda.setText(R.string.segunda);
-        segunda.setChecked(true);
-        terca.setText(R.string.terca);
-        terca.setChecked(true);
-        quarta.setText(R.string.quarta);
-        quarta.setChecked(true);
-        quinta.setText(R.string.quinta);
-        quinta.setChecked(true);
-        sexta.setText(R.string.sexta);
-        sexta.setChecked(true);
-        sabado.setText(R.string.sabado);
-        sabado.setChecked(true);
-        domingo.setText(R.string.domingo);
+        segunda = findViewById(R.id.layoutSegunda);
+        segunda.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mudarTela(getApplicationContext(), HorariosDiasActivity.class);
+            }
+        });
     }
 }
