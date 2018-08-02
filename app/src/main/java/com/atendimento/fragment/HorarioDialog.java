@@ -55,14 +55,6 @@ public class HorarioDialog extends DialogFragment {
         timePickerHorarios.setCurrentMinute(00);
         setMinutePicker(INTERVAL);
 
-        spinnerHorarios = viewHorarios.findViewById(R.id.spinnerDialogHorarios);
-        listaOpHorarios = new ArrayList<String>();
-        listaOpHorarios.add("00");
-        listaOpHorarios.add("15");
-        listaOpHorarios.add("30");
-        dataHorarios = new ArrayAdapter<String>(getActivity(), R.layout.support_simple_spinner_dropdown_item, listaOpHorarios);
-        spinnerHorarios.setAdapter(dataHorarios);
-
         if (!getArguments().isEmpty()) {
             if (!getArguments().getString("hora").equals("")){
                 String horaParemetro = getArguments().getString("hora");

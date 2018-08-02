@@ -17,16 +17,11 @@
     <TimePicker
         android:numbersBackgroundColor="@color/colorPrimary"
         android:numbersSelectorColor="@color/colorBranco"
-        android:headerBackground="@color/colorPrimary"
 
+        android:headerBackground="@color/colorPrimary"
         android:id="@+id/timePickerHorario"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-    <Spinner
-        android:id="@+id/spinnerDialogHorarios"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:spinnerMode="dialog" />
 
 
 </LinearLayout>
