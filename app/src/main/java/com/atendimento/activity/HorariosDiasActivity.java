@@ -2,6 +2,7 @@ package com.atendimento.activity;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -58,6 +59,22 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
                 setHorariosTextViews(fim, fim.getText().toString());
             }
         });
+
+        ok = findViewById(R.id.buttonOKHorario);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mudarTelaParametro(getApplicationContext(),HorariosEmpresaActivity.class, inicio.getText().toString());
+            }
+        });
+
+        cancel = findViewById(R.id.buttonCancelHorario);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     private void setHorariosTextViews(TextView textViewParemetro, String textoComparacao){
@@ -67,6 +84,14 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
         bundle = util.bundleStringGenerico("hora",textViewParemetro.getText().toString());
         horariosDialog.setArguments(bundle);
         horariosDialog.show(getFragmentManager(), "Horários");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: mudarTela(getApplicationContext(), HorariosEmpresaActivity.class); return true;
+            default: return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

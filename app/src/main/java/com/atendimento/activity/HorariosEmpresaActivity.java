@@ -1,6 +1,7 @@
 package com.atendimento.activity;
 
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,9 +17,9 @@ public class HorariosEmpresaActivity extends BaseActivity {
     private Button horaInicio;
     private Button horaFinal;
     private DialogFragment horariosDialog;
-    private TextView inicio;
-    private TextView fim;
     private LinearLayout segunda;
+    private TextView inicioSegunda;
+    private TextView fimSegunda;
     private CheckBox terca;
     private CheckBox quarta;
     private CheckBox quinta;
@@ -26,6 +27,7 @@ public class HorariosEmpresaActivity extends BaseActivity {
     private CheckBox sabado;
     private CheckBox domingo;
     private Util util;
+    private String parametroHora;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,8 @@ public class HorariosEmpresaActivity extends BaseActivity {
         toolbarBase.setTitle("Cadastrar Horários");
         toolbarBase.setTitleTextColor(getResources().getColor(R.color.colorBranco));
 
+        inicioSegunda = findViewById(R.id.textViewInicioSegunda);
+        fimSegunda    = findViewById(R.id.textViewFimSegunda);
         segunda = findViewById(R.id.layoutSegunda);
         segunda.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,5 +47,13 @@ public class HorariosEmpresaActivity extends BaseActivity {
                 mudarTela(getApplicationContext(), HorariosDiasActivity.class);
             }
         });
+
+        parametroHora = getIntent().getExtras().getString("hora");
+        if (parametroHora != null) {
+            if (!parametroHora.isEmpty()) {
+                inicioSegunda.setText(getIntent().getExtras().getString("hora"));
+            }
+        }
+
     }
 }

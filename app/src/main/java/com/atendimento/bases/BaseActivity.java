@@ -70,6 +70,14 @@ public class BaseActivity extends AppCompatActivity {
         ActivityCompat.finishAffinity(this);
     }
 
+    protected void mudarTelaParametro(Context contexto, Class classe, String paremetro) {
+        Intent intent = new Intent(contexto, classe);
+        intent.putExtra("hora", paremetro);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
+
 
     public static boolean validaPermissoes(int requestCode, Activity activity, String[] permissoes){
         if (Build.VERSION.SDK_INT >= 23){
@@ -137,18 +145,6 @@ public class BaseActivity extends AppCompatActivity {
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(5, 'Salões de Beleza')");
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(6, 'Escritórios Advocacia')");
 
-        sqLiteDatabasePar.execSQL("CREATE TABLE IF NOT EXISTS horarios(codigo INT(3), descricao VARCHAR)");
-        sqLiteDatabasePar.execSQL("DELETE FROM horarios");
-        sqLiteDatabasePar.execSQL("INSERT INTO horarios(codigo, descricao)  VALUES(1, 'Semanal')");
-        sqLiteDatabasePar.execSQL("INSERT INTO horarios(codigo, descricao)  VALUES(2, 'Fim de Semana')");
-        sqLiteDatabasePar.execSQL("INSERT INTO horarios(codigo, descricao)  VALUES(3, 'Integral')");
-
-        sqLiteDatabasePar.execSQL("CREATE TABLE IF NOT EXISTS horariosFuncionamento(codigo INT(3), descricao VARCHAR)");
-        sqLiteDatabasePar.execSQL("DELETE FROM horariosFuncionamento");
-        sqLiteDatabasePar.execSQL("INSERT INTO horariosFuncionamento(codigo, descricao)  VALUES(1, 'Comercial - 08:00 : 18:00')");
-        sqLiteDatabasePar.execSQL("INSERT INTO horariosFuncionamento(codigo, descricao)  VALUES(2, 'Noturno')");
-        sqLiteDatabasePar.execSQL("INSERT INTO horariosFuncionamento(codigo, descricao)  VALUES(3, 'Integral')");
-
         return sqLiteDatabasePar;
     }
 
@@ -163,18 +159,4 @@ public class BaseActivity extends AppCompatActivity {
         }
         return cursor;
     }
-
-    protected Cursor cursorHorarios(SQLiteDatabase parametroDatabase, String parametros){
-        Cursor cursor;
-        if (parametros.isEmpty()) {
-            cursor = parametroDatabase.rawQuery("SELECT codigo, descricao FROM horarios", null);
-        }
-        else {
-            String[] params = new String[]{parametros};
-            cursor = parametroDatabase.rawQuery("SELECT codigo, descricao FROM horarios WHERE descricao = ?", params);
-        }
-        return cursor;
-    }
-
-
 }
