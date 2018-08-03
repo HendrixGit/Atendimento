@@ -28,6 +28,7 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
     private Util util;
     private Boolean op;
     private String horaInicioParametro = "";
+    private String horaFimParametro    = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mudarTelaParametroFlag(getApplicationContext(),HorariosEmpresaActivity.class, inicio.getText().toString());
+                mudarTelaParametroFlag(getApplicationContext(),HorariosEmpresaActivity.class, inicio.getText().toString(), fim.getText().toString());
             }
         });
 
@@ -73,7 +74,7 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mudarTelaParametroFlag(getApplicationContext(),HorariosEmpresaActivity.class,horaInicioParametro);
+                mudarTelaParametroFlag(getApplicationContext(),HorariosEmpresaActivity.class,horaInicioParametro, horaFimParametro);
             }
         });
 
@@ -83,6 +84,14 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
                 inicio.setText(getIntent().getExtras().getString("hora"));
             }
         }
+
+        horaFimParametro = getIntent().getExtras().getString("hora2");
+        if (horaFimParametro != null) {
+            if (!horaFimParametro.isEmpty()) {
+                fim.setText(getIntent().getExtras().getString("hora2"));
+            }
+        }
+
     }
 
     private void setHorariosTextViews(TextView textViewParemetro, String textoComparacao){

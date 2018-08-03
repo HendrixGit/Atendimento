@@ -27,7 +27,8 @@ public class HorariosEmpresaActivity extends BaseActivity {
     private CheckBox sabado;
     private CheckBox domingo;
     private Util util;
-    private String parametroHora;
+    private String parametroHoraInicial;
+    private String getParametroHoraFinal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +45,21 @@ public class HorariosEmpresaActivity extends BaseActivity {
         segunda.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mudarTelaParametroFlag(getApplicationContext(), HorariosDiasActivity.class, inicioSegunda.getText().toString());
+                mudarTelaParametroFlag(getApplicationContext(), HorariosDiasActivity.class, inicioSegunda.getText().toString(), fimSegunda.getText().toString());
             }
         });
 
-        parametroHora = getIntent().getExtras().getString("hora");
-        if (parametroHora != null) {
-            if (!parametroHora.isEmpty()) {
+        parametroHoraInicial = getIntent().getExtras().getString("hora");
+        if (parametroHoraInicial != null) {
+            if (!parametroHoraInicial.isEmpty()) {
                 inicioSegunda.setText(getIntent().getExtras().getString("hora"));
+            }
+        }
+
+        getParametroHoraFinal = getIntent().getExtras().getString("hora2");
+        if (getParametroHoraFinal != null) {
+            if (!getParametroHoraFinal.isEmpty()) {
+                fimSegunda.setText(getIntent().getExtras().getString("hora2"));
             }
         }
 

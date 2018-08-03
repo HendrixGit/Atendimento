@@ -70,9 +70,10 @@ public class BaseActivity extends AppCompatActivity {
         ActivityCompat.finishAffinity(this);
     }
 
-    protected void mudarTelaParametroFlag(Context contexto, Class classe, String paremetro) {
+    protected void mudarTelaParametroFlag(Context contexto, Class classe, String parametro, String parametro2) {
         Intent intent = new Intent(contexto, classe);
-        intent.putExtra("hora", paremetro);
+        intent.putExtra("hora", parametro);
+        intent.putExtra("hora2", parametro2);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
