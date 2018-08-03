@@ -27,6 +27,7 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
     private Button cancel;
     private Util util;
     private Boolean op;
+    private String horaInicioParametro = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mudarTelaParametro(getApplicationContext(),HorariosEmpresaActivity.class, inicio.getText().toString());
+                mudarTelaParametroFlag(getApplicationContext(),HorariosEmpresaActivity.class, inicio.getText().toString());
             }
         });
 
@@ -72,9 +73,16 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                mudarTelaParametroFlag(getApplicationContext(),HorariosEmpresaActivity.class,horaInicioParametro);
             }
         });
+
+        horaInicioParametro = getIntent().getExtras().getString("hora");
+        if (horaInicioParametro != null) {
+            if (!horaInicioParametro.isEmpty()) {
+                inicio.setText(getIntent().getExtras().getString("hora"));
+            }
+        }
     }
 
     private void setHorariosTextViews(TextView textViewParemetro, String textoComparacao){

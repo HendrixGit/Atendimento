@@ -44,7 +44,7 @@ public class HorariosEmpresaActivity extends BaseActivity {
         segunda.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mudarTela(getApplicationContext(), HorariosDiasActivity.class);
+                mudarTelaParametroFlag(getApplicationContext(), HorariosDiasActivity.class, inicioSegunda.getText().toString());
             }
         });
 
