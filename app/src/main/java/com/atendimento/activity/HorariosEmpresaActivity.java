@@ -28,7 +28,7 @@ public class HorariosEmpresaActivity extends BaseActivity {
     private CheckBox domingo;
     private Util util;
     private String parametroHoraInicial;
-    private String getParametroHoraFinal;
+    private String parametroHoraFinal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +56,9 @@ public class HorariosEmpresaActivity extends BaseActivity {
             }
         }
 
-        getParametroHoraFinal = getIntent().getExtras().getString("hora2");
-        if (getParametroHoraFinal != null) {
-            if (!getParametroHoraFinal.isEmpty()) {
+        parametroHoraFinal = getIntent().getExtras().getString("hora2");
+        if (parametroHoraFinal != null) {
+            if (!parametroHoraFinal.isEmpty()) {
                 fimSegunda.setText(getIntent().getExtras().getString("hora2"));
             }
         }

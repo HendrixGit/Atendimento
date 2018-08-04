@@ -1,12 +1,15 @@
 package com.atendimento.activity;
 
 import android.app.DialogFragment;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.atendimento.R;
@@ -14,6 +17,9 @@ import com.atendimento.bases.BaseActivity;
 import com.atendimento.fragment.HorarioDialog;
 import com.atendimento.util.MyDialogFragmentListener;
 import com.atendimento.util.Util;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HorariosDiasActivity extends BaseActivity implements MyDialogFragmentListener {
 
@@ -29,6 +35,9 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
     private Boolean op;
     private String horaInicioParametro = "";
     private String horaFimParametro    = "";
+    private Spinner spinnerDuracao;
+    private ArrayAdapter<String> dataDuracao;
+    private List<String> listaDuracao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +53,21 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
 
         inicio = findViewById(R.id.textViewHorarioInicial);
         fim    = findViewById(R.id.textViewHorarioFinal);
+        spinnerDuracao = findViewById(R.id.spinnerDuracao);
+        sqLiteDatabasePar = databaseCategorias();
+
+        listaDuracao = new ArrayList<String>();
+        Cursor cursor = cursorDuracao(sqLiteDatabasePar,"");
+        int indiceColunaDescricao = cursor.getColumnIndex("descricao");
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()){
+            listaDuracao.add(cursor.getString(indiceColunaDescricao));
+            cursor.moveToNext();
+        }
+
+        dataDuracao = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, listaDuracao);
+        spinnerDuracao.setAdapter(dataDuracao);
 
         editInicio = findViewById(R.id.imageViewEditInicio);
         editInicio.setOnClickListener(new View.OnClickListener() {

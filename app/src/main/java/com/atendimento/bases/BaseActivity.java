@@ -146,6 +146,12 @@ public class BaseActivity extends AppCompatActivity {
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(5, 'Salões de Beleza')");
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(6, 'Escritórios Advocacia')");
 
+        sqLiteDatabasePar.execSQL("CREATE TABLE IF NOT EXISTS duracao(codigo INT(3), descricao VARCHAR)");
+        sqLiteDatabasePar.execSQL("DELETE FROM duracao");
+        sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao)  VALUES(1, '15')");
+        sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao)  VALUES(2, '30')");
+        sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao)  VALUES(3, '60')");
+
         return sqLiteDatabasePar;
     }
 
@@ -160,4 +166,18 @@ public class BaseActivity extends AppCompatActivity {
         }
         return cursor;
     }
+
+
+    protected Cursor cursorDuracao(SQLiteDatabase parametroDatabase, String parametros){
+        Cursor cursor;
+        if (parametros.isEmpty()) {
+            cursor = parametroDatabase.rawQuery("SELECT codigo, descricao FROM duracao", null);
+        }
+        else {
+            String[] params = new String[]{parametros};
+            cursor = parametroDatabase.rawQuery("SELECT codigo, descricao FROM duracao WHERE descricao = ?", params);
+        }
+        return cursor;
+    }
+
 }

@@ -66,4 +66,5 @@
     <string name="sabado">Sábado</string>
     <string name="domingo">Domingo</string>
     <string name="diadisponivel">Dia disponível ?</string>
+    <string name="duracao">Definir duração</string>
 </resources>
