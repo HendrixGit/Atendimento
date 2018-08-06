@@ -90,7 +90,7 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mudarTelaParametroFlag(getApplicationContext(),HorariosEmpresaActivity.class, inicio.getText().toString(), fim.getText().toString(), 0);
+                mudarTelaParametroFlag(getApplicationContext(),HorariosEmpresaActivity.class, inicio.getText().toString(), fim.getText().toString(), 0, false);
             }
         });
 
@@ -98,7 +98,7 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mudarTelaParametroFlag(getApplicationContext(),HorariosEmpresaActivity.class,horaInicioParametro, horaFimParametro, 0);
+                mudarTelaParametroFlag(getApplicationContext(),HorariosEmpresaActivity.class,horaInicioParametro, horaFimParametro, 0, false);
             }
         });
 

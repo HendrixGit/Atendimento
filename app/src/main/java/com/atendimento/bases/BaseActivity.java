@@ -70,11 +70,12 @@ public class BaseActivity extends AppCompatActivity {
         ActivityCompat.finishAffinity(this);
     }
 
-    protected void mudarTelaParametroFlag(Context contexto, Class classe, String parametro, String parametro2, Integer parametro3) {
+    protected void mudarTelaParametroFlag(Context contexto, Class classe, String parametro, String parametro2, Integer parametro3, Boolean diaParametro) {
         Intent intent = new Intent(contexto, classe);
         intent.putExtra("hora", parametro);
         intent.putExtra("hora2", parametro2);
         intent.putExtra("duracao", parametro3);
+        intent.putExtra("dia", diaParametro);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
@@ -147,6 +148,7 @@ public class BaseActivity extends AppCompatActivity {
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(5, 'Salões de Beleza')");
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(6, 'Escritórios Advocacia')");
 
+        sqLiteDatabasePar.execSQL("DROP TABLE duracao");
         sqLiteDatabasePar.execSQL("CREATE TABLE IF NOT EXISTS duracao(codigo INT(3), descricao VARCHAR, duracaoHorario INT(3))");
         sqLiteDatabasePar.execSQL("DELETE FROM duracao");
         sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao, duracaoHorario)  VALUES(1, '15', 15)");
