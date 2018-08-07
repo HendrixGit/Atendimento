@@ -139,6 +139,7 @@ public class BaseActivity extends AppCompatActivity {
 
     protected SQLiteDatabase databaseCategorias(){
         sqLiteDatabasePar = openOrCreateDatabase("databaseCategorias", MODE_PRIVATE, null);
+        sqLiteDatabasePar.execSQL("DROP TABLE categorias");
         sqLiteDatabasePar.execSQL("CREATE TABLE IF NOT EXISTS categorias(codigo INT(3), descricao VARCHAR)");
         sqLiteDatabasePar.execSQL("DELETE FROM categorias");
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(1, 'Clínicas Médicas')");
