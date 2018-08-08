@@ -1,6 +1,7 @@
 package com.atendimento.activity;
 
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.fragment.HorarioDialog;
+import com.atendimento.model.Horario;
 import com.atendimento.util.MyDialogFragmentListener;
 import com.atendimento.util.Util;
 
@@ -38,6 +40,7 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
     private Spinner spinnerDuracao;
     private ArrayAdapter<String> dataDuracao;
     private List<String> listaDuracao;
+    private Horario horarioParametro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +60,8 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
         sqLiteDatabasePar = databaseCategorias();
 
         listaDuracao = new ArrayList<String>();
-        Cursor cursor = cursorDuracao(sqLiteDatabasePar,"");
-        int indiceColunaDescricao = cursor.getColumnIndex("descricao");
+        final Cursor cursor = cursorDuracao(sqLiteDatabasePar,"");
+        final int indiceColunaDescricao = cursor.getColumnIndex("descricao");
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()){
@@ -90,7 +93,24 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mudarTelaParametroFlag(getApplicationContext(),HorariosEmpresaActivity.class, inicio.getText().toString(), fim.getText().toString(), 0, false);
+                Cursor cursor2 = cursorDuracao(sqLiteDatabasePar, spinnerDuracao.getSelectedItem().toString());
+                Integer indiceHorario = cursor2.getColumnIndex("duracaoHorario");
+                cursor2.moveToFirst();
+
+                Horario horario = new Horario();
+                horario.setIdEmpresa("");
+                horario.setDescricaoDia("");
+                horario.setDiaAtivo(checkBoxDias.isSelected());
+                horario.setDiaSemana(1);
+                horario.setDuracao(cursor2.getInt(indiceHorario));
+                horario.setHoraInicio(inicio.getText().toString());
+                horario.setHoraFinal(fim.getText().toString());
+
+                Intent intent = new Intent(getApplicationContext(), HorariosEmpresaActivity.class);
+                intent.putExtra("horario",horario);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
             }
         });
 

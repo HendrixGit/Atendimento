@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
+import com.atendimento.model.Horario;
 import com.atendimento.util.Util;
 
 public class HorariosEmpresaActivity extends BaseActivity {
@@ -29,6 +30,7 @@ public class HorariosEmpresaActivity extends BaseActivity {
     private Util util;
     private String parametroHoraInicial;
     private String parametroHoraFinal;
+    private Horario horarioParametro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,14 @@ public class HorariosEmpresaActivity extends BaseActivity {
                 mudarTelaParametroFlag(getApplicationContext(), HorariosDiasActivity.class, inicioSegunda.getText().toString(), fimSegunda.getText().toString(), 0, false);
             }
         });
+
+        Intent intent = getIntent();
+        horarioParametro = (Horario) intent.getSerializableExtra("horario");
+        if (horarioParametro != null){
+            if (horarioParametro.getDiaSemana() == 1){
+
+            }
+        }
 
         parametroHoraInicial = getIntent().getExtras().getString("hora");
         if (parametroHoraInicial != null) {

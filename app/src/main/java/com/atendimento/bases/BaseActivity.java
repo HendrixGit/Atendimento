@@ -152,9 +152,9 @@ public class BaseActivity extends AppCompatActivity {
         sqLiteDatabasePar.execSQL("DROP TABLE duracao");
         sqLiteDatabasePar.execSQL("CREATE TABLE IF NOT EXISTS duracao(codigo INT(3), descricao VARCHAR, duracaoHorario INT(3))");
         sqLiteDatabasePar.execSQL("DELETE FROM duracao");
-        sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao, duracaoHorario)  VALUES(1, '15', 15)");
-        sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao, duracaoHorario)  VALUES(2, '30', 30)");
-        sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao, duracaoHorario)  VALUES(3, '60', 60)");
+        sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao, duracaoHorario)  VALUES(1, '15 Minutos', 15)");
+        sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao, duracaoHorario)  VALUES(2, '30 Minutos', 30)");
+        sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao, duracaoHorario)  VALUES(3, '60 Minutos', 60)");
 
         return sqLiteDatabasePar;
     }
@@ -179,7 +179,7 @@ public class BaseActivity extends AppCompatActivity {
         }
         else {
             String[] params = new String[]{parametros};
-            cursor = parametroDatabase.rawQuery("SELECT codigo, descricao FROM duracao WHERE descricao = ?", params);
+            cursor = parametroDatabase.rawQuery("SELECT codigo, descricao, duracaoHorario FROM duracao WHERE descricao = ?", params);
         }
         return cursor;
     }
