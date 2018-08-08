@@ -1,5 +1,6 @@
 package com.atendimento.activity;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.database.Cursor;
@@ -20,6 +21,7 @@ import com.atendimento.model.Horario;
 import com.atendimento.util.MyDialogFragmentListener;
 import com.atendimento.util.Util;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +43,7 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
     private ArrayAdapter<String> dataDuracao;
     private List<String> listaDuracao;
     private Horario horarioParametro;
+    private Boolean opCheckBox = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,17 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
 
         checkBoxDias = findViewById(R.id.checkedTextViewDia);
         checkBoxDias.setChecked(true);
+        checkBoxDias.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (opCheckBox){
+                    opCheckBox = false;
+                }
+                else{
+                    opCheckBox = true;
+                }
+            }
+        });
 
         inicio = findViewById(R.id.textViewHorarioInicial);
         fim    = findViewById(R.id.textViewHorarioFinal);
@@ -100,17 +114,13 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
                 Horario horario = new Horario();
                 horario.setIdEmpresa("");
                 horario.setDescricaoDia("");
-                horario.setDiaAtivo(checkBoxDias.isSelected());
+                horario.setDiaAtivo(opCheckBox);
                 horario.setDiaSemana(1);
                 horario.setDuracao(cursor2.getInt(indiceHorario));
                 horario.setHoraInicio(inicio.getText().toString());
                 horario.setHoraFinal(fim.getText().toString());
 
-                Intent intent = new Intent(getApplicationContext(), HorariosEmpresaActivity.class);
-                intent.putExtra("horario",horario);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+                voltar(horario);
             }
         });
 
@@ -118,24 +128,26 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mudarTelaParametroFlag(getApplicationContext(),HorariosEmpresaActivity.class,horaInicioParametro, horaFimParametro, 0, false);
+                voltar(horarioParametro);
             }
         });
 
-        horaInicioParametro = getIntent().getExtras().getString("hora");
-        if (horaInicioParametro != null) {
-            if (!horaInicioParametro.isEmpty()) {
-                inicio.setText(getIntent().getExtras().getString("hora"));
-            }
+        Intent intent = getIntent();
+        horarioParametro = (Horario) intent.getSerializableExtra("horario");
+        if (horarioParametro != null){
+            inicio.setText(horarioParametro.getHoraInicio());
+            fim.setText(horarioParametro.getHoraFinal());
+            checkBoxDias.setChecked(horarioParametro.getDiaAtivo());
+            opCheckBox = horarioParametro.getDiaAtivo();
         }
+    }
 
-        horaFimParametro = getIntent().getExtras().getString("hora2");
-        if (horaFimParametro != null) {
-            if (!horaFimParametro.isEmpty()) {
-                fim.setText(getIntent().getExtras().getString("hora2"));
-            }
-        }
-
+    private void voltar(Serializable serializable){
+        Intent intent = new Intent(getApplicationContext(), HorariosEmpresaActivity.class);
+        intent.putExtra("horario", serializable);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
     private void setHorariosTextViews(TextView textViewParemetro, String textoComparacao){

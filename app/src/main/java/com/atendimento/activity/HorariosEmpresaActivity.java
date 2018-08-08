@@ -47,7 +47,11 @@ public class HorariosEmpresaActivity extends BaseActivity {
         segunda.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mudarTelaParametroFlag(getApplicationContext(), HorariosDiasActivity.class, inicioSegunda.getText().toString(), fimSegunda.getText().toString(), 0, false);
+                Intent intent = new Intent(getApplicationContext(), HorariosDiasActivity.class);
+                intent.putExtra("horario",horarioParametro);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -55,23 +59,22 @@ public class HorariosEmpresaActivity extends BaseActivity {
         horarioParametro = (Horario) intent.getSerializableExtra("horario");
         if (horarioParametro != null){
             if (horarioParametro.getDiaSemana() == 1){
-
+                if (horarioParametro.getDiaAtivo()) {
+                    segunda.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                }
+                else{
+                    segunda.setBackgroundColor(getResources().getColor(R.color.colorDiaSelecionado));
+                }
+                inicioSegunda.setText(horarioParametro.getHoraInicio());
+                fimSegunda.setText(horarioParametro.getHoraFinal());
             }
         }
-
-        parametroHoraInicial = getIntent().getExtras().getString("hora");
-        if (parametroHoraInicial != null) {
-            if (!parametroHoraInicial.isEmpty()) {
-                inicioSegunda.setText(getIntent().getExtras().getString("hora"));
-            }
-        }
-
-        parametroHoraFinal = getIntent().getExtras().getString("hora2");
-        if (parametroHoraFinal != null) {
-            if (!parametroHoraFinal.isEmpty()) {
-                fimSegunda.setText(getIntent().getExtras().getString("hora2"));
-            }
-        }
-
+    }
+    private void telaHorarios(Intent dia, String inicio, String fim){
+        Intent intent = new Intent(getApplicationContext(), HorariosDiasActivity.class);
+        intent.putExtra("horario",horarioParametro);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 }

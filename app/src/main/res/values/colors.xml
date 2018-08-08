@@ -9,4 +9,5 @@
     <color name="colorPreto">#000000</color>
     <color name="colorSelecao">#FFD0D2D7</color>
     <color name="colorCalendario">#01ccff</color>
+    <color name="colorDiaSelecionado">#828889</color>
 </resources>
