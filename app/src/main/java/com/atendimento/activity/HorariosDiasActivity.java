@@ -111,6 +111,7 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
                 Integer indiceHorario = cursor2.getColumnIndex("duracaoHorario");
                 cursor2.moveToFirst();
 
+
                 Horario horario = new Horario();
                 horario.setIdEmpresa("");
                 horario.setDescricaoDia("");
@@ -119,7 +120,6 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
                 horario.setDuracao(cursor2.getInt(indiceHorario));
                 horario.setHoraInicio(inicio.getText().toString());
                 horario.setHoraFinal(fim.getText().toString());
-
                 voltar(horario);
             }
         });

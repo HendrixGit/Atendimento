@@ -38,7 +38,7 @@
             app:layout_constraintTop_toBottomOf="@+id/include7" />
 
         <Button
-            android:id="@+id/buttonConfirmaHorario"
+            android:id="@+id/buttonOKHorario"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -50,7 +50,7 @@
             android:text="@android:string/ok"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/button2" />
+            app:layout_constraintStart_toEndOf="@+id/buttonCancelHorario" />
 
         <LinearLayout
             android:id="@+id/layoutSegunda"
@@ -106,7 +106,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/buttonCancelHorario"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -117,7 +117,7 @@
             android:background="@drawable/com_facebook_button_background"
             android:text="@android:string/cancel"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/buttonConfirmaHorario"
+            app:layout_constraintEnd_toStartOf="@+id/buttonOKHorario"
             app:layout_constraintStart_toStartOf="parent" />
 
 

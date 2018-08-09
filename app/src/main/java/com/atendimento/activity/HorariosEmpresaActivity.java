@@ -15,8 +15,8 @@ import com.atendimento.util.Util;
 
 public class HorariosEmpresaActivity extends BaseActivity {
 
-    private Button horaInicio;
-    private Button horaFinal;
+    private Button ok;
+    private Button cancelar;
     private DialogFragment horariosDialog;
     private LinearLayout segunda;
     private TextView inicioSegunda;
@@ -51,6 +51,21 @@ public class HorariosEmpresaActivity extends BaseActivity {
                 intent.putExtra("horario",horarioParametro);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                finish();
+            }
+        });
+
+        ok       = findViewById(R.id.buttonOKHorario);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                
+            }
+        });
+        cancelar = findViewById(R.id.buttonCancelHorario);
+        cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 finish();
             }
         });
