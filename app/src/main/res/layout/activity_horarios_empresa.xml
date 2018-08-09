@@ -54,7 +54,7 @@
 
         <LinearLayout
             android:id="@+id/layoutSegunda"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorDiaAtivo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"

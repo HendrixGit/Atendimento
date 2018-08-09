@@ -138,6 +138,7 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
             inicio.setText(horarioParametro.getHoraInicio());
             fim.setText(horarioParametro.getHoraFinal());
             checkBoxDias.setChecked(horarioParametro.getDiaAtivo());
+            checkBoxDias.setText(horarioParametro.getDescricaoDia());
             opCheckBox = horarioParametro.getDiaAtivo();
         }
     }

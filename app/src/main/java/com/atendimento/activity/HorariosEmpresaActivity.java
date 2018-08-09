@@ -21,6 +21,7 @@ public class HorariosEmpresaActivity extends BaseActivity {
     private LinearLayout segunda;
     private TextView inicioSegunda;
     private TextView fimSegunda;
+    private Boolean  segundaAtivo = true;
     private CheckBox terca;
     private CheckBox quarta;
     private CheckBox quinta;
@@ -47,11 +48,7 @@ public class HorariosEmpresaActivity extends BaseActivity {
         segunda.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), HorariosDiasActivity.class);
-                intent.putExtra("horario",horarioParametro);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+                telaHorarios(1, getResources().getString(R.string.segunda), inicioSegunda.getText().toString(), fimSegunda.getText().toString(), segundaAtivo);
             }
         });
 
@@ -59,7 +56,7 @@ public class HorariosEmpresaActivity extends BaseActivity {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+
             }
         });
         cancelar = findViewById(R.id.buttonCancelHorario);
@@ -74,18 +71,26 @@ public class HorariosEmpresaActivity extends BaseActivity {
         horarioParametro = (Horario) intent.getSerializableExtra("horario");
         if (horarioParametro != null){
             if (horarioParametro.getDiaSemana() == 1){
-                if (horarioParametro.getDiaAtivo()) {
-                    segunda.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                inicioSegunda.setText(horarioParametro.getHoraInicio());
+                fimSegunda.setText(horarioParametro.getHoraFinal());
+                segundaAtivo = horarioParametro.getDiaAtivo();
+                if (segundaAtivo) {
+                    segunda.setBackgroundColor(getResources().getColor(R.color.colorDiaAtivo));
                 }
                 else{
                     segunda.setBackgroundColor(getResources().getColor(R.color.colorDiaSelecionado));
                 }
-                inicioSegunda.setText(horarioParametro.getHoraInicio());
-                fimSegunda.setText(horarioParametro.getHoraFinal());
             }
         }
     }
-    private void telaHorarios(Intent dia, String inicio, String fim){
+    private void telaHorarios(Integer dia, String diaDescricao,  String inicio, String fim, Boolean diaAtivo){
+        horarioParametro = new Horario();
+        horarioParametro.setDiaSemana(dia);
+        horarioParametro.setHoraInicio(inicio);
+        horarioParametro.setHoraFinal(fim);
+        horarioParametro.setDiaAtivo(diaAtivo);
+        horarioParametro.setDescricaoDia(diaDescricao);
+
         Intent intent = new Intent(getApplicationContext(), HorariosDiasActivity.class);
         intent.putExtra("horario",horarioParametro);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
