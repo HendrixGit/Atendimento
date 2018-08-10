@@ -111,12 +111,11 @@ public class HorariosDiasActivity extends BaseActivity implements MyDialogFragme
                 Integer indiceHorario = cursor2.getColumnIndex("duracaoHorario");
                 cursor2.moveToFirst();
 
-
                 Horario horario = new Horario();
                 horario.setIdEmpresa("");
                 horario.setDescricaoDia("");
                 horario.setDiaAtivo(opCheckBox);
-                horario.setDiaSemana(1);
+                horario.setDiaSemana(horarioParametro.getDiaSemana());
                 horario.setDuracao(cursor2.getInt(indiceHorario));
                 horario.setHoraInicio(inicio.getText().toString());
                 horario.setHoraFinal(fim.getText().toString());

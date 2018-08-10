@@ -22,7 +22,10 @@ public class HorariosEmpresaActivity extends BaseActivity {
     private TextView inicioSegunda;
     private TextView fimSegunda;
     private Boolean  segundaAtivo = true;
-    private CheckBox terca;
+    private TextView inicioTerca;
+    private TextView fimTerca;
+    private Boolean  tercaAtivo = true;
+    private LinearLayout terca;
     private CheckBox quarta;
     private CheckBox quinta;
     private CheckBox sexta;
@@ -52,6 +55,16 @@ public class HorariosEmpresaActivity extends BaseActivity {
             }
         });
 
+        inicioTerca = findViewById(R.id.textViewInicioTerca);
+        fimTerca    = findViewById(R.id.textViewFimTerca);
+        terca = findViewById(R.id.layoutTerca);
+        terca.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                telaHorarios(2, getResources().getString(R.string.terca), inicioTerca.getText().toString(), fimTerca.getText().toString(), tercaAtivo);
+            }
+        });
+
         ok       = findViewById(R.id.buttonOKHorario);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,15 +87,27 @@ public class HorariosEmpresaActivity extends BaseActivity {
                 inicioSegunda.setText(horarioParametro.getHoraInicio());
                 fimSegunda.setText(horarioParametro.getHoraFinal());
                 segundaAtivo = horarioParametro.getDiaAtivo();
-                if (segundaAtivo) {
-                    segunda.setBackgroundColor(getResources().getColor(R.color.colorDiaAtivo));
-                }
-                else{
-                    segunda.setBackgroundColor(getResources().getColor(R.color.colorDiaSelecionado));
-                }
+                setLineayLayout(segunda, horarioParametro.getDiaAtivo());
+            }
+            else
+            if (horarioParametro.getDiaSemana() == 2){
+                inicioTerca.setText(horarioParametro.getHoraInicio());
+                fimTerca.setText(horarioParametro.getHoraFinal());
+                tercaAtivo = horarioParametro.getDiaAtivo();
+                setLineayLayout(terca, horarioParametro.getDiaAtivo());
             }
         }
     }
+
+    private void setLineayLayout(LinearLayout layout, Boolean booleanParametro){
+        if (booleanParametro){
+            layout.setBackgroundColor(getResources().getColor(R.color.colorDiaAtivo));
+        }
+        else{
+            layout.setBackgroundColor(getResources().getColor(R.color.colorDiaSelecionado));
+        }
+    }
+
     private void telaHorarios(Integer dia, String diaDescricao,  String inicio, String fim, Boolean diaAtivo){
         horarioParametro = new Horario();
         horarioParametro.setDiaSemana(dia);
@@ -93,7 +118,7 @@ public class HorariosEmpresaActivity extends BaseActivity {
 
         Intent intent = new Intent(getApplicationContext(), HorariosDiasActivity.class);
         intent.putExtra("horario",horarioParametro);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_TASK_ON_HOME);
         startActivity(intent);
         finish();
     }
