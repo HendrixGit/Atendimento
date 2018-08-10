@@ -53,6 +53,59 @@
             app:layout_constraintStart_toEndOf="@+id/buttonCancelHorario" />
 
         <LinearLayout
+            android:id="@+id/layoutTerca"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/colorDiaAtivo"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutSegunda">
+
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/terca"
+                android:textAlignment="center"
+                android:textColor="@color/colorBranco"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/textViewInicioTerca"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/horarioPadraoInicial"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBranco"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/textViewFimTerca"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/horarioPadraoFinal"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBranco"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/layoutSegunda"
             android:background="@color/colorDiaAtivo"
             android:layout_width="0dp"
@@ -102,7 +155,6 @@
                     android:textColor="@color/colorBranco"
                     android:textSize="18sp" />
             </LinearLayout>
-
         </LinearLayout>
 
         <Button
