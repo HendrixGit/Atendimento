@@ -1,0 +1,38 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="250dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryDark"
+    style="@style/dialogHorario">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        tools:text="@string/horarios" />
+
+    <TextView
+        android:id="@+id/textViewInicioHorario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/inicio"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/textViewFimHorario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Fim"
+        android:textAlignment="center" />
+
+    <CheckBox
+        android:id="@+id/checkBodDiaHorario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/diadisponivel"
+        android:textAlignment="center" />
+
+</LinearLayout>
