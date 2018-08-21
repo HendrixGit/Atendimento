@@ -9,15 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.atendimento.R;
 import com.atendimento.fragment.HorarioDialog;
 import com.atendimento.util.HorarioFragmentListener;
-import com.atendimento.util.MyDialogFragmentListener;
 import com.atendimento.util.Util;
 
 
-public class DiaHorarrioDialog extends DialogFragment implements MyDialogFragmentListener {
+public class DiaHorarrioDialog extends DialogFragment {
 
     private View viewDiaHorarios;
     private AlertDialog.Builder builder;
@@ -40,9 +40,14 @@ public class DiaHorarrioDialog extends DialogFragment implements MyDialogFragmen
             @Override
             public void onClick(View view) {
                 op = 0;
-                inicio.setText(getResources().getString(R.string.horarioPadraoInicial));
-                setHorariosTextViews(inicio);
+                TimePicker timePicker = new TimePicker(getActivity());
+                timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+                    @Override
+                    public void onTimeChanged(TimePicker timePicker, int i, int i1) {
 
+                    }
+                });
+                timePicker.showContextMenu();
             }
         });
         fim    = viewDiaHorarios.findViewById(R.id.textViewFimHorario);
@@ -70,27 +75,5 @@ public class DiaHorarrioDialog extends DialogFragment implements MyDialogFragmen
         horarioFragmentListener.horarioInicial(inicio.getText().toString());
         horarioFragmentListener.horarioFinal(fim.getText().toString());
     }
-
-    private void setHorariosTextViews(TextView textViewParemetro){
-        horariosDialog = new HorarioDialog();
-        util = new Util();
-        Bundle bundle;
-        bundle = util.bundleStringGenerico("hora",textViewParemetro.getText().toString());
-        horariosDialog.setArguments(bundle);
-        horariosDialog.show(getFragmentManager(), "Horários");
-    }
-
-    @Override
-    public void onReturnValue(String resultadoParametro) {
-        if (op == 0){
-            inicio.setText(resultadoParametro);
-            inicio.setText("0:00");
-            setHorariosTextViews(inicio);
-        }
-        else{
-            fim.setText(resultadoParametro);
-        }
-    }
-
 
 }

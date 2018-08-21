@@ -1,17 +1,22 @@
 package com.atendimento.activity;
 
 import android.app.DialogFragment;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.atendimento.R;
+import com.atendimento.adapter.AdapterHorarios;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.model.Horario;
-import com.atendimento.util.Util;
+import com.atendimento.util.RecyclerItemClickListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HorariosEmpresaActivity extends BaseActivity {
 
@@ -26,15 +31,11 @@ public class HorariosEmpresaActivity extends BaseActivity {
     private TextView fimTerca;
     private Boolean  tercaAtivo = true;
     private LinearLayout terca;
-    private CheckBox quarta;
-    private CheckBox quinta;
-    private CheckBox sexta;
-    private CheckBox sabado;
-    private CheckBox domingo;
-    private Util util;
-    private String parametroHoraInicial;
-    private String parametroHoraFinal;
-    private Horario horarioParametro;
+
+    private RecyclerView recyclerViewHorarios;
+    private AdapterHorarios adapter;
+    private List<Horario> empresaHorarios;
+    private Horario horarioSegunda;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,81 +46,54 @@ public class HorariosEmpresaActivity extends BaseActivity {
         toolbarBase.setTitle("Cadastrar Horários");
         toolbarBase.setTitleTextColor(getResources().getColor(R.color.colorBranco));
 
-        inicioSegunda = findViewById(R.id.textViewInicioSegunda);
-        fimSegunda    = findViewById(R.id.textViewFimSegunda);
-        segunda = findViewById(R.id.layoutSegunda);
-        segunda.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                telaHorarios(1, getResources().getString(R.string.segunda), inicioSegunda.getText().toString(), fimSegunda.getText().toString(), segundaAtivo);
-            }
-        });
+        horarioSegunda = new Horario();
+        horarioSegunda.setDescricaoDia("Segunda");
+        horarioSegunda.setDiaAtivo(true);
+        horarioSegunda.setHoraInicio("08:00");
+        horarioSegunda.setHoraFinal("18:00");
+        horarioSegunda.setDiaSemana(1);
+        horarioSegunda.setDuracao(15);
+        empresaHorarios = new ArrayList<>();
+        empresaHorarios.add(horarioSegunda);
 
-        inicioTerca = findViewById(R.id.textViewInicioTerca);
-        fimTerca    = findViewById(R.id.textViewFimTerca);
-        terca = findViewById(R.id.layoutTerca);
-        terca.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                telaHorarios(2, getResources().getString(R.string.terca), inicioTerca.getText().toString(), fimTerca.getText().toString(), tercaAtivo);
-            }
-        });
 
-        ok       = findViewById(R.id.buttonOKHorario);
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        adapter = new AdapterHorarios(empresaHorarios, getApplicationContext());
+        recyclerViewHorarios = findViewById(R.id.recyclerViewHorarios);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerViewHorarios.setLayoutManager(layoutManager);
+        recyclerViewHorarios.setHasFixedSize(true);
+        recyclerViewHorarios.setAdapter(adapter);
+        recyclerViewHorarios.addOnItemTouchListener(
+                new RecyclerItemClickListener(
+                        getApplicationContext(),
+                        recyclerViewHorarios,
+                        new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
 
-            }
-        });
-        cancelar = findViewById(R.id.buttonCancelHorario);
-        cancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+                            }
 
-        Intent intent = getIntent();
-        horarioParametro = (Horario) intent.getSerializableExtra("horario");
-        if (horarioParametro != null){
-            if (horarioParametro.getDiaSemana() == 1){
-                inicioSegunda.setText(horarioParametro.getHoraInicio());
-                fimSegunda.setText(horarioParametro.getHoraFinal());
-                segundaAtivo = horarioParametro.getDiaAtivo();
-                setLineayLayout(segunda, horarioParametro.getDiaAtivo());
-            }
-            else
-            if (horarioParametro.getDiaSemana() == 2){
-                inicioTerca.setText(horarioParametro.getHoraInicio());
-                fimTerca.setText(horarioParametro.getHoraFinal());
-                tercaAtivo = horarioParametro.getDiaAtivo();
-                setLineayLayout(terca, horarioParametro.getDiaAtivo());
-            }
-        }
+                            @Override
+                            public void onLongItemClick(View view, int position) {
+
+                            }
+
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                            }
+                        }
+                ));
+        //telaHorarios(1, getResources().getString(R.string.segunda), "08:00","18:00", true, horarioSegunda);
     }
 
-    private void setLineayLayout(LinearLayout layout, Boolean booleanParametro){
-        if (booleanParametro){
-            layout.setBackgroundColor(getResources().getColor(R.color.colorDiaAtivo));
-        }
-        else{
-            layout.setBackgroundColor(getResources().getColor(R.color.colorDiaSelecionado));
-        }
-    }
 
-    private void telaHorarios(Integer dia, String diaDescricao,  String inicio, String fim, Boolean diaAtivo){
+    private void telaHorarios(Integer dia, String diaDescricao, String inicio, String fim, Boolean diaAtivo, Horario horarioParametro){
         horarioParametro = new Horario();
         horarioParametro.setDiaSemana(dia);
         horarioParametro.setHoraInicio(inicio);
         horarioParametro.setHoraFinal(fim);
         horarioParametro.setDiaAtivo(diaAtivo);
         horarioParametro.setDescricaoDia(diaDescricao);
-
-        Intent intent = new Intent(getApplicationContext(), HorariosDiasActivity.class);
-        intent.putExtra("horario",horarioParametro);
-        intent.setFlags(Intent.FLAG_ACTIVITY_TASK_ON_HOME);
-        startActivity(intent);
-        finish();
     }
 }
