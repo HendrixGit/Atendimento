@@ -60,6 +60,9 @@ public class AdapterHorarios extends RecyclerView.Adapter<AdapterHorarios.Horari
         holder.descricaoDia.setText(horario.getDescricaoDia());
         holder.inicio.setText(horario.getHoraInicio());
         holder.fim.setText(horario.getHoraFinal());
+        if (horario.getDiaAtivo()){
+
+        }
     }
 
     @Override
