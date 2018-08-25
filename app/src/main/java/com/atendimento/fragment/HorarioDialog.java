@@ -92,7 +92,7 @@ public class HorarioDialog extends DialogFragment {
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        activityChamada = (MyDialogFragmentListener) getDialog();
+        activityChamada = (MyDialogFragmentListener) getActivity();
         activityChamada.onReturnValue(horaParemetro);
         super.onDismiss(dialog);
     }

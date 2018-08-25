@@ -1,20 +1,25 @@
 package com.atendimento.activity;
 
+import android.app.DialogFragment;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
+import com.atendimento.fragment.HorarioDialog;
 import com.atendimento.model.Horario;
+import com.atendimento.util.MyDialogFragmentListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HorariosEmpresaActivity extends BaseActivity {
+public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFragmentListener {
 
     private List<Horario> empresaHorarios;
     private Horario horarioSegunda;
@@ -25,7 +30,12 @@ public class HorariosEmpresaActivity extends BaseActivity {
     private TextView inicio;
     private TextView fim;
     private Button ok;
+    private Button confirmar;
     private Button cancel;
+    private CheckBox checkBoxDiaAtivo;
+    private ConstraintLayout constraintLayoutHorarios;
+    private DialogFragment fragmentHorarios;
+    private int op;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +45,69 @@ public class HorariosEmpresaActivity extends BaseActivity {
         toolbarBase = findViewById(R.id.toolbar);
         toolbarBase.setTitle("Cadastrar Horários");
         toolbarBase.setTitleTextColor(getResources().getColor(R.color.colorBranco));
+        constraintLayoutHorarios = findViewById(R.id.layoutHorarios);
 
         inicio = findViewById(R.id.textViewInicioHorarios);
+        inicio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                op = 0;
+                abrirHorarios();
+            }
+        });
         fim    = findViewById(R.id.textViewFinalHorarios);
+        fim.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                op = 1;
+                abrirHorarios();
+            }
+        });
+        checkBoxDiaAtivo = findViewById(R.id.checkedTextViewDiaAtivo);
+        checkBoxDiaAtivo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkBoxDiaAtivo.isChecked()){
+                    constraintLayoutHorarios.setBackgroundColor(getResources().getColor(R.color.colorSelecao));
+                }
+                else{
+                    constraintLayoutHorarios.setBackgroundColor(getResources().getColor(R.color.colorDiaSelecionado));
+                }
+            }
+        });
+
+        confirmar = findViewById(R.id.buttonOKConfirmarHorarios);
+        confirmar.setOnClickListener(new View.OnClickListener() {
+            int pos;
+            @Override
+            public void onClick(View view) {
+                if (spinnerHorarios.getSelectedItemPosition() == 0){
+                    empresaHorarios.get(0).setHoraInicio(inicio.getText().toString());
+                    empresaHorarios.get(0).setHoraFinal(fim.getText().toString());
+                    empresaHorarios.get(0).setDiaAtivo(retornoDiaAtivo());
+                    setCheckbox(empresaHorarios.get(0));
+                    pos = spinnerHorarios.getSelectedItemPosition();
+                }
+                else
+                if(spinnerHorarios.getSelectedItemPosition() == 1){
+                    empresaHorarios.get(1).setHoraInicio(inicio.getText().toString());
+                    empresaHorarios.get(1).setHoraFinal(fim.getText().toString());
+                    empresaHorarios.get(1).setDiaAtivo(retornoDiaAtivo());
+                    setCheckbox(empresaHorarios.get(1));
+                    pos = spinnerHorarios.getSelectedItemPosition();
+                }
+                preencheSpinner();
+                spinnerHorarios.setSelection(pos);
+            }
+        });
 
         ok     = findViewById(R.id.buttonOKHorarios);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         cancel = findViewById(R.id.buttonCancelarHorarios);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,21 +129,24 @@ public class HorariosEmpresaActivity extends BaseActivity {
         horarioTerca.setDescricaoDia(getResources().getString(R.string.terca));
         horarioTerca.setDiaAtivo(true);
         horarioTerca.setHoraInicio(getResources().getString(R.string.horarioPadraoInicial));
-        horarioTerca.setHoraFinal(getResources().getString(R.string.horarioPadraoFinal));
+        horarioTerca.setHoraFinal(getResources().getString(R.string.horarioPadraoMeioDia));
         horarioTerca.setDiaSemana(2);
         empresaHorarios.add(horarioTerca);
 
         listaHorarios = new ArrayList<>();
-        listaHorarios.add(horarioSegunda.getDescricaoDia() + " - " + horarioSegunda.getHoraInicio() + " - " + horarioSegunda.getHoraFinal());
-        listaHorarios.add(horarioTerca.getDescricaoDia()   + " - " + horarioTerca.getHoraInicio() + " - " + horarioTerca.getHoraFinal());
-        dataHorarios = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, listaHorarios);
         spinnerHorarios = findViewById(R.id.spinnerHorarios);
-        spinnerHorarios.setAdapter(dataHorarios);
-
+        preencheSpinner();
+//        dataHorarios = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, listaHorarios);
+//        spinnerHorarios.setAdapter(dataHorarios);
         spinnerHorarios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                if (i == 0){
+                    setCampos(empresaHorarios.get(0));
+                }
+                else{
+                    setCampos(empresaHorarios.get(1));
+                }
             }
 
             @Override
@@ -86,6 +157,40 @@ public class HorariosEmpresaActivity extends BaseActivity {
 
     }
 
+    private void setCheckbox(Horario horarioCheckBox){
+        if (horarioCheckBox.getDiaAtivo()){
+            constraintLayoutHorarios.setBackgroundColor(getResources().getColor(R.color.colorSelecao));
+        }
+        else{
+            constraintLayoutHorarios.setBackgroundColor(getResources().getColor(R.color.colorDiaSelecionado));
+        }
+        checkBoxDiaAtivo.setChecked(horarioCheckBox.getDiaAtivo());
+    }
+
+    private Boolean retornoDiaAtivo(){
+        if (checkBoxDiaAtivo.isChecked()){
+             return true;
+         }
+         else{
+            return false;
+        }
+
+    }
+
+    private void setCampos(Horario horarioParametro){
+        inicio.setText(horarioParametro.getHoraInicio());
+        fim.setText(horarioParametro.getHoraFinal());
+        setCheckbox(horarioParametro);
+    }
+
+    private void preencheSpinner(){
+        listaHorarios.clear();
+        for (Horario horario : empresaHorarios){
+            listaHorarios.add(horario.getDescricaoDia() + " - " + horario.getHoraInicio() + " - " + horario.getHoraFinal());
+        }
+        dataHorarios = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, listaHorarios);
+        spinnerHorarios.setAdapter(dataHorarios);
+    }
 
     private void telaHorarios(Integer dia, String diaDescricao, String inicio, String fim, Boolean diaAtivo, Horario horarioParametro){
         horarioParametro = new Horario();
@@ -94,5 +199,30 @@ public class HorariosEmpresaActivity extends BaseActivity {
         horarioParametro.setHoraFinal(fim);
         horarioParametro.setDiaAtivo(diaAtivo);
         horarioParametro.setDescricaoDia(diaDescricao);
+    }
+
+    private void abrirHorarios(){
+        fragmentHorarios = new HorarioDialog();
+        Bundle bundle = new Bundle();
+        if (op == 0) {
+            bundle.putString("hora", inicio.getText().toString());
+        }
+        else{
+            bundle.putString("hora", fim.getText().toString());
+        }
+        fragmentHorarios.setArguments(bundle);
+        fragmentHorarios.show(getFragmentManager(), "horarios");
+    }
+
+    @Override
+    public void onReturnValue(String resultadoParametro) {
+        if (!resultadoParametro.isEmpty()){
+            if (op == 0) {
+                inicio.setText(resultadoParametro);
+            }
+            else{
+                fim.setText(resultadoParametro);
+            }
+        }
     }
 }

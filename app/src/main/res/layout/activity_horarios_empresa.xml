@@ -49,7 +49,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
     <android.support.constraint.ConstraintLayout
-        android:background="@drawable/border"
+        android:background="@color/colorSelecao"
         android:id="@+id/layoutHorarios"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -112,7 +112,7 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/textView23"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/checkedTextViewDiaAtivo" />
 
         <TextView
             android:id="@+id/textView23"
@@ -131,7 +131,7 @@
             app:layout_constraintTop_toTopOf="@+id/textView21" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/buttonOKConfirmarHorarios"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -146,6 +146,24 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewInicioHorarios" />
+
+        <CheckBox
+            android:checked="true"
+            android:id="@+id/checkedTextViewDiaAtivo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/com_facebook_button_background"
+            android:text="@string/diadisponivel"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 
