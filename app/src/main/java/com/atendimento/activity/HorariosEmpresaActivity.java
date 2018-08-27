@@ -1,6 +1,8 @@
 package com.atendimento.activity;
 
 import android.app.DialogFragment;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
@@ -25,8 +27,10 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
     private Horario horarioSegunda;
     private Horario horarioTerca;
     private ArrayAdapter<String> dataHorarios;
+    private ArrayAdapter<String> dataDuracao;
     private Spinner spinnerHorarios;
     private List<String> listaHorarios;
+    private List<String> listaDuracao;
     private TextView inicio;
     private TextView fim;
     private Button ok;
@@ -36,6 +40,7 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
     private ConstraintLayout constraintLayoutHorarios;
     private DialogFragment fragmentHorarios;
     private int op;
+    private Spinner spinnerDuracao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +81,25 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
             }
         });
 
+        sqLiteDatabasePar = databaseCategorias();
+        Cursor cursor = cursorDuracao(sqLiteDatabasePar,"");
+        int indiceColunaDescricao = cursor.getColumnIndex("descricao");
+        cursor.moveToFirst();
+        listaDuracao = new ArrayList<>();
+
+        while (!cursor.isAfterLast()){
+            listaDuracao.add(cursor.getString(indiceColunaDescricao));
+            cursor.moveToNext();
+        }
+
+        dataDuracao = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, listaDuracao);
+        spinnerDuracao = findViewById(R.id.spinnerDuracao);
+        spinnerDuracao.setAdapter(dataDuracao);
+
         confirmar = findViewById(R.id.buttonOKConfirmarHorarios);
         confirmar.setOnClickListener(new View.OnClickListener() {
             int pos;
+            Boolean diaAtivo;
             @Override
             public void onClick(View view) {
                 if (spinnerHorarios.getSelectedItemPosition() == 0){
@@ -86,6 +107,7 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
                     empresaHorarios.get(0).setHoraFinal(fim.getText().toString());
                     empresaHorarios.get(0).setDiaAtivo(retornoDiaAtivo());
                     setCheckbox(empresaHorarios.get(0));
+                    diaAtivo = empresaHorarios.get(0).getDiaAtivo();
                     pos = spinnerHorarios.getSelectedItemPosition();
                 }
                 else
@@ -94,9 +116,11 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
                     empresaHorarios.get(1).setHoraFinal(fim.getText().toString());
                     empresaHorarios.get(1).setDiaAtivo(retornoDiaAtivo());
                     setCheckbox(empresaHorarios.get(1));
+                    diaAtivo = empresaHorarios.get(1).getDiaAtivo();
                     pos = spinnerHorarios.getSelectedItemPosition();
                 }
                 preencheSpinner();
+                setSpinnerValues(pos, diaAtivo);
                 spinnerHorarios.setSelection(pos);
             }
         });
@@ -136,8 +160,6 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
         listaHorarios = new ArrayList<>();
         spinnerHorarios = findViewById(R.id.spinnerHorarios);
         preencheSpinner();
-//        dataHorarios = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, listaHorarios);
-//        spinnerHorarios.setAdapter(dataHorarios);
         spinnerHorarios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -165,13 +187,14 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
             constraintLayoutHorarios.setBackgroundColor(getResources().getColor(R.color.colorDiaSelecionado));
         }
         checkBoxDiaAtivo.setChecked(horarioCheckBox.getDiaAtivo());
+        setSpinnerValues(-1,horarioCheckBox.getDiaAtivo());
     }
 
     private Boolean retornoDiaAtivo(){
         if (checkBoxDiaAtivo.isChecked()){
-             return true;
-         }
-         else{
+            return true;
+        }
+        else{
             return false;
         }
 
@@ -212,6 +235,18 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
         }
         fragmentHorarios.setArguments(bundle);
         fragmentHorarios.show(getFragmentManager(), "horarios");
+    }
+
+    private void setSpinnerValues(int posicao, Boolean diaAtivo){
+        if (posicao != -1){
+            spinnerHorarios.setSelection(posicao);
+        }
+        if (diaAtivo){
+            spinnerHorarios.setBackgroundColor(getResources().getColor(R.color.colorFacebook));
+        }
+        else{
+            spinnerHorarios.setBackgroundColor(getResources().getColor(R.color.colorDiaSelecionado));
+        }
     }
 
     @Override
