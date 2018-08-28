@@ -19,6 +19,7 @@ import com.atendimento.model.Horario;
 import com.atendimento.util.MyDialogFragmentListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFragmentListener {
@@ -26,6 +27,11 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
     private List<Horario> empresaHorarios;
     private Horario horarioSegunda;
     private Horario horarioTerca;
+    private Horario horarioQuarta;
+    private Horario horarioQuinta;
+    private Horario horarioSexta;
+    private Horario horarioSabado;
+    private Horario horarioDomingo;
     private ArrayAdapter<String> dataHorarios;
     private ArrayAdapter<String> dataDuracao;
     private Spinner spinnerHorarios;
@@ -141,21 +147,41 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
         });
 
         empresaHorarios = new ArrayList<>();
-        horarioSegunda  = new Horario();
-        horarioSegunda.setDescricaoDia(getResources().getString(R.string.segunda));
-        horarioSegunda.setDiaAtivo(true);
-        horarioSegunda.setHoraInicio(getResources().getString(R.string.horarioPadraoInicial));
-        horarioSegunda.setHoraFinal(getResources().getString(R.string.horarioPadraoFinal));
-        horarioSegunda.setDiaSemana(1);
+
+        horarioSegunda = setarHorarios(Calendar.MONDAY, getResources().getString(R.string.segunda),
+                getResources().getString(R.string.horarioPadraoInicial),
+                getResources().getString(R.string.horarioPadraoFinal), true);
         empresaHorarios.add(horarioSegunda);
 
-        horarioTerca = new Horario();
-        horarioTerca.setDescricaoDia(getResources().getString(R.string.terca));
-        horarioTerca.setDiaAtivo(true);
-        horarioTerca.setHoraInicio(getResources().getString(R.string.horarioPadraoInicial));
-        horarioTerca.setHoraFinal(getResources().getString(R.string.horarioPadraoMeioDia));
-        horarioTerca.setDiaSemana(2);
+        horarioTerca = setarHorarios(Calendar.TUESDAY, getResources().getString(R.string.terca),
+                getResources().getString(R.string.horarioPadraoInicial),
+                getResources().getString(R.string.horarioPadraoFinal), true);
         empresaHorarios.add(horarioTerca);
+
+        horarioQuarta = setarHorarios(Calendar.WEDNESDAY, getResources().getString(R.string.quarta),
+                getResources().getString(R.string.horarioPadraoInicial),
+                getResources().getString(R.string.horarioPadraoFinal), true);
+        empresaHorarios.add(horarioQuarta);
+
+        horarioQuinta = setarHorarios(Calendar.THURSDAY, getResources().getString(R.string.quinta),
+                getResources().getString(R.string.horarioPadraoInicial),
+                getResources().getString(R.string.horarioPadraoFinal), true);
+        empresaHorarios.add(horarioQuinta);
+
+        horarioSexta = setarHorarios(Calendar.FRIDAY, getResources().getString(R.string.sexta),
+                getResources().getString(R.string.horarioPadraoInicial),
+                getResources().getString(R.string.horarioPadraoFinal), true);
+        empresaHorarios.add(horarioSexta);
+
+        horarioSabado = setarHorarios(Calendar.SATURDAY, getResources().getString(R.string.sabado),
+                getResources().getString(R.string.horarioPadraoInicial),
+                getResources().getString(R.string.horarioPadraoMeioDia), true);
+        empresaHorarios.add(horarioSabado);
+
+        horarioDomingo = setarHorarios(Calendar.SUNDAY, getResources().getString(R.string.domingo),
+                getResources().getString(R.string.horarioPadraoInicial),
+                getResources().getString(R.string.horarioPadraoFinal), false);
+        empresaHorarios.add(horarioDomingo);
 
         listaHorarios = new ArrayList<>();
         spinnerHorarios = findViewById(R.id.spinnerHorarios);
@@ -215,13 +241,14 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
         spinnerHorarios.setAdapter(dataHorarios);
     }
 
-    private void telaHorarios(Integer dia, String diaDescricao, String inicio, String fim, Boolean diaAtivo, Horario horarioParametro){
-        horarioParametro = new Horario();
+    private Horario setarHorarios(Integer dia, String diaDescricao, String inicio, String fim, Boolean diaAtivo){
+        Horario horarioParametro = new Horario();
         horarioParametro.setDiaSemana(dia);
+        horarioParametro.setDescricaoDia(diaDescricao);
         horarioParametro.setHoraInicio(inicio);
         horarioParametro.setHoraFinal(fim);
         horarioParametro.setDiaAtivo(diaAtivo);
-        horarioParametro.setDescricaoDia(diaDescricao);
+        return horarioParametro;
     }
 
     private void abrirHorarios(){

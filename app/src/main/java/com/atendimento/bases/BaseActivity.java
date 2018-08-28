@@ -155,6 +155,9 @@ public class BaseActivity extends AppCompatActivity {
         sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao, duracaoHorario)  VALUES(1, '15 Minutos', 15)");
         sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao, duracaoHorario)  VALUES(2, '30 Minutos', 30)");
         sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao, duracaoHorario)  VALUES(3, '60 Minutos', 60)");
+        sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao, duracaoHorario)  VALUES(4, '80 Minutos', 80)");
+        sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao, duracaoHorario)  VALUES(5, '120 Minutos', 120)");
+        sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao, duracaoHorario)  VALUES(6, '180 Minutos', 180)");
 
         return sqLiteDatabasePar;
     }
