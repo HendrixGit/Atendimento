@@ -1,6 +1,9 @@
 package com.atendimento.activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -9,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.atendimento.R;
@@ -16,6 +20,7 @@ import com.atendimento.bases.BaseActivity;
 import com.atendimento.fragment.HorarioDialog;
 import com.atendimento.model.Horario;
 import com.atendimento.util.MyDialogFragmentListener;
+import com.atendimento.util.Util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,6 +53,10 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
     private Spinner spinnerDuracao;
     private int pos = 0;
     private Boolean diaAtivo =  true;
+    private ImageView setarHorarios;
+    private Util util;
+    private Dialog.OnClickListener yesClickDialog;
+    private AlertDialog perguntaHorarios;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +67,33 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
         toolbarBase.setTitle("Cadastrar Horários");
         toolbarBase.setTitleTextColor(getResources().getColor(R.color.colorBranco));
         constraintLayoutHorarios = findViewById(R.id.layoutHorarios);
+        util = new Util();
+        yesClickDialog = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                int x = 0;
+                while (empresaHorarios.size() > x){
+                    empresaHorarios.get(x).setHoraInicio(inicio.getText().toString());
+                    empresaHorarios.get(x).setHoraFinal(fim.getText().toString());
+                    x++;
+                }
+                preencheSpinner(spinnerHorarios.getSelectedItemPosition(), empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()).getDiaAtivo());
+            }
+        };
+
+        setarHorarios = findViewById(R.id.imageViewSetarHorarios);
+        setarHorarios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = util.YesNoDialog(
+                        "Deseja atribuir o horário selecionado para todos os dias?",
+                        HorariosEmpresaActivity.this,
+                        yesClickDialog);
+
+                perguntaHorarios = builder.create();
+                perguntaHorarios.show();
+            }
+        });
 
         inicio = findViewById(R.id.textViewInicioHorarios);
         inicio.setOnClickListener(new View.OnClickListener() {
@@ -114,9 +150,7 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
                 diaAtivo = empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()).getDiaAtivo();
                 pos = spinnerHorarios.getSelectedItemPosition();
 
-                preencheSpinner();
-                setSpinnerValues(pos, diaAtivo);
-                spinnerHorarios.setSelection(pos);
+                preencheSpinner(pos, diaAtivo);
             }
         });
 
@@ -174,7 +208,7 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
 
         listaHorarios = new ArrayList<>();
         spinnerHorarios = findViewById(R.id.spinnerHorarios);
-        preencheSpinner();
+        preencheSpinner(pos,diaAtivo);
         spinnerHorarios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -216,13 +250,16 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
         setCheckbox(horarioParametro);
     }
 
-    private void preencheSpinner(){
+    private void preencheSpinner(Integer posicao, Boolean diaParametro){
         listaHorarios.clear();
         for (Horario horario : empresaHorarios){
             listaHorarios.add(horario.getDescricaoDia() + " - " + horario.getHoraInicio() + " - " + horario.getHoraFinal());
         }
         dataHorarios = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, listaHorarios);
         spinnerHorarios.setAdapter(dataHorarios);
+
+        setSpinnerValues(posicao, diaParametro);
+        spinnerHorarios.setSelection(posicao);
     }
 
     private Horario setarHorarios(Integer dia, String diaDescricao, String inicio, String fim, Boolean diaAtivo){
