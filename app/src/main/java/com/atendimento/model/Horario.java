@@ -1,8 +1,11 @@
 package com.atendimento.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
-public class Horario implements Serializable {
+public class Horario implements Parcelable {
 
     private String idEmpresa;
     private int duracao;
@@ -15,6 +18,29 @@ public class Horario implements Serializable {
     public Horario() {
 
     }
+
+    protected Horario(Parcel in) {
+        idEmpresa = in.readString();
+        duracao = in.readInt();
+        diaSemana = in.readInt();
+        descricaoDia = in.readString();
+        horaInicio = in.readString();
+        horaFinal = in.readString();
+        byte tmpDiaAtivo = in.readByte();
+        diaAtivo = tmpDiaAtivo == 0 ? null : tmpDiaAtivo == 1;
+    }
+
+    public static final Creator<Horario> CREATOR = new Creator<Horario>() {
+        @Override
+        public Horario createFromParcel(Parcel in) {
+            return new Horario(in);
+        }
+
+        @Override
+        public Horario[] newArray(int size) {
+            return new Horario[size];
+        }
+    };
 
     public String getIdEmpresa() {
         return idEmpresa;
@@ -70,5 +96,21 @@ public class Horario implements Serializable {
 
     public void setDiaAtivo(Boolean diaAtivo) {
         this.diaAtivo = diaAtivo;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(idEmpresa);
+        parcel.writeInt(duracao);
+        parcel.writeInt(diaSemana);
+        parcel.writeString(descricaoDia);
+        parcel.writeString(horaInicio);
+        parcel.writeString(horaFinal);
+        parcel.writeByte((byte) (diaAtivo == null ? 0 : diaAtivo ? 1 : 2));
     }
 }

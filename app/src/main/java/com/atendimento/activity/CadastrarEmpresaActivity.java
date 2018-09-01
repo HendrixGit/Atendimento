@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -30,6 +31,7 @@ import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Empresa;
+import com.atendimento.model.Horario;
 import com.atendimento.util.Preferencias;
 import com.atendimento.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -80,15 +82,17 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     private Task taskSalvarEmpresa;
     private Task taskSalvarEmpresa2;
     private RunnableFuture runnableFuture;
-    private TextView horarios;
+    private ArrayList<Horario> empresaHorarios;
+    private ImageView checkHorarios;
+    private Button buttonHorarios;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastrar_empresa);
 
-        horarios = findViewById(R.id.textView11);
-        horarios.setOnClickListener(new View.OnClickListener() {
+        buttonHorarios = findViewById(R.id.buttonHorarios);
+        buttonHorarios.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mudarTela(getApplicationContext(), HorariosEmpresaActivity.class);
@@ -104,10 +108,17 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         identificadorUsuario = preferencias.getIdentificador();
         firebase = ConfiguracaoFirebase.getFirebaseDatabase();
         imm = (InputMethodManager)this.getSystemService(Service.INPUT_METHOD_SERVICE);
+        checkHorarios = findViewById(R.id.imageViewCheckHorarios);
         Intent intent = getIntent();
         empresaParametro = (Empresa) intent.getSerializableExtra("empresa");
         if (empresaParametro != null){ carregarDados(); }
         else { idKey = firebase.push().getKey(); }
+
+        empresaHorarios = intent.getParcelableArrayListExtra("horarios");
+        if (empresaHorarios != null){
+            checkHorarios.setImageDrawable(getResources().getDrawable(R.drawable.checkmarkblue));
+            checkHorarios.setVisibility(View.VISIBLE);
+        }
         util = new Util();
         nomeEmpresa.setEnabled(false);
         imm.hideSoftInputFromWindow(nomeEmpresa.getWindowToken(),0);

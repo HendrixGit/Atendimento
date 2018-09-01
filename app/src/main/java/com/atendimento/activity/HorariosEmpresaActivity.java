@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -28,7 +29,7 @@ import java.util.List;
 
 public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFragmentListener {
 
-    private List<Horario> empresaHorarios;
+    private ArrayList<Horario> empresaHorarios;
     private Horario horarioSegunda;
     private Horario horarioTerca;
     private Horario horarioQuarta;
@@ -126,7 +127,7 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
 
         sqLiteDatabasePar = databaseCategorias();
         Cursor cursor = cursorDuracao(sqLiteDatabasePar,"");
-        int indiceColunaDescricao = cursor.getColumnIndex("descricao");
+        final int indiceColunaDescricao = cursor.getColumnIndex("descricao");
         cursor.moveToFirst();
         listaDuracao = new ArrayList<>();
 
@@ -158,7 +159,11 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(getApplicationContext(), CadastrarEmpresaActivity.class);
+                intent.putParcelableArrayListExtra("horarios", empresaHorarios);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
             }
         });
         cancel = findViewById(R.id.buttonCancelarHorarios);
