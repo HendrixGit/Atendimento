@@ -129,6 +129,7 @@
             app:layout_constraintTop_toTopOf="@+id/circleImageEmpresa" />
 
         <TextView
+            android:textAlignment="center"
             android:id="@+id/textView9"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -11,7 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.media.Image;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -25,7 +25,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
@@ -42,6 +41,8 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     private SQLiteDatabase sqLiteDatabasePar;
     private ProgressBar progressBar;
     private StorageReference storageReference;
-    private Bitmap      imagemEmpresa;
+    private Drawable    imagemEmpresa;
     private Bitmap      imagemEmpresaParametro;
     private Preferencias preferencias;
     private AlertDialog opcoes;
@@ -95,7 +96,10 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         buttonHorarios.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mudarTela(getApplicationContext(), HorariosEmpresaActivity.class);
+                Intent intent   = new Intent(getApplicationContext(), HorariosEmpresaActivity.class);
+                Empresa empresa = getDadosEmpresa();
+                intent.putExtra("empresa", empresa);
+                startActivity(intent);
             }
         });
 
@@ -110,7 +114,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         imm = (InputMethodManager)this.getSystemService(Service.INPUT_METHOD_SERVICE);
         checkHorarios = findViewById(R.id.imageViewCheckHorarios);
         Intent intent = getIntent();
-        empresaParametro = (Empresa) intent.getSerializableExtra("empresa");
+        empresaParametro     = (Empresa) intent.getSerializableExtra("empresa");
         if (empresaParametro != null){ carregarDados(); }
         else { idKey = firebase.push().getKey(); }
 
@@ -209,35 +213,61 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         carregarFotoEmpresa();
     }
 
-    private void carregarFotoEmpresa(){
-        if (!idKey.equals("")) {
-            progressBar.setVisibility(View.VISIBLE);
-            storageReference = ConfiguracaoFirebase.getStorage().child("empresas").child(identificadorUsuario).child(idKey);
-            long dim = 1024 * 1024;
-            storageReference.getBytes(dim).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    imagemEmpresa = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    imagemEmpresaParametro = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    circleImageView.setImageBitmap(imagemEmpresa);
-                    progressBar.setVisibility(View.GONE);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    imagemEmpresaPadrao();
-                    Log.i("erroFotoCarregar", e.toString() + " " + e.getCause().toString());
-                }
-            });
+    private void carregarFoto(String url){
+        progressBar.setVisibility(View.VISIBLE);
+
+        if (imagemEmpresaParametro !=  null){
+            circleImageView.setImageBitmap(imagemEmpresaParametro);
+            progressBar.setVisibility(View.GONE);
         }
-        else{
-            imagemEmpresaPadrao();
+        else {
+            if (url != "") {
+                Picasso.with(getApplicationContext()).load(url).resize(128, 128).error(R.drawable.ic_action_user).
+                        into(circleImageView, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
+            }
+            else {
+                Picasso.with(getApplicationContext()).load(R.drawable.ic_action_user).resize(128, 128).error(R.drawable.ic_action_user).
+                        into(circleImageView, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
+
+            }
         }
     }
 
-    private void imagemEmpresaPadrao(){
-        circleImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_user));
-        progressBar.setVisibility(View.GONE);
+    private void carregarFotoEmpresa(){
+        try {
+            if (empresaParametro != null) {
+                carregarFoto(empresaParametro.getUrlImagem());
+            }
+            else{
+                carregarFoto("");
+            }
+        }
+        catch (Exception e){
+
+        }
+        finally {
+
+        }
     }
 
     public void mostrarOpcoes(){
@@ -274,8 +304,25 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         idKey     = empresaParametro.getId();
         urlImagem = empresaParametro.getUrlImagem();
         nomeEmpresa.setText(empresaParametro.getNome());
+        if (empresaParametro.getImageArray() != null) {
+            imagemEmpresaParametro = BitmapFactory.decodeByteArray(empresaParametro.getImageArray(), 0, empresaParametro.getImageArray().length);
+        }
     }
 
+    private Empresa getDadosEmpresa(){
+        Empresa empresaAtual = new Empresa();
+        empresaAtual.setNome(nomeEmpresa.getText().toString());
+        empresaAtual.setCategoria(spinnerCategoria.getSelectedItem().toString());
+        empresaAtual.setId(idKey);
+        empresaAtual.setIdUsuario(identificadorUsuario);
+
+        if (imagemEmpresaParametro != null) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            imagemEmpresaParametro.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            empresaAtual.setImageArray(stream.toByteArray());
+        }
+        return empresaAtual;
+    }
 
     private void salvarEmpresa(){
         if ((!nomeEmpresa.getText().toString().equals("")) && (imagemEmpresaParametro != null) && (spinnerCategoria.getSelectedItemPosition() != 0)) {

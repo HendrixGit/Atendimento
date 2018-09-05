@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.fragment.HorarioDialog;
+import com.atendimento.model.Empresa;
 import com.atendimento.model.Horario;
 import com.atendimento.util.MyDialogFragmentListener;
 import com.atendimento.util.Util;
@@ -126,7 +127,7 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
         });
 
         sqLiteDatabasePar = databaseCategorias();
-        Cursor cursor = cursorDuracao(sqLiteDatabasePar,"");
+        final Cursor cursor = cursorDuracao(sqLiteDatabasePar,"");
         final int indiceColunaDescricao = cursor.getColumnIndex("descricao");
         cursor.moveToFirst();
         listaDuracao = new ArrayList<>();
@@ -160,8 +161,9 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), CadastrarEmpresaActivity.class);
+                Empresa empresa = (Empresa) getIntent().getSerializableExtra("empresa");
+                intent.putExtra("empresa", empresa);
                 intent.putParcelableArrayListExtra("horarios", empresaHorarios);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
             }

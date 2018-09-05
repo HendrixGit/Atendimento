@@ -1,6 +1,7 @@
 package com.atendimento.model;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
@@ -16,7 +17,7 @@ public class Empresa implements Serializable {
     private String Categoria;
     private String urlImagem;
     private Boolean selecionado = false;
-    private Bitmap imagemBitmap;
+    private byte[] imageArray;
 
     public Empresa() {
 
@@ -67,8 +68,8 @@ public class Empresa implements Serializable {
     public void setSelecionado(Boolean selecionado) { this.selecionado = selecionado; }
 
     @Exclude
-    public Bitmap getImagemBitmap() { return imagemBitmap; }
+    public byte[] getImageArray() { return imageArray; }
 
     @Exclude
-    public void setImagemBitmap(Bitmap imagemBitmap) { this.imagemBitmap = imagemBitmap; }
+    public void setImageArray(byte[] imageArray) { this.imageArray = imageArray; }
 }
