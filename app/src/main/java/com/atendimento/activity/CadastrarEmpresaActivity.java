@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -69,7 +68,6 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     private SQLiteDatabase sqLiteDatabasePar;
     private ProgressBar progressBar;
     private StorageReference storageReference;
-    private Drawable    imagemEmpresa;
     private Bitmap      imagemEmpresaParametro;
     private Preferencias preferencias;
     private AlertDialog opcoes;
@@ -116,7 +114,8 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         Intent intent = getIntent();
         empresaParametro     = (Empresa) intent.getSerializableExtra("empresa");
         if (empresaParametro != null){ carregarDados(); }
-        else { idKey = firebase.push().getKey(); }
+        else { idKey = firebase.push().getKey();
+               carregarFoto(""); }
 
         empresaHorarios = intent.getParcelableArrayListExtra("horarios");
         if (empresaHorarios != null){
@@ -145,7 +144,6 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         Cursor cursor = cursorCategorias(sqLiteDatabasePar,"");
         int indiceColunaDescricao = cursor.getColumnIndex("descricao");
         cursor.moveToFirst();
-        listaCategoria.add("--  Selecione a Categoria  --");
 
         while (!cursor.isAfterLast()){
             listaCategoria.add(cursor.getString(indiceColunaDescricao));
@@ -159,7 +157,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
             int indiceColunaCodigo = cursor.getColumnIndex("codigo");
             cursor2.moveToFirst();
             int opcao = Integer.parseInt(cursor2.getString(indiceColunaCodigo));
-            spinnerCategoria.setSelection(opcao);
+            spinnerCategoria.setSelection(opcao - 1);
         }
 
         toolbar.setTitle("Cadastro de Empresa");
@@ -210,7 +208,6 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                 startActivityForResult(intent,0);
             }
         };
-        carregarFotoEmpresa();
     }
 
     private void carregarFoto(String url){
@@ -221,12 +218,13 @@ public class CadastrarEmpresaActivity extends BaseActivity {
             progressBar.setVisibility(View.GONE);
         }
         else {
-            if (url != "") {
+            if (url != "" && url !=  null) {
                 Picasso.with(getApplicationContext()).load(url).resize(128, 128).error(R.drawable.ic_action_user).
                         into(circleImageView, new Callback() {
                             @Override
                             public void onSuccess() {
                                 progressBar.setVisibility(View.GONE);
+                                imagemEmpresaParametro = BitmapFactory.decodeByteArray(empresaParametro.getImageArray(), 0, empresaParametro.getImageArray().length);
                             }
 
                             @Override
@@ -250,23 +248,6 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                         });
 
             }
-        }
-    }
-
-    private void carregarFotoEmpresa(){
-        try {
-            if (empresaParametro != null) {
-                carregarFoto(empresaParametro.getUrlImagem());
-            }
-            else{
-                carregarFoto("");
-            }
-        }
-        catch (Exception e){
-
-        }
-        finally {
-
         }
     }
 
@@ -307,6 +288,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         if (empresaParametro.getImageArray() != null) {
             imagemEmpresaParametro = BitmapFactory.decodeByteArray(empresaParametro.getImageArray(), 0, empresaParametro.getImageArray().length);
         }
+        carregarFoto(urlImagem);
     }
 
     private Empresa getDadosEmpresa(){
@@ -315,6 +297,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         empresaAtual.setCategoria(spinnerCategoria.getSelectedItem().toString());
         empresaAtual.setId(idKey);
         empresaAtual.setIdUsuario(identificadorUsuario);
+        empresaAtual.setUrlImagem(urlImagem);
 
         if (imagemEmpresaParametro != null) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -325,7 +308,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     }
 
     private void salvarEmpresa(){
-        if ((!nomeEmpresa.getText().toString().equals("")) && (imagemEmpresaParametro != null) && (spinnerCategoria.getSelectedItemPosition() != 0)) {
+        if ((!nomeEmpresa.getText().toString().equals("")) && (imagemEmpresaParametro != null)) {
             runnableFuture = new RunnableFuture() {
                 @Override
                 public void run() {
