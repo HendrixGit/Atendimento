@@ -115,7 +115,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         empresaParametro     = (Empresa) intent.getSerializableExtra("empresa");
         if (empresaParametro != null){ carregarDados(); }
         else { idKey = firebase.push().getKey();
-               carregarFoto(""); }
+               carregarFoto(); }
 
         empresaHorarios = intent.getParcelableArrayListExtra("horarios");
         if (empresaHorarios != null){
@@ -210,44 +210,30 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         };
     }
 
-    private void carregarFoto(String url){
+    private void carregarFoto(){
         progressBar.setVisibility(View.VISIBLE);
-
         if (imagemEmpresaParametro !=  null){
             circleImageView.setImageBitmap(imagemEmpresaParametro);
             progressBar.setVisibility(View.GONE);
         }
         else {
-            if (url != "" && url !=  null) {
-                Picasso.with(getApplicationContext()).load(url).resize(128, 128).error(R.drawable.ic_action_user).
-                        into(circleImageView, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                progressBar.setVisibility(View.GONE);
-                                imagemEmpresaParametro = BitmapFactory.decodeByteArray(empresaParametro.getImageArray(), 0, empresaParametro.getImageArray().length);
-                            }
-
-                            @Override
-                            public void onError() {
-                                progressBar.setVisibility(View.GONE);
-                            }
-                        });
-            }
-            else {
-                Picasso.with(getApplicationContext()).load(R.drawable.ic_action_user).resize(128, 128).error(R.drawable.ic_action_user).
-                        into(circleImageView, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                progressBar.setVisibility(View.GONE);
-                            }
-
-                            @Override
-                            public void onError() {
-                                progressBar.setVisibility(View.GONE);
-                            }
-                        });
-
-            }
+            storageReference = ConfiguracaoFirebase.getStorage().child("empresas").child(identificadorUsuario).child(idKey);
+            long dim = 1024 * 1024;
+            storageReference.getBytes(dim).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    imagemEmpresaParametro = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    circleImageView.setImageBitmap(imagemEmpresaParametro);
+                    progressBar.setVisibility(View.GONE);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressBar.setVisibility(View.GONE);
+                    Picasso.with(getApplicationContext()).load(R.drawable.ic_action_user).into(circleImageView);
+                    Log.i("erroFotoCarregar", e.toString() + " " + e.getCause().toString());
+                }
+            });
         }
     }
 
@@ -288,7 +274,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         if (empresaParametro.getImageArray() != null) {
             imagemEmpresaParametro = BitmapFactory.decodeByteArray(empresaParametro.getImageArray(), 0, empresaParametro.getImageArray().length);
         }
-        carregarFoto(urlImagem);
+        carregarFoto();
     }
 
     private Empresa getDadosEmpresa(){
