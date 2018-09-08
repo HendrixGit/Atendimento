@@ -160,6 +160,16 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int x = 0;
+                while (empresaHorarios.size() > x){
+                    Cursor cursorHorararios = cursorDuracao(sqLiteDatabasePar, spinnerDuracao.getSelectedItem().toString());
+                    int duracao = cursorHorararios.getColumnIndex("duracaoHorario");
+                    cursorHorararios.moveToFirst();
+                    empresaHorarios.get(x).setDuracao(cursorHorararios.getInt(duracao));
+                    x++;
+                }
+
+
                 Intent intent = new Intent(getApplicationContext(), CadastrarEmpresaActivity.class);
                 Empresa empresa = (Empresa) getIntent().getSerializableExtra("empresa");
                 intent.putExtra("empresa", empresa);

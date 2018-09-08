@@ -8,7 +8,8 @@ import java.io.Serializable;
 public class Horario implements Parcelable {
 
     private String idEmpresa;
-    private int duracao;
+    private String idUsuariosEmpresa;
+    private int    duracao;
     private int    diaSemana;
     private String descricaoDia;
     private String horaInicio;
@@ -49,6 +50,10 @@ public class Horario implements Parcelable {
     public void setIdEmpresa(String idEmpresa) {
         this.idEmpresa = idEmpresa;
     }
+
+    public String getIdUsuariosEmpresa() { return idUsuariosEmpresa; }
+
+    public void setIdUsuariosEmpresa(String idUsuariosEmpresa) { this.idUsuariosEmpresa = idUsuariosEmpresa; }
 
     public int getDuracao() {
         return duracao;

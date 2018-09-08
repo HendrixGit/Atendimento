@@ -328,6 +328,9 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                     empresa.setNome(nomeEmpresa.getText().toString());
                     empresa.setCategoria(spinnerCategoria.getSelectedItem().toString());
                     empresa.setUrlImagem(urlImagem);
+
+                    salvarHorarios();
+
                     taskSalvarEmpresa  = firebase.child("empresas").child(identificadorUsuario).child(idKey).setValue(empresa);
                     taskSalvarEmpresa2 = firebase.child("empresasApp").child(idKey).setValue(empresa);
                     Tasks.whenAll(taskSalvarEmpresa, taskSalvarEmpresa2).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -360,6 +363,16 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         empresaParametro = null;
+    }
+
+    private void salvarHorarios(){
+        int i = 0;
+        for (Horario horario : empresaHorarios){
+            empresaHorarios.get(i).setIdEmpresa(idKey);
+            empresaHorarios.get(i).setIdUsuariosEmpresa(identificadorUsuario);
+            firebase.child("horarios").child(idKey).child(horario.getDescricaoDia()).setValue(empresaHorarios.get(i));
+            i++;
+        }
     }
 
     @Override
