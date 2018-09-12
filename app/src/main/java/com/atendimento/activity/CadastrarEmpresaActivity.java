@@ -294,7 +294,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     }
 
     private void salvarEmpresa(){
-        if ((!nomeEmpresa.getText().toString().equals("")) && (imagemEmpresaParametro != null)) {
+        if ((!nomeEmpresa.getText().toString().equals("")) && (imagemEmpresaParametro != null)  && (empresaHorarios != null)) {
             runnableFuture = new RunnableFuture() {
                 @Override
                 public void run() {
@@ -355,7 +355,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
             runnableFuture.run();
         }
         else{
-            Toast.makeText(getApplicationContext(), "Preencha os dados, e coloque a foto", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Preencha os dados, coloque a foto e defina os horários", Toast.LENGTH_LONG).show();
         }
     }
 

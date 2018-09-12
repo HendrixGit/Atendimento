@@ -2,7 +2,6 @@ package com.atendimento.fragment;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.location.Location;
@@ -11,20 +10,18 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.NumberPicker;
-import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import com.atendimento.R;
 import com.atendimento.util.MyDialogFragmentListener;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 
 public class HorarioDialog extends DialogFragment {
@@ -33,11 +30,9 @@ public class HorarioDialog extends DialogFragment {
     private AlertDialog.Builder builder;
     private LayoutInflater inflater;
     private MyDialogFragmentListener activityChamada;
+    private MaterialCalendarView timePicker;
     private TimePicker timePickerHorarios;
     private String horaParemetro = "";
-    private Spinner spinnerHorarios;
-    private List<String> listaOpHorarios;
-    private ArrayAdapter<String> dataHorarios;
 
     private static final int INTERVAL = 60;
     private static final DecimalFormat FORMATTER = new DecimalFormat("00");
@@ -46,6 +41,7 @@ public class HorarioDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
+
         builder = new AlertDialog.Builder(getActivity(),R.style.dialog);
         inflater           = getActivity().getLayoutInflater();
         viewHorarios       = inflater.inflate(R.layout.hora_dialog, null, false);

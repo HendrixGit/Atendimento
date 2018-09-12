@@ -2,7 +2,6 @@ package com.atendimento.activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,17 +17,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
-import com.atendimento.fragment.HorarioDialog;
 import com.atendimento.model.Empresa;
 import com.atendimento.model.Horario;
-import com.atendimento.util.MyDialogFragmentListener;
 import com.atendimento.util.Util;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFragmentListener {
+public class HorariosEmpresaActivity extends BaseActivity {
 
     private ArrayList<Horario> empresaHorarios;
     private Horario horarioSegunda;
@@ -50,8 +48,6 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
     private Button cancel;
     private CheckBox checkBoxDiaAtivo;
     private ConstraintLayout constraintLayoutHorarios;
-    private DialogFragment fragmentHorarios;
-    private int op;
     private Spinner spinnerDuracao;
     private int pos = 0;
     private Boolean diaAtivo =  true;
@@ -59,6 +55,7 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
     private Util util;
     private Dialog.OnClickListener yesClickDialog;
     private AlertDialog perguntaHorarios;
+    private TimePickerDialog timePickerDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,16 +98,14 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
         inicio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                op = 0;
-                abrirHorarios();
+                abrirHorarios("Horário Inicial",0);
             }
         });
         fim    = findViewById(R.id.textViewFinalHorarios);
         fim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                op = 1;
-                abrirHorarios();
+                abrirHorarios("Horário Final", 1);
             }
         });
         checkBoxDiaAtivo = findViewById(R.id.checkedTextViewDiaAtivo);
@@ -220,7 +215,7 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
 
         horarioDomingo = setarHorarios(Calendar.SUNDAY, getResources().getString(R.string.domingo),
                 getResources().getString(R.string.horarioPadraoInicial),
-                getResources().getString(R.string.horarioPadraoFinal), false);
+                getResources().getString(R.string.horarioPadraoMeioDia), false);
         empresaHorarios.add(horarioDomingo);
 
         listaHorarios = new ArrayList<>();
@@ -289,17 +284,42 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
         return horarioParametro;
     }
 
-    private void abrirHorarios(){
-        fragmentHorarios = new HorarioDialog();
-        Bundle bundle = new Bundle();
-        if (op == 0) {
-            bundle.putString("hora", inicio.getText().toString());
+    private void abrirHorarios(String titulo, final Integer operacao){
+        String hora = "";
+        String horaInicial = "";
+        timePickerDialog = TimePickerDialog.newInstance(
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+                        String zeros = "";
+                        if (hourOfDay <= 9){  zeros = "0";  }
+                        if(operacao == 0) {
+                            inicio.setText(zeros + hourOfDay + ":" + minute + 0);
+                        }
+                        else{
+                            fim.setText(zeros + hourOfDay + ":" + minute + 0);
+                        }
+                    }}, true);
+
+        timePickerDialog.setTitle(titulo);
+        timePickerDialog.setVersion(TimePickerDialog.Version.VERSION_2);
+        timePickerDialog.setInitialSelection(8, 00);
+        timePickerDialog.setMaxTime(18,00,00);
+        timePickerDialog.setMinTime(8, 00,00);
+        timePickerDialog.setTimeInterval(1, 60);
+        timePickerDialog.setVersion(TimePickerDialog.Version.VERSION_2);
+
+        if(operacao == 0){
+            hora = inicio.getText().toString().substring(0,2);
         }
         else{
-            bundle.putString("hora", fim.getText().toString());
+            horaInicial = inicio.getText().toString().substring(0,2);
+            timePickerDialog.setMinTime(Integer.parseInt(horaInicial) + 1, 00, 00);
+            hora = fim.getText().toString().substring(0,2);
         }
-        fragmentHorarios.setArguments(bundle);
-        fragmentHorarios.show(getFragmentManager(), "horarios");
+
+        timePickerDialog.setInitialSelection(Integer.parseInt(hora), 00);
+        timePickerDialog.show(getFragmentManager(), "Horarios");
     }
 
     private void setSpinnerValues(int posicao, Boolean diaAtivo){
@@ -314,15 +334,4 @@ public class HorariosEmpresaActivity extends BaseActivity implements MyDialogFra
         }
     }
 
-    @Override
-    public void onReturnValue(String resultadoParametro) {
-        if (!resultadoParametro.isEmpty()){
-            if (op == 0) {
-                inicio.setText(resultadoParametro);
-            }
-            else{
-                fim.setText(resultadoParametro);
-            }
-        }
-    }
 }
