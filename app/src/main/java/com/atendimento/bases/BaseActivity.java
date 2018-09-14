@@ -182,7 +182,13 @@ public class BaseActivity extends AppCompatActivity {
         }
         else {
             String[] params = new String[]{parametros};
-            cursor = parametroDatabase.rawQuery("SELECT codigo, descricao, duracaoHorario FROM duracao WHERE descricao = ?", params);
+            try {
+                Integer.parseInt(parametros);
+                cursor = parametroDatabase.rawQuery("SELECT codigo, descricao, duracaoHorario FROM duracao WHERE duracaoHorario = ?", params);
+            }
+            catch (Exception e){
+                cursor = parametroDatabase.rawQuery("SELECT codigo, descricao, duracaoHorario FROM duracao WHERE descricao = ?", params);
+            }
         }
         return cursor;
     }

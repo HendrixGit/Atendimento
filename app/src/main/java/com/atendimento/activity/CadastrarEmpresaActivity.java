@@ -97,6 +97,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                 Intent intent   = new Intent(getApplicationContext(), HorariosEmpresaActivity.class);
                 Empresa empresa = getDadosEmpresa();
                 intent.putExtra("empresa", empresa);
+                if (empresaHorarios != null){  intent.putParcelableArrayListExtra("horarios", empresaHorarios);  }
                 startActivity(intent);
             }
         });

@@ -181,42 +181,79 @@ public class HorariosEmpresaActivity extends BaseActivity {
             }
         });
 
-        empresaHorarios = new ArrayList<>();
+        if (getIntent().getSerializableExtra("horarios") != null) {
 
-        horarioSegunda = setarHorarios(Calendar.MONDAY, getResources().getString(R.string.segunda),
-                getResources().getString(R.string.horarioPadraoInicial),
-                getResources().getString(R.string.horarioPadraoFinal), true);
-        empresaHorarios.add(horarioSegunda);
+            empresaHorarios = (ArrayList<Horario>) getIntent().getSerializableExtra("horarios");
 
-        horarioTerca = setarHorarios(Calendar.TUESDAY, getResources().getString(R.string.terca),
-                getResources().getString(R.string.horarioPadraoInicial),
-                getResources().getString(R.string.horarioPadraoFinal), true);
-        empresaHorarios.add(horarioTerca);
+            horarioSegunda = setarHorarios(empresaHorarios.get(0).getDiaSemana(), empresaHorarios.get(0).getDescricaoDia(),
+                    empresaHorarios.get(0).getHoraInicio(), empresaHorarios.get(0).getHoraFinal(), empresaHorarios.get(0).getDiaAtivo());
 
-        horarioQuarta = setarHorarios(Calendar.WEDNESDAY, getResources().getString(R.string.quarta),
-                getResources().getString(R.string.horarioPadraoInicial),
-                getResources().getString(R.string.horarioPadraoFinal), true);
-        empresaHorarios.add(horarioQuarta);
+            horarioTerca = setarHorarios(empresaHorarios.get(1).getDiaSemana(), empresaHorarios.get(1).getDescricaoDia(),
+                    empresaHorarios.get(1).getHoraInicio(), empresaHorarios.get(1).getHoraFinal(), empresaHorarios.get(1).getDiaAtivo());
 
-        horarioQuinta = setarHorarios(Calendar.THURSDAY, getResources().getString(R.string.quinta),
-                getResources().getString(R.string.horarioPadraoInicial),
-                getResources().getString(R.string.horarioPadraoFinal), true);
-        empresaHorarios.add(horarioQuinta);
+            horarioQuarta = setarHorarios(empresaHorarios.get(2).getDiaSemana(), empresaHorarios.get(2).getDescricaoDia(),
+                    empresaHorarios.get(2).getHoraInicio(), empresaHorarios.get(2).getHoraFinal(), empresaHorarios.get(2).getDiaAtivo());
 
-        horarioSexta = setarHorarios(Calendar.FRIDAY, getResources().getString(R.string.sexta),
-                getResources().getString(R.string.horarioPadraoInicial),
-                getResources().getString(R.string.horarioPadraoFinal), true);
-        empresaHorarios.add(horarioSexta);
+            horarioQuinta = setarHorarios(empresaHorarios.get(3).getDiaSemana(), empresaHorarios.get(1).getDescricaoDia(),
+                    empresaHorarios.get(3).getHoraInicio(), empresaHorarios.get(3).getHoraFinal(), empresaHorarios.get(3).getDiaAtivo());
 
-        horarioSabado = setarHorarios(Calendar.SATURDAY, getResources().getString(R.string.sabado),
-                getResources().getString(R.string.horarioPadraoInicial),
-                getResources().getString(R.string.horarioPadraoMeioDia), true);
-        empresaHorarios.add(horarioSabado);
+            horarioSexta = setarHorarios(empresaHorarios.get(4).getDiaSemana(), empresaHorarios.get(4).getDescricaoDia(),
+                    empresaHorarios.get(4).getHoraInicio(), empresaHorarios.get(4).getHoraFinal(), empresaHorarios.get(4).getDiaAtivo());
 
-        horarioDomingo = setarHorarios(Calendar.SUNDAY, getResources().getString(R.string.domingo),
-                getResources().getString(R.string.horarioPadraoInicial),
-                getResources().getString(R.string.horarioPadraoMeioDia), false);
-        empresaHorarios.add(horarioDomingo);
+            horarioSabado = setarHorarios(empresaHorarios.get(5).getDiaSemana(), empresaHorarios.get(5).getDescricaoDia(),
+                    empresaHorarios.get(5).getHoraInicio(), empresaHorarios.get(5).getHoraFinal(), empresaHorarios.get(5).getDiaAtivo());
+
+            horarioDomingo = setarHorarios(empresaHorarios.get(6).getDiaSemana(), empresaHorarios.get(6).getDescricaoDia(),
+                    empresaHorarios.get(6).getHoraInicio(), empresaHorarios.get(6).getHoraFinal(), empresaHorarios.get(6).getDiaAtivo());
+
+            Cursor cursorDuracao = cursorDuracao(sqLiteDatabasePar, String.valueOf(empresaHorarios.get(0).getDuracao()));
+            Integer duracao = cursorDuracao.getColumnIndex("codigo");
+            cursorDuracao.moveToFirst();
+            Integer opDuracao = cursorDuracao.getInt(duracao);
+            spinnerDuracao.setSelection(opDuracao - 1);
+
+        }
+        else{
+
+            empresaHorarios = new ArrayList<>();
+
+            horarioSegunda = setarHorarios(Calendar.MONDAY, getResources().getString(R.string.segunda),
+                    getResources().getString(R.string.horarioPadraoInicial),
+                    getResources().getString(R.string.horarioPadraoFinal), true);
+
+            horarioTerca = setarHorarios(Calendar.TUESDAY, getResources().getString(R.string.terca),
+                    getResources().getString(R.string.horarioPadraoInicial),
+                    getResources().getString(R.string.horarioPadraoFinal), true);
+
+            horarioQuarta = setarHorarios(Calendar.WEDNESDAY, getResources().getString(R.string.quarta),
+                    getResources().getString(R.string.horarioPadraoInicial),
+                    getResources().getString(R.string.horarioPadraoFinal), true);
+
+            horarioQuinta = setarHorarios(Calendar.THURSDAY, getResources().getString(R.string.quinta),
+                    getResources().getString(R.string.horarioPadraoInicial),
+                    getResources().getString(R.string.horarioPadraoFinal), true);
+
+            horarioSexta = setarHorarios(Calendar.FRIDAY, getResources().getString(R.string.sexta),
+                    getResources().getString(R.string.horarioPadraoInicial),
+                    getResources().getString(R.string.horarioPadraoFinal), true);
+
+            horarioSabado = setarHorarios(Calendar.SATURDAY, getResources().getString(R.string.sabado),
+                    getResources().getString(R.string.horarioPadraoInicial),
+                    getResources().getString(R.string.horarioPadraoMeioDia), true);
+
+            horarioDomingo = setarHorarios(Calendar.SUNDAY, getResources().getString(R.string.domingo),
+                    getResources().getString(R.string.horarioPadraoInicial),
+                    getResources().getString(R.string.horarioPadraoMeioDia), false);
+
+            empresaHorarios.add(horarioSegunda);
+            empresaHorarios.add(horarioTerca);
+            empresaHorarios.add(horarioQuarta);
+            empresaHorarios.add(horarioQuinta);
+            empresaHorarios.add(horarioSexta);
+            empresaHorarios.add(horarioSabado);
+            empresaHorarios.add(horarioDomingo);
+        }
+
 
         listaHorarios = new ArrayList<>();
         spinnerHorarios = findViewById(R.id.spinnerHorarios);
@@ -232,8 +269,8 @@ public class HorariosEmpresaActivity extends BaseActivity {
 
             }
         });
-
     }
+
 
     private void setCheckbox(Horario horarioCheckBox){
         if (horarioCheckBox.getDiaAtivo()){
