@@ -37,10 +37,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -68,14 +70,14 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     private SQLiteDatabase sqLiteDatabasePar;
     private ProgressBar progressBar;
     private StorageReference storageReference;
-    private Bitmap      imagemEmpresaParametro;
+    private Bitmap imagemEmpresaParametro;
     private Preferencias preferencias;
     private AlertDialog opcoes;
     private Dialog.OnClickListener onClickCameraListener;
     private Dialog.OnClickListener onClickGaleriaListener;
     private UploadTask uploadTask;
     private ImageView imageViewEditNomeEmpresa;
-    private String idKey     = "";
+    private String idKey = "";
     private String urlImagem = "";
     private Empresa empresaParametro = null;
     private Task taskSalvarEmpresa;
@@ -84,6 +86,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     private ArrayList<Horario> empresaHorarios;
     private ImageView checkHorarios;
     private Button buttonHorarios;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,38 +97,39 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         buttonHorarios.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent   = new Intent(getApplicationContext(), HorariosEmpresaActivity.class);
+                Intent intent = new Intent(getApplicationContext(), HorariosEmpresaActivity.class);
                 Empresa empresa = getDadosEmpresa();
                 intent.putExtra("empresa", empresa);
-                if (empresaHorarios != null){  intent.putParcelableArrayListExtra("horarios", empresaHorarios);  }
+                if (empresaHorarios != null) {
+                    intent.putParcelableArrayListExtra("horarios", empresaHorarios);
+                }
                 startActivity(intent);
             }
         });
 
-        nomeEmpresa      = findViewById(R.id.editTextNomeEmpresa);
+        nomeEmpresa = findViewById(R.id.editTextNomeEmpresa);
         spinnerCategoria = findViewById(R.id.spinnerCategoria);
-        circleImageView  = findViewById(R.id.circleImageEmpresa);
-        progressBar      = findViewById(R.id.progressBarCadEmpresa);
-        toolbar          = findViewById(R.id.toolbar);
+        circleImageView = findViewById(R.id.circleImageEmpresa);
+        progressBar = findViewById(R.id.progressBarCadEmpresa);
+        toolbar = findViewById(R.id.toolbar);
         preferencias = new Preferencias(getApplicationContext());
         identificadorUsuario = preferencias.getIdentificador();
         firebase = ConfiguracaoFirebase.getFirebaseDatabase();
-        imm = (InputMethodManager)this.getSystemService(Service.INPUT_METHOD_SERVICE);
+        imm = (InputMethodManager) this.getSystemService(Service.INPUT_METHOD_SERVICE);
         checkHorarios = findViewById(R.id.imageViewCheckHorarios);
-        Intent intent = getIntent();
-        empresaParametro     = (Empresa) intent.getSerializableExtra("empresa");
-        if (empresaParametro != null){ carregarDados(); }
-        else { idKey = firebase.push().getKey();
-               carregarFoto(); }
-
-        empresaHorarios = intent.getParcelableArrayListExtra("horarios");
-        if (empresaHorarios != null){
-            checkHorarios.setImageDrawable(getResources().getDrawable(R.drawable.checkmarkblue));
-            checkHorarios.setVisibility(View.VISIBLE);
+        intent = getIntent();
+        empresaParametro = (Empresa) intent.getSerializableExtra("empresa");
+        if (empresaParametro != null) {
+            carregarDados();
         }
+        else {
+            idKey = firebase.push().getKey();
+            carregarFoto();
+        }
+
         util = new Util();
         nomeEmpresa.setEnabled(false);
-        imm.hideSoftInputFromWindow(nomeEmpresa.getWindowToken(),0);
+        imm.hideSoftInputFromWindow(nomeEmpresa.getWindowToken(), 0);
         nomeEmpresa.getBackground().mutate().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
         imageViewEditNomeEmpresa = findViewById(R.id.imageViewEditEmpresaNome);
         imageViewEditNomeEmpresa.setOnClickListener(new View.OnClickListener() {
@@ -142,19 +146,19 @@ public class CadastrarEmpresaActivity extends BaseActivity {
 
         sqLiteDatabasePar = databaseCategorias();
 
-        Cursor cursor = cursorCategorias(sqLiteDatabasePar,"");
+        Cursor cursor = cursorCategorias(sqLiteDatabasePar, "");
         int indiceColunaDescricao = cursor.getColumnIndex("descricao");
         cursor.moveToFirst();
 
-        while (!cursor.isAfterLast()){
+        while (!cursor.isAfterLast()) {
             listaCategoria.add(cursor.getString(indiceColunaDescricao));
             cursor.moveToNext();
         }
 
         dataCategoria = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, listaCategoria);
         spinnerCategoria.setAdapter(dataCategoria);
-        if (empresaParametro != null){
-            Cursor cursor2   = cursorCategorias(sqLiteDatabasePar, empresaParametro.getCategoria());
+        if (empresaParametro != null) {
+            Cursor cursor2 = cursorCategorias(sqLiteDatabasePar, empresaParametro.getCategoria());
             int indiceColunaCodigo = cursor.getColumnIndex("codigo");
             cursor2.moveToFirst();
             int opcao = Integer.parseInt(cursor2.getString(indiceColunaCodigo));
@@ -198,7 +202,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Intent camera = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(camera,1);
+                startActivityForResult(camera, 1);
             }
         };
 
@@ -206,18 +210,22 @@ public class CadastrarEmpresaActivity extends BaseActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent,0);
+                startActivityForResult(intent, 0);
             }
         };
     }
 
-    private void carregarFoto(){
+    private void imagemlistaHorariosPreenchida() {
+        checkHorarios.setImageDrawable(getResources().getDrawable(R.drawable.checkmarkblue));
+        checkHorarios.setVisibility(View.VISIBLE);
+    }
+
+    private void carregarFoto() {
         progressBar.setVisibility(View.VISIBLE);
-        if (imagemEmpresaParametro !=  null){
+        if (imagemEmpresaParametro != null) {
             circleImageView.setImageBitmap(imagemEmpresaParametro);
             progressBar.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             storageReference = ConfiguracaoFirebase.getStorage().child("empresas").child(identificadorUsuario).child(idKey);
             long dim = 1024 * 1024;
             storageReference.getBytes(dim).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -238,8 +246,8 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         }
     }
 
-    public void mostrarOpcoes(){
-        AlertDialog.Builder builder  = util.CustomDialog("De onde deseja, tirar a foto da Empresa", CadastrarEmpresaActivity.this, "Câmera", onClickCameraListener, "Galeria", onClickGaleriaListener);
+    public void mostrarOpcoes() {
+        AlertDialog.Builder builder = util.CustomDialog("De onde deseja, tirar a foto da Empresa", CadastrarEmpresaActivity.this, "Câmera", onClickCameraListener, "Galeria", onClickGaleriaListener);
         opcoes = builder.create();
         opcoes.show();
     }
@@ -268,14 +276,50 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         return uploadTask;
     }
 
-    private void carregarDados(){
-        idKey     = empresaParametro.getId();
+    private void carregarDados() {
+        idKey = empresaParametro.getId();
         urlImagem = empresaParametro.getUrlImagem();
         nomeEmpresa.setText(empresaParametro.getNome());
         if (empresaParametro.getImageArray() != null) {
             imagemEmpresaParametro = BitmapFactory.decodeByteArray(empresaParametro.getImageArray(), 0, empresaParametro.getImageArray().length);
         }
         carregarFoto();
+
+        if (intent.getParcelableArrayListExtra("horarios") != null) {
+            empresaHorarios = intent.getParcelableArrayListExtra("horarios");
+            imagemlistaHorariosPreenchida();
+        }
+        else{
+            empresaHorarios = new ArrayList<>();
+            firebase.child("horarios").child(idKey).orderByChild("diaSemana").addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    Horario horario = dataSnapshot.getValue(Horario.class);
+                    empresaHorarios.add(horario);
+                    imagemlistaHorariosPreenchida();
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
     private Empresa getDadosEmpresa(){

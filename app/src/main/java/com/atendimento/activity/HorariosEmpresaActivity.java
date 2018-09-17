@@ -17,9 +17,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
+import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Empresa;
 import com.atendimento.model.Horario;
 import com.atendimento.util.Util;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.ArrayList;
