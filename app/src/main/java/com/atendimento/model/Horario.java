@@ -3,7 +3,6 @@ package com.atendimento.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
 
 public class Horario implements Parcelable {
 
@@ -15,6 +14,7 @@ public class Horario implements Parcelable {
     private String horaInicio;
     private String horaFinal;
     private Boolean diaAtivo;
+    private int    ordem;
 
     public Horario() {
 
@@ -29,6 +29,7 @@ public class Horario implements Parcelable {
         horaFinal = in.readString();
         byte tmpDiaAtivo = in.readByte();
         diaAtivo = tmpDiaAtivo == 0 ? null : tmpDiaAtivo == 1;
+        ordem = in.readInt();
     }
 
     public static final Creator<Horario> CREATOR = new Creator<Horario>() {
@@ -103,6 +104,10 @@ public class Horario implements Parcelable {
         this.diaAtivo = diaAtivo;
     }
 
+    public int getOrdem() { return ordem; }
+
+    public void setOrdem(int ordem) { this.ordem = ordem; }
+
     @Override
     public int describeContents() {
         return 0;
@@ -117,5 +122,6 @@ public class Horario implements Parcelable {
         parcel.writeString(horaInicio);
         parcel.writeString(horaFinal);
         parcel.writeByte((byte) (diaAtivo == null ? 0 : diaAtivo ? 1 : 2));
+        parcel.writeInt(ordem);
     }
 }

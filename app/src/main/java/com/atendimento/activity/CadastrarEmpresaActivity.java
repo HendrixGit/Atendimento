@@ -291,7 +291,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         }
         else{
             empresaHorarios = new ArrayList<>();
-            firebase.child("horarios").child(idKey).orderByChild("diaSemana").addChildEventListener(new ChildEventListener() {
+            firebase.child("horarios").child(idKey).orderByChild("ordem").addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Horario horario = dataSnapshot.getValue(Horario.class);

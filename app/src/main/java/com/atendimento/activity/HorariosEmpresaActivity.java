@@ -17,12 +17,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
-import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Empresa;
 import com.atendimento.model.Horario;
 import com.atendimento.util.Util;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.ArrayList;
@@ -189,25 +186,32 @@ public class HorariosEmpresaActivity extends BaseActivity {
             empresaHorarios = (ArrayList<Horario>) getIntent().getSerializableExtra("horarios");
 
             horarioSegunda = setarHorarios(empresaHorarios.get(0).getDiaSemana(), empresaHorarios.get(0).getDescricaoDia(),
-                    empresaHorarios.get(0).getHoraInicio(), empresaHorarios.get(0).getHoraFinal(), empresaHorarios.get(0).getDiaAtivo());
+                    empresaHorarios.get(0).getHoraInicio(), empresaHorarios.get(0).getHoraFinal(), empresaHorarios.get(0).getDiaAtivo(),
+                    empresaHorarios.get(0).getOrdem());
 
             horarioTerca = setarHorarios(empresaHorarios.get(1).getDiaSemana(), empresaHorarios.get(1).getDescricaoDia(),
-                    empresaHorarios.get(1).getHoraInicio(), empresaHorarios.get(1).getHoraFinal(), empresaHorarios.get(1).getDiaAtivo());
+                    empresaHorarios.get(1).getHoraInicio(), empresaHorarios.get(1).getHoraFinal(), empresaHorarios.get(1).getDiaAtivo(),
+                    empresaHorarios.get(1).getOrdem());
 
             horarioQuarta = setarHorarios(empresaHorarios.get(2).getDiaSemana(), empresaHorarios.get(2).getDescricaoDia(),
-                    empresaHorarios.get(2).getHoraInicio(), empresaHorarios.get(2).getHoraFinal(), empresaHorarios.get(2).getDiaAtivo());
+                    empresaHorarios.get(2).getHoraInicio(), empresaHorarios.get(2).getHoraFinal(), empresaHorarios.get(2).getDiaAtivo(),
+                    empresaHorarios.get(2).getOrdem());
 
             horarioQuinta = setarHorarios(empresaHorarios.get(3).getDiaSemana(), empresaHorarios.get(1).getDescricaoDia(),
-                    empresaHorarios.get(3).getHoraInicio(), empresaHorarios.get(3).getHoraFinal(), empresaHorarios.get(3).getDiaAtivo());
+                    empresaHorarios.get(3).getHoraInicio(), empresaHorarios.get(3).getHoraFinal(), empresaHorarios.get(3).getDiaAtivo(),
+                    empresaHorarios.get(3).getOrdem());
 
             horarioSexta = setarHorarios(empresaHorarios.get(4).getDiaSemana(), empresaHorarios.get(4).getDescricaoDia(),
-                    empresaHorarios.get(4).getHoraInicio(), empresaHorarios.get(4).getHoraFinal(), empresaHorarios.get(4).getDiaAtivo());
+                    empresaHorarios.get(4).getHoraInicio(), empresaHorarios.get(4).getHoraFinal(), empresaHorarios.get(4).getDiaAtivo(),
+                    empresaHorarios.get(4).getOrdem());
 
             horarioSabado = setarHorarios(empresaHorarios.get(5).getDiaSemana(), empresaHorarios.get(5).getDescricaoDia(),
-                    empresaHorarios.get(5).getHoraInicio(), empresaHorarios.get(5).getHoraFinal(), empresaHorarios.get(5).getDiaAtivo());
+                    empresaHorarios.get(5).getHoraInicio(), empresaHorarios.get(5).getHoraFinal(), empresaHorarios.get(5).getDiaAtivo(),
+                    empresaHorarios.get(5).getOrdem());
 
             horarioDomingo = setarHorarios(empresaHorarios.get(6).getDiaSemana(), empresaHorarios.get(6).getDescricaoDia(),
-                    empresaHorarios.get(6).getHoraInicio(), empresaHorarios.get(6).getHoraFinal(), empresaHorarios.get(6).getDiaAtivo());
+                    empresaHorarios.get(6).getHoraInicio(), empresaHorarios.get(6).getHoraFinal(), empresaHorarios.get(6).getDiaAtivo(),
+                    empresaHorarios.get(6).getOrdem());
 
             Cursor cursorDuracao = cursorDuracao(sqLiteDatabasePar, String.valueOf(empresaHorarios.get(0).getDuracao()));
             Integer duracao = cursorDuracao.getColumnIndex("codigo");
@@ -222,31 +226,31 @@ public class HorariosEmpresaActivity extends BaseActivity {
 
             horarioSegunda = setarHorarios(Calendar.MONDAY, getResources().getString(R.string.segunda),
                     getResources().getString(R.string.horarioPadraoInicial),
-                    getResources().getString(R.string.horarioPadraoFinal), true);
+                    getResources().getString(R.string.horarioPadraoFinal), true, 1);
 
             horarioTerca = setarHorarios(Calendar.TUESDAY, getResources().getString(R.string.terca),
                     getResources().getString(R.string.horarioPadraoInicial),
-                    getResources().getString(R.string.horarioPadraoFinal), true);
+                    getResources().getString(R.string.horarioPadraoFinal), true, 2);
 
             horarioQuarta = setarHorarios(Calendar.WEDNESDAY, getResources().getString(R.string.quarta),
                     getResources().getString(R.string.horarioPadraoInicial),
-                    getResources().getString(R.string.horarioPadraoFinal), true);
+                    getResources().getString(R.string.horarioPadraoFinal), true, 3);
 
             horarioQuinta = setarHorarios(Calendar.THURSDAY, getResources().getString(R.string.quinta),
                     getResources().getString(R.string.horarioPadraoInicial),
-                    getResources().getString(R.string.horarioPadraoFinal), true);
+                    getResources().getString(R.string.horarioPadraoFinal), true, 4);
 
             horarioSexta = setarHorarios(Calendar.FRIDAY, getResources().getString(R.string.sexta),
                     getResources().getString(R.string.horarioPadraoInicial),
-                    getResources().getString(R.string.horarioPadraoFinal), true);
+                    getResources().getString(R.string.horarioPadraoFinal), true, 5);
 
             horarioSabado = setarHorarios(Calendar.SATURDAY, getResources().getString(R.string.sabado),
                     getResources().getString(R.string.horarioPadraoInicial),
-                    getResources().getString(R.string.horarioPadraoMeioDia), true);
+                    getResources().getString(R.string.horarioPadraoMeioDia), true, 6);
 
             horarioDomingo = setarHorarios(Calendar.SUNDAY, getResources().getString(R.string.domingo),
                     getResources().getString(R.string.horarioPadraoInicial),
-                    getResources().getString(R.string.horarioPadraoMeioDia), false);
+                    getResources().getString(R.string.horarioPadraoMeioDia), false, 7);
 
             empresaHorarios.add(horarioSegunda);
             empresaHorarios.add(horarioTerca);
@@ -314,13 +318,14 @@ public class HorariosEmpresaActivity extends BaseActivity {
         spinnerHorarios.setSelection(posicao);
     }
 
-    private Horario setarHorarios(Integer dia, String diaDescricao, String inicio, String fim, Boolean diaAtivo){
+    private Horario setarHorarios(Integer dia, String diaDescricao, String inicio, String fim, Boolean diaAtivo, Integer ordemParametro){
         Horario horarioParametro = new Horario();
         horarioParametro.setDiaSemana(dia);
         horarioParametro.setDescricaoDia(diaDescricao);
         horarioParametro.setHoraInicio(inicio);
         horarioParametro.setHoraFinal(fim);
         horarioParametro.setDiaAtivo(diaAtivo);
+        horarioParametro.setOrdem(ordemParametro);
         return horarioParametro;
     }
 
