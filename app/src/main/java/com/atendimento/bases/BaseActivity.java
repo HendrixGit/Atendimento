@@ -70,18 +70,6 @@ public class BaseActivity extends AppCompatActivity {
         ActivityCompat.finishAffinity(this);
     }
 
-    protected void mudarTelaParametroFlag(Context contexto, Class classe, String parametro, String parametro2, Integer parametro3, Boolean diaParametro) {
-        Intent intent = new Intent(contexto, classe);
-        intent.putExtra("hora", parametro);
-        intent.putExtra("hora2", parametro2);
-        intent.putExtra("duracao", parametro3);
-        intent.putExtra("dia", diaParametro);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
-    }
-
-
     public static boolean validaPermissoes(int requestCode, Activity activity, String[] permissoes){
         if (Build.VERSION.SDK_INT >= 23){
             List<String> listaPermissoes = new ArrayList<>();

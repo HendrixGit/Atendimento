@@ -67,4 +67,5 @@
     <string name="domingo">Domingo</string>
     <string name="diadisponivel">Dia disponível ?</string>
     <string name="duracao">Definir duração</string>
+    <string name="definirIntervalo">Definir Intervalo</string>
 </resources>

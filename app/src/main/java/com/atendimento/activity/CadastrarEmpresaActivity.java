@@ -109,7 +109,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
 
         nomeEmpresa = findViewById(R.id.editTextNomeEmpresa);
         spinnerCategoria = findViewById(R.id.spinnerCategoria);
-        circleImageView = findViewById(R.id.circleImageEmpresa);
+        circleImageView  = findViewById(R.id.circleImageEmpresa);
         progressBar = findViewById(R.id.progressBarCadEmpresa);
         toolbar = findViewById(R.id.toolbar);
         preferencias = new Preferencias(getApplicationContext());
@@ -343,16 +343,13 @@ public class CadastrarEmpresaActivity extends BaseActivity {
             runnableFuture = new RunnableFuture() {
                 @Override
                 public void run() {
-                    if (imagemEmpresaParametro != null) {
-                        salvarImagem();
-                        Tasks.whenAll(uploadTask).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                isDone();
-                            }
-                        });
-                    }
-                    else{ isDone(); }
+                    salvarImagem();
+                    Tasks.whenAll(uploadTask).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            isDone();
+                        }
+                    });
                 }
 
                 @Override
@@ -410,12 +407,99 @@ public class CadastrarEmpresaActivity extends BaseActivity {
         empresaParametro = null;
     }
 
+
     private void salvarHorarios(){
+        firebase.child("horariosUsuarios").child(idKey).removeValue();
         int i = 0;
         for (Horario horario : empresaHorarios){
             empresaHorarios.get(i).setIdEmpresa(idKey);
             empresaHorarios.get(i).setIdUsuariosEmpresa(identificadorUsuario);
             firebase.child("horarios").child(idKey).child(horario.getDescricaoDia()).setValue(empresaHorarios.get(i));
+
+            if (empresaHorarios.get(i).getDiaAtivo()) {
+                int horaInicio      = Integer.parseInt(empresaHorarios.get(i).getHoraInicio().substring(0, 2));
+                int horaFim         = horaInicio;
+                int horaFimConta    = Integer.parseInt(empresaHorarios.get(i).getHoraFinal().substring(0, 2));
+                int duracao         = empresaHorarios.get(i).getDuracao();
+                int duracaoCount    = 0;
+                float duracaoFloat  = empresaHorarios.get(i).getDuracao() / 60;
+                int duracaoInicio   = 0;
+                String descricaoDuracao       = String.valueOf(duracao);
+                String descricaoDuracaoInicio = "00";
+                int ordem = 1;
+                float quantidadeHorarios = ((horaFimConta - horaInicio) * 60) / duracao;
+                for (int contador = 1; contador <= quantidadeHorarios; contador++) {
+
+                    if (duracao >= 60){
+                        descricaoDuracao       = "00";
+                        descricaoDuracaoInicio = "00";
+                        horaInicio = horaFim;
+
+                        try {
+                            Integer parametroHora  = Integer.parseInt(String.valueOf(duracaoFloat));
+                            horaFim    = horaFim + (duracao / 60);
+                        }
+                        catch (Exception e){
+                            horaInicio = horaFim;
+                            duracaoInicio = duracaoCount;
+
+                            if(duracao == 80){
+                                duracaoCount = duracaoCount + 20;
+                                horaFim++;
+                                if (duracaoCount >= 60){
+                                    duracaoCount = 0;
+                                    horaFim++;
+                                }
+                            }
+
+                            if(duracao == 180){
+                                horaFim = horaFim + 3;
+                            }
+
+                            if (duracaoCount > 0) {
+                                descricaoDuracao = String.valueOf(duracaoCount);
+                            }
+                            else {
+                                descricaoDuracao = "00";
+                            }
+
+                            if (duracaoInicio > 0) {
+                                descricaoDuracaoInicio = String.valueOf(duracaoInicio);
+                            }
+                            else {
+                                descricaoDuracaoInicio = "00";
+                            }
+                        }
+
+                    }
+
+                    Horario horarioParametros = empresaHorarios.get(i);
+                    horarioParametros.setHoraInicio(horaInicio     +  ":"  +  descricaoDuracaoInicio);
+                    horarioParametros.setHoraFinal(horaFim         +  ":"  +  descricaoDuracao);
+                    horarioParametros.setOrdem(ordem);
+                    firebase.child("horariosUsuarios").child(idKey).child(horario.getDescricaoDia()).push().setValue(horarioParametros);
+                    ordem++;
+
+
+                    if(duracao < 60) {
+                        duracaoInicio = duracao;
+                        descricaoDuracaoInicio = String.valueOf(duracaoInicio);
+                        duracao = duracao + (empresaHorarios.get(i).getDuracao());
+                        descricaoDuracao = String.valueOf(duracao);
+                        if(duracao >= 60){
+                            duracao = 0;
+                            descricaoDuracao = "00";
+                            horaInicio = horaFim;
+                            horaFim++;
+                        }
+                        if (duracaoInicio == 0){
+                            horaInicio++;
+                            descricaoDuracaoInicio = "00";
+                        }
+                    }
+
+                }
+            }
             i++;
         }
     }
