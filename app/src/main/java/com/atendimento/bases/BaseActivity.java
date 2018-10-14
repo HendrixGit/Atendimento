@@ -166,7 +166,7 @@ public class BaseActivity extends AppCompatActivity {
     protected Cursor cursorDuracao(SQLiteDatabase parametroDatabase, String parametros){
         Cursor cursor;
         if (parametros.isEmpty()) {
-            cursor = parametroDatabase.rawQuery("SELECT codigo, descricao FROM duracao", null);
+            cursor = parametroDatabase.rawQuery("SELECT codigo, descricao, duracaoHorario FROM duracao", null);
         }
         else {
             String[] params = new String[]{parametros};

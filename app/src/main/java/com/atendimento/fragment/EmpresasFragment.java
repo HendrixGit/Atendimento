@@ -185,6 +185,7 @@ public class EmpresasFragment extends BaseFragment {
             firebaseDatabaseDeletar.child("empresas").child(empresa.getIdUsuario()).child(empresa.getId()).removeValue();
             firebaseDatabaseDeletar.child("empresasApp").child(empresa.getId()).removeValue();
             firebaseDatabaseDeletar.child("horarios").child(empresa.getId()).removeValue();
+            firebaseDatabaseDeletar.child("horariosUsuarios").child(empresa.getId()).removeValue();
             storageReferenceBase = ConfiguracaoFirebase.getStorage().child("empresas").child(empresa.getIdUsuario()).child(empresa.getId());
             storageReferenceBase.delete();
         }

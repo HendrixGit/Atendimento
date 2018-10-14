@@ -15,6 +15,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
 import com.atendimento.model.Empresa;
@@ -140,14 +142,29 @@ public class HorariosEmpresaActivity extends BaseActivity {
         confirmar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()).setHoraInicio(inicio.getText().toString());
-                empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()).setHoraFinal(fim.getText().toString());
-                empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()).setDiaAtivo(retornoDiaAtivo());
-                setCheckbox(empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()));
-                diaAtivo = empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()).getDiaAtivo();
-                pos = spinnerHorarios.getSelectedItemPosition();
+                Cursor cursorDuracao = cursorDuracao(sqLiteDatabasePar, spinnerDuracao.getSelectedItem().toString());
+                int codigoDuracao    = cursorDuracao.getColumnIndex("codigo");
+                int indiceDuracao    = cursorDuracao.getColumnIndex("duracaoHorario");
+                cursorDuracao.moveToFirst();
+                float duracao = cursorDuracao.getInt(indiceDuracao);
 
-                preencheSpinner(pos, diaAtivo);
+                float horaInicio = Integer.parseInt((String) inicio.getText().subSequence(0,2));
+                float horaFim    = Integer.parseInt((String) fim.getText().subSequence(0,2));
+                float resultadoHoras = (horaFim - horaInicio) * 60;
+
+                if (resultadoHoras < duracao){
+                    Toast.makeText(getApplicationContext(), "Duração maior que o período de horas", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()).setHoraInicio(inicio.getText().toString());
+                    empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()).setHoraFinal(fim.getText().toString());
+                    empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()).setDiaAtivo(retornoDiaAtivo());
+                    setCheckbox(empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()));
+                    diaAtivo = empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()).getDiaAtivo();
+                    pos = spinnerHorarios.getSelectedItemPosition();
+
+                    preencheSpinner(pos, diaAtivo);
+                }
             }
         });
 

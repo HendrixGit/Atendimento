@@ -415,6 +415,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
             empresaHorarios.get(i).setIdEmpresa(idKey);
             empresaHorarios.get(i).setIdUsuariosEmpresa(identificadorUsuario);
             firebase.child("horarios").child(idKey).child(horario.getDescricaoDia()).setValue(empresaHorarios.get(i));
+            firebase.child("horarios").child(idKey).child(horario.getDescricaoDia()).setValue(empresaHorarios.get(i));
 
             if (empresaHorarios.get(i).getDiaAtivo()) {
                 int horaInicio      = Integer.parseInt(empresaHorarios.get(i).getHoraInicio().substring(0, 2));
@@ -442,6 +443,11 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                         catch (Exception e){
                             horaInicio = horaFim;
                             duracaoInicio = duracaoCount;
+
+
+                            if (duracao == 60){
+                                horaFim++;
+                            }
 
                             if(duracao == 80){
                                 duracaoCount = duracaoCount + 20;
@@ -477,7 +483,8 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                     horarioParametros.setHoraInicio(horaInicio     +  ":"  +  descricaoDuracaoInicio);
                     horarioParametros.setHoraFinal(horaFim         +  ":"  +  descricaoDuracao);
                     horarioParametros.setOrdem(ordem);
-                    firebase.child("horariosUsuarios").child(idKey).child(horario.getDescricaoDia()).push().setValue(horarioParametros);
+                    String dia = String.valueOf(horarioParametros.getDiaSemana());
+                    firebase.child("horariosUsuarios").child(idKey).child(dia).push().setValue(horarioParametros);
                     ordem++;
 
 
