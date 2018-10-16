@@ -458,6 +458,10 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                                 }
                             }
 
+                            if (duracao == 120){
+                                horaFim = horaFim + 2;
+                            }
+
                             if(duracao == 180){
                                 horaFim = horaFim + 3;
                             }

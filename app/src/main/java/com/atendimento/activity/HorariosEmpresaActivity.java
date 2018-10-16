@@ -76,6 +76,7 @@ public class HorariosEmpresaActivity extends BaseActivity {
                 while (empresaHorarios.size() > x){
                     empresaHorarios.get(x).setHoraInicio(inicio.getText().toString());
                     empresaHorarios.get(x).setHoraFinal(fim.getText().toString());
+                    empresaHorarios.get(x).setDiaAtivo(retornoDiaAtivo());
                     x++;
                 }
                 preencheSpinner(spinnerHorarios.getSelectedItemPosition(), empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()).getDiaAtivo());
@@ -87,7 +88,7 @@ public class HorariosEmpresaActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = util.YesNoDialog(
-                        "Deseja atribuir o horário selecionado para todos os dias?",
+                        "Atribuir o horário selecionado para todos os dias?",
                         HorariosEmpresaActivity.this,
                         yesClickDialog);
 
@@ -142,11 +143,7 @@ public class HorariosEmpresaActivity extends BaseActivity {
         confirmar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Cursor cursorDuracao = cursorDuracao(sqLiteDatabasePar, spinnerDuracao.getSelectedItem().toString());
-                int codigoDuracao    = cursorDuracao.getColumnIndex("codigo");
-                int indiceDuracao    = cursorDuracao.getColumnIndex("duracaoHorario");
-                cursorDuracao.moveToFirst();
-                float duracao = cursorDuracao.getInt(indiceDuracao);
+                float duracao = getValorDuracao(spinnerDuracao.getSelectedItem().toString());
 
                 float horaInicio = Integer.parseInt((String) inicio.getText().subSequence(0,2));
                 float horaFim    = Integer.parseInt((String) fim.getText().subSequence(0,2));
@@ -159,6 +156,10 @@ public class HorariosEmpresaActivity extends BaseActivity {
                     empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()).setHoraInicio(inicio.getText().toString());
                     empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()).setHoraFinal(fim.getText().toString());
                     empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()).setDiaAtivo(retornoDiaAtivo());
+                    Integer duracaoParametro = getValorDuracao(spinnerDuracao.getSelectedItem().toString());
+                    empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()).setDuracao(duracaoParametro);
+
+
                     setCheckbox(empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()));
                     diaAtivo = empresaHorarios.get(spinnerHorarios.getSelectedItemPosition()).getDiaAtivo();
                     pos = spinnerHorarios.getSelectedItemPosition();
@@ -230,11 +231,7 @@ public class HorariosEmpresaActivity extends BaseActivity {
                     empresaHorarios.get(6).getHoraInicio(), empresaHorarios.get(6).getHoraFinal(), empresaHorarios.get(6).getDiaAtivo(),
                     empresaHorarios.get(6).getOrdem());
 
-            Cursor cursorDuracao = cursorDuracao(sqLiteDatabasePar, String.valueOf(empresaHorarios.get(0).getDuracao()));
-            Integer duracao = cursorDuracao.getColumnIndex("codigo");
-            cursorDuracao.moveToFirst();
-            Integer opDuracao = cursorDuracao.getInt(duracao);
-            spinnerDuracao.setSelection(opDuracao - 1);
+            preencheSpinnerDuracao(String.valueOf(empresaHorarios.get(0).getDuracao()));
 
         }
         else{
@@ -295,6 +292,26 @@ public class HorariosEmpresaActivity extends BaseActivity {
         });
     }
 
+    private void preencheSpinnerDuracao(String descricaoDuracao) {
+        Integer opDuracaoFinal = getCodigoDuracao(descricaoDuracao);
+        spinnerDuracao.setSelection(opDuracaoFinal - 1);
+    }
+
+    private int getCodigoDuracao(String descricaoDuracao){
+        Cursor cursorDuracao = cursorDuracao(sqLiteDatabasePar, descricaoDuracao);
+        Integer duracao = cursorDuracao.getColumnIndex("codigo");
+        cursorDuracao.moveToFirst();
+        Integer opDuracao = cursorDuracao.getInt(duracao);
+        return opDuracao;
+    }
+
+    private int getValorDuracao(String descricaoDuracao){
+        Cursor cursorDuracao = cursorDuracao(sqLiteDatabasePar, descricaoDuracao);
+        Integer duracao = cursorDuracao.getColumnIndex("duracaoHorario");
+        cursorDuracao.moveToFirst();
+        Integer opDuracao = cursorDuracao.getInt(duracao);
+        return opDuracao;
+    }
 
     private void setCheckbox(Horario horarioCheckBox){
         if (horarioCheckBox.getDiaAtivo()){
@@ -321,6 +338,7 @@ public class HorariosEmpresaActivity extends BaseActivity {
         inicio.setText(horarioParametro.getHoraInicio());
         fim.setText(horarioParametro.getHoraFinal());
         setCheckbox(horarioParametro);
+        preencheSpinnerDuracao(String.valueOf(horarioParametro.getDuracao()));
     }
 
     private void preencheSpinner(Integer posicao, Boolean diaParametro){
