@@ -25,8 +25,8 @@
         </activity>
         <activity
             android:name=".activity.MainActivity"
-            android:noHistory="true"
             android:configChanges="orientation|keyboardHidden"
+            android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity android:name=".bases.BaseActivity" />
         <activity android:name=".activity.LoginActivity" />
@@ -64,6 +64,7 @@
             android:screenOrientation="portrait" />
         <activity android:name=".activity.CalendarioActivity" />
         <activity android:name=".activity.HorariosEmpresaActivity" />
+        <activity android:name=".activity.MarcarHorariosActivity"></activity>
     </application>
 
 </manifest>

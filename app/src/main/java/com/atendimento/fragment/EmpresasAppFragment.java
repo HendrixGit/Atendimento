@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.atendimento.activity.MarcarHorariosActivity;
 import com.atendimento.adapter.AdapterEmpresasApp;
 import com.atendimento.bases.BaseFragment;
 import com.atendimento.config.ConfiguracaoFirebase;
@@ -38,7 +39,7 @@ public class EmpresasAppFragment extends BaseFragment {
                         new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
-
+                                mudarTela(getActivity(), MarcarHorariosActivity.class);
                             }
 
                             @Override
