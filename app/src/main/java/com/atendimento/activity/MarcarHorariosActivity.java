@@ -1,32 +1,31 @@
 package com.atendimento.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
-
 import com.atendimento.R;
 import com.atendimento.bases.BaseActivity;
+import com.atendimento.model.Empresa;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import java.util.Calendar;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import android.util.Size;
-import android.view.Display;
-import com.prolificinteractive.materialcalendarview.CalendarUtils;
-import com.prolificinteractive.materialcalendarview.WeekPagerAdapter;
-import com.prolificinteractive.materialcalendarview.WeekView;
-import com.prolificinteractive.materialcalendarview.format.CalendarWeekDayFormatter;
-import com.prolificinteractive.materialcalendarview.format.DateFormatDayFormatter;
-import com.prolificinteractive.materialcalendarview.format.DateFormatTitleFormatter;
-import com.prolificinteractive.materialcalendarview.format.DayFormatter;
-import com.prolificinteractive.materialcalendarview.format.WeekDayFormatter;
-import com.wdullaer.materialdatetimepicker.date.MonthAdapter;
-import java.time.Year;
-import java.time.temporal.WeekFields;
-import java.util.Date;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MarcarHorariosActivity extends BaseActivity {
 
     private MaterialCalendarView calendar;
+    private TextView titulo;
+    private TextView subTitulo;
+    private CircleImageView circleImageViewMarcar;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +35,40 @@ public class MarcarHorariosActivity extends BaseActivity {
         toolbarBase = findViewById(R.id.toolbar);
         toolbarBase.setTitle("Marcar Horário");
         toolbarBase.setTitleTextColor(getResources().getColor(R.color.colorBranco));
+
+        titulo    = findViewById(R.id.textViewTituloMarcar);
+        subTitulo = findViewById(R.id.textViewSubTituloMarcar);
+        circleImageViewMarcar = findViewById(R.id.imageViewImagemMarcar);
+        progressBar = findViewById(R.id.progressBarMarcarHorarios);
+        progressBar.setVisibility(View.VISIBLE);
+
+        Intent intent = getIntent();
+        Empresa empresa = (Empresa) intent.getSerializableExtra("empresa");
+        if (empresa != null){
+            titulo.setText(empresa.getNome());
+            subTitulo.setText(empresa.getCategoria());
+            try {
+                Picasso.with(getApplicationContext()).
+                        load(empresa.getUrlImagem()).
+                        error(R.drawable.atendimento).
+                        resize(64,64).
+                        into(circleImageViewMarcar, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError() {
+                                progressBar.setVisibility(View.GONE);
+                                circleImageViewMarcar.setImageDrawable(getResources().getDrawable(R.drawable.atendimento));
+                            }
+                        });
+            }
+            finally {
+
+            }
+        }
 
         calendar = findViewById(R.id.calendarMarcarHorarios);
         calendar.setPagingEnabled(false);
@@ -63,5 +96,11 @@ public class MarcarHorariosActivity extends BaseActivity {
                 .setCalendarDisplayMode(CalendarMode.WEEKS)
                 .commit();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mudarTelaFinish(getApplicationContext(), MainActivity.class);
     }
 }

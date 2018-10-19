@@ -64,7 +64,7 @@
             android:screenOrientation="portrait" />
         <activity android:name=".activity.CalendarioActivity" />
         <activity android:name=".activity.HorariosEmpresaActivity" />
-        <activity android:name=".activity.MarcarHorariosActivity"></activity>
+        <activity android:name=".activity.MarcarHorariosActivity"/>
     </application>
 
 </manifest>

@@ -225,6 +225,12 @@ public class ConfiguracoesActivity extends BaseActivity implements MyDialogFragm
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mudarTelaFinish(getApplicationContext(), InicioActivity.class);
+    }
+
     private void deletarUsuario(){
         taskDeletaUsuario = firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

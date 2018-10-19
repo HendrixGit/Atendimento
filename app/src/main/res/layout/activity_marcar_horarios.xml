@@ -8,8 +8,6 @@
     tools:context=".activity.MarcarHorariosActivity"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -17,22 +15,89 @@
         <include
             android:id="@+id/include8"
             layout="@layout/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-            app:mcv_calendarMode="week"
             android:id="@+id/calendarMarcarHorarios"
-            android:layout_width="0dp"
             style="@style/dialogHorario"
-
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewImagemMarcar"
+            app:mcv_arrowColor="@color/colorBranco"
+            app:mcv_calendarMode="week"
+            app:mcv_dateTextAppearance="@style/dialogHorario" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageViewImagemMarcar"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include8" />
+
+        <TextView
+            android:id="@+id/textViewTituloMarcar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/colorPreto"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageViewImagemMarcar"
+            app:layout_constraintTop_toTopOf="@+id/imageViewImagemMarcar" />
+
+        <TextView
+            android:id="@+id/textViewSubTituloMarcar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/colorPreto"
+            app:layout_constraintEnd_toEndOf="@+id/textViewTituloMarcar"
+            app:layout_constraintStart_toStartOf="@+id/textViewTituloMarcar"
+            app:layout_constraintTop_toBottomOf="@+id/textViewTituloMarcar" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewMarcarHorarios"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include8"
-            app:mcv_arrowColor="@color/colorBranco"
-            app:mcv_dateTextAppearance="@style/dialogHorario" />
+            app:layout_constraintTop_toBottomOf="@+id/calendarMarcarHorarios" />
+
+        <ProgressBar
+            android:id="@+id/progressBarMarcarHorarios"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewImagemMarcar"
+            app:layout_constraintEnd_toEndOf="@+id/imageViewImagemMarcar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/imageViewImagemMarcar" />
 
     </android.support.constraint.ConstraintLayout>
 

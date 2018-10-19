@@ -39,7 +39,7 @@ public class EmpresasAppFragment extends BaseFragment {
                         new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
-                                mudarTela(getActivity(), MarcarHorariosActivity.class);
+                                mudarTelaObject(getActivity(), MarcarHorariosActivity.class, empresaList.get(position), "empresa");
                             }
 
                             @Override
