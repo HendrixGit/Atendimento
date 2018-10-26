@@ -3,18 +3,35 @@ package com.atendimento.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import com.atendimento.R;
+import com.atendimento.adapter.AdapterHorarios;
 import com.atendimento.bases.BaseActivity;
+import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Empresa;
+import com.atendimento.model.Horario;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.wdullaer.materialdatetimepicker.date.MonthAdapter;
 
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -26,6 +43,13 @@ public class MarcarHorariosActivity extends BaseActivity {
     private TextView subTitulo;
     private CircleImageView circleImageViewMarcar;
     private ProgressBar progressBar;
+    private RecyclerView recyclerViewMarcarHorarios;
+    private ChildEventListener childEventListenerHorarios;
+    private DatabaseReference firebase;
+    private List<Horario> listaHorarios =  new ArrayList<>();
+    private AdapterHorarios adapterHorarios;
+    private Query query;
+    private TextView horariosDisponiveis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +63,13 @@ public class MarcarHorariosActivity extends BaseActivity {
         titulo    = findViewById(R.id.textViewTituloMarcar);
         subTitulo = findViewById(R.id.textViewSubTituloMarcar);
         circleImageViewMarcar = findViewById(R.id.imageViewImagemMarcar);
+        recyclerViewMarcarHorarios = findViewById(R.id.recyclerViewMarcarHorarios);
         progressBar = findViewById(R.id.progressBarMarcarHorarios);
         progressBar.setVisibility(View.VISIBLE);
+        horariosDisponiveis = findViewById(R.id.textViewHorariosDiponiveis);
 
         Intent intent = getIntent();
-        Empresa empresa = (Empresa) intent.getSerializableExtra("empresa");
+        final Empresa empresa = (Empresa) intent.getSerializableExtra("empresa");
         if (empresa != null){
             titulo.setText(empresa.getNome());
             subTitulo.setText(empresa.getCategoria());
@@ -96,6 +122,44 @@ public class MarcarHorariosActivity extends BaseActivity {
                 .setCalendarDisplayMode(CalendarMode.WEEKS)
                 .commit();
 
+        adapterHorarios = new AdapterHorarios(listaHorarios, MarcarHorariosActivity.this);
+        RecyclerView.LayoutManager layoutManager   = new LinearLayoutManager(this);
+        recyclerViewMarcarHorarios.setLayoutManager(layoutManager);
+        recyclerViewMarcarHorarios.setAdapter(adapterHorarios);
+        Calendar calendario = Calendar.getInstance();
+        int dia = calendario.get(Calendar.DAY_OF_WEEK);
+        dia = 2;
+        firebase = ConfiguracaoFirebase.getFirebaseDatabase();
+        query    = firebase.child("horariosUsuarios").child(empresa.getId()).child(String.valueOf(dia)).orderByChild("ordem");
+        childEventListenerHorarios = query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Horario horario = dataSnapshot.getValue(Horario.class);
+                listaHorarios.add(horario);
+                adapterHorarios.notifyDataSetChanged();
+                horariosDisponiveis.setText(getResources().getString(R.string.horariosDisponiveis) + " - " + horario.getDescricaoDia().toString());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.atendimento.activity;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,7 +11,6 @@ import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.fragment.EmpresasAppFragment;
 import com.atendimento.model.Usuario;
 import com.atendimento.util.Preferencias;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

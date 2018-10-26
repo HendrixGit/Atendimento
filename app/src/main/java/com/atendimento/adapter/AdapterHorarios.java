@@ -26,19 +26,19 @@ public class AdapterHorarios extends RecyclerView.Adapter<AdapterHorarios.Horari
 
         TextView inicio;
         TextView fim;
-        TextView descricaoDia;
+        TextView duracao;
 
         public HorariosViewHoder(View itemView) {
             super(itemView);
-            inicio       = itemView.findViewById(R.id.textViewInicioDia);
-            fim          = itemView.findViewById(R.id.textViewFimDia);
-            descricaoDia = itemView.findViewById(R.id.textViewDescricaoDia);
+            inicio       = itemView.findViewById(R.id.textViewListagemHorariosInicio);
+            fim          = itemView.findViewById(R.id.textViewListagemHorariosFim);
+
         }
     }
 
     @Override
     public HorariosViewHoder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemLista = LayoutInflater.from(parent.getContext()).inflate(R.layout.horarios_layout, parent, false);
+        View itemLista = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_horarios, parent, false);
         itemLista.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -57,16 +57,17 @@ public class AdapterHorarios extends RecyclerView.Adapter<AdapterHorarios.Horari
     @Override
     public void onBindViewHolder(HorariosViewHoder holder, int position) {
         Horario horario = listahorarios.get(position);
-        holder.descricaoDia.setText(horario.getDescricaoDia());
         holder.inicio.setText(horario.getHoraInicio());
         holder.fim.setText(horario.getHoraFinal());
-        if (horario.getDiaAtivo()){
-
-        }
     }
 
     @Override
     public int getItemCount() {
         return listahorarios.size();
+    }
+
+
+    public List getList() {
+        return listahorarios;
     }
 }

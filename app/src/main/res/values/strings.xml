@@ -68,4 +68,6 @@
     <string name="diadisponivel">Dia disponível ?</string>
     <string name="duracao">Definir duração</string>
     <string name="definirIntervalo">Definir Intervalo</string>
+    <string name="duracaoDescricao">Duração</string>
+    <string name="horariosDisponiveis">Horários Disponíveis</string>
 </resources>

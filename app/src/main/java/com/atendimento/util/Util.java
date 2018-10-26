@@ -10,12 +10,11 @@ import android.os.Bundle;
 import com.atendimento.R;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 
 
 public class Util{
-
-    private String sql;
 
     public String returnDataString(Date data) throws ParseException {
         long now = System.currentTimeMillis();
@@ -89,4 +88,11 @@ public class Util{
         return bundle;
     }
 
+    public String codificar64(String parametro){
+        return android.util.Base64.encodeToString(parametro.getBytes(), android.util.Base64.DEFAULT).replaceAll("(\\n|\\r)","");
+    }
+
+    public String decodificar64(String parametro){
+        return new String(android.util.Base64.decode(parametro, android.util.Base64.DEFAULT));
+    }
 }

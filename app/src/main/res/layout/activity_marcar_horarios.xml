@@ -75,15 +75,12 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewMarcarHorarios"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_height="0dp"
             android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/calendarMarcarHorarios" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewHorariosDiponiveis" />
 
         <ProgressBar
             android:id="@+id/progressBarMarcarHorarios"
@@ -98,6 +95,19 @@
             app:layout_constraintEnd_toEndOf="@+id/imageViewImagemMarcar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/imageViewImagemMarcar" />
+
+        <TextView
+            android:id="@+id/textViewHorariosDiponiveis"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/horariosDisponiveis"
+            android:textAlignment="center"
+            android:textColor="@color/colorPreto"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/calendarMarcarHorarios" />
 
     </android.support.constraint.ConstraintLayout>
 

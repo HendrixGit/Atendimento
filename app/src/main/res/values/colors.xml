@@ -11,4 +11,6 @@
     <color name="colorCalendario">#01ccff</color>
     <color name="colorDiaSelecionado">#828889</color>
     <color name="colorDiaAtivo">#03698f</color>
+    <color name="colorInicio">#00ff7e</color>
+    <color name="colorFim">#f85555</color>
 </resources>

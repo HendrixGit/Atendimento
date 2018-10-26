@@ -487,8 +487,11 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                     horarioParametros.setHoraInicio(horaInicio     +  ":"  +  descricaoDuracaoInicio);
                     horarioParametros.setHoraFinal(horaFim         +  ":"  +  descricaoDuracao);
                     horarioParametros.setOrdem(ordem);
+
                     String dia = String.valueOf(horarioParametros.getDiaSemana());
-                    firebase.child("horariosUsuarios").child(idKey).child(dia).push().setValue(horarioParametros);
+                    String ordemCodificada = util.codificar64(String.valueOf(ordem));
+
+                    firebase.child("horariosUsuarios").child(idKey).push().setValue(horarioParametros);
                     ordem++;
 
 
