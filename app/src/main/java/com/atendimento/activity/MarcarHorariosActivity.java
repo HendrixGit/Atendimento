@@ -12,27 +12,25 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.wdullaer.materialdatetimepicker.date.MonthAdapter;
-
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -91,7 +89,7 @@ public class MarcarHorariosActivity extends BaseActivity {
                             }
                         });
             }
-            finally {
+            finally{
 
             }
         }
@@ -122,13 +120,35 @@ public class MarcarHorariosActivity extends BaseActivity {
                 .setCalendarDisplayMode(CalendarMode.WEEKS)
                 .commit();
 
-        adapterHorarios = new AdapterHorarios(listaHorarios, MarcarHorariosActivity.this);
-        RecyclerView.LayoutManager layoutManager   = new LinearLayoutManager(this);
-        recyclerViewMarcarHorarios.setLayoutManager(layoutManager);
-        recyclerViewMarcarHorarios.setAdapter(adapterHorarios);
+        calendar.setOnDateChangedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+                int diaCalendario = date.getCalendar().get(Calendar.DAY_OF_WEEK);
+                setarDiasSemana(empresa, diaCalendario);
+            }
+        });
+
+
         Calendar calendario = Calendar.getInstance();
         int dia = calendario.get(Calendar.DAY_OF_WEEK);
         dia = 2;
+        setarDiasSemana(empresa, dia);
+        RecyclerView.LayoutManager layoutManager   = new LinearLayoutManager(this);
+        recyclerViewMarcarHorarios.setLayoutManager(layoutManager);
+        recyclerViewMarcarHorarios.setAdapter(adapterHorarios);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mudarTelaFinish(getApplicationContext(), MainActivity.class);
+    }
+
+    public void setarDiasSemana(Empresa empresa, Integer dia){
+        listaHorarios.clear();
+        if(adapterHorarios == null) {
+            adapterHorarios = new AdapterHorarios(listaHorarios, MarcarHorariosActivity.this);
+        }
         firebase = ConfiguracaoFirebase.getFirebaseDatabase();
         query    = firebase.child("horariosUsuarios").child(empresa.getId()).child(String.valueOf(dia)).orderByChild("ordem");
         childEventListenerHorarios = query.addChildEventListener(new ChildEventListener() {
@@ -136,8 +156,7 @@ public class MarcarHorariosActivity extends BaseActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Horario horario = dataSnapshot.getValue(Horario.class);
                 listaHorarios.add(horario);
-                adapterHorarios.notifyDataSetChanged();
-                horariosDisponiveis.setText(getResources().getString(R.string.horariosDisponiveis) + " - " + horario.getDescricaoDia().toString());
+                horariosDisponiveis.setText(horario.getDescricaoDia().toString());
             }
 
             @Override
@@ -160,11 +179,9 @@ public class MarcarHorariosActivity extends BaseActivity {
 
             }
         });
+        adapterHorarios.notifyDataSetChanged();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        mudarTelaFinish(getApplicationContext(), MainActivity.class);
-    }
+
+
 }

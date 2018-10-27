@@ -26,13 +26,13 @@ public class AdapterHorarios extends RecyclerView.Adapter<AdapterHorarios.Horari
 
         TextView inicio;
         TextView fim;
-        TextView duracao;
+        TextView situacao;
 
         public HorariosViewHoder(View itemView) {
             super(itemView);
             inicio       = itemView.findViewById(R.id.textViewListagemHorariosInicio);
             fim          = itemView.findViewById(R.id.textViewListagemHorariosFim);
-
+            situacao     = itemView.findViewById(R.id.textViewListagemHorariosSituacao);
         }
     }
 
@@ -59,6 +59,7 @@ public class AdapterHorarios extends RecyclerView.Adapter<AdapterHorarios.Horari
         Horario horario = listahorarios.get(position);
         holder.inicio.setText(horario.getHoraInicio());
         holder.fim.setText(horario.getHoraFinal());
+
     }
 
     @Override

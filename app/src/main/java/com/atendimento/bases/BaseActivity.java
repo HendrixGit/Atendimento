@@ -127,7 +127,7 @@ public class BaseActivity extends AppCompatActivity {
 
     protected SQLiteDatabase databaseCategorias(){
         sqLiteDatabasePar = openOrCreateDatabase("databaseCategorias", MODE_PRIVATE, null);
-        sqLiteDatabasePar.execSQL("DROP TABLE categorias");
+        sqLiteDatabasePar.execSQL("DROP TABLE IF EXISTS categorias");
         sqLiteDatabasePar.execSQL("CREATE TABLE IF NOT EXISTS categorias(codigo INT(3), descricao VARCHAR)");
         sqLiteDatabasePar.execSQL("DELETE FROM categorias");
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(1, 'Clínicas Médicas')");
@@ -137,7 +137,7 @@ public class BaseActivity extends AppCompatActivity {
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(5, 'Salões de Beleza')");
         sqLiteDatabasePar.execSQL("INSERT INTO categorias(codigo, descricao)  VALUES(6, 'Escritórios Advocacia')");
 
-        sqLiteDatabasePar.execSQL("DROP TABLE duracao");
+        sqLiteDatabasePar.execSQL("DROP TABLE IF EXISTS duracao");
         sqLiteDatabasePar.execSQL("CREATE TABLE IF NOT EXISTS duracao(codigo INT(3), descricao VARCHAR, duracaoHorario INT(3))");
         sqLiteDatabasePar.execSQL("DELETE FROM duracao");
         sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao, duracaoHorario)  VALUES(1, '15 Minutos', 15)");
@@ -146,6 +146,13 @@ public class BaseActivity extends AppCompatActivity {
         sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao, duracaoHorario)  VALUES(4, '80 Minutos', 80)");
         sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao, duracaoHorario)  VALUES(5, '120 Minutos', 120)");
         sqLiteDatabasePar.execSQL("INSERT INTO duracao(codigo, descricao, duracaoHorario)  VALUES(6, '180 Minutos', 180)");
+
+        sqLiteDatabasePar.execSQL("DROP TABLE IF EXISTS situacaoHorarios");
+        sqLiteDatabasePar.execSQL("CREATE TABLE IF NOT EXISTS situacaoHorarios(codigo INT(3), descricao VARCHAR)");
+        sqLiteDatabasePar.execSQL("INSERT INTO situacaoHorarios(codigo, descricao)  VALUES(1, 'Em andamento')");
+        sqLiteDatabasePar.execSQL("INSERT INTO situacaoHorarios(codigo, descricao)  VALUES(2, 'Em Atraso')");
+        sqLiteDatabasePar.execSQL("INSERT INTO situacaoHorarios(codigo, descricao)  VALUES(3, 'Finalizado')");
+        sqLiteDatabasePar.execSQL("INSERT INTO situacaoHorarios(codigo, descricao)  VALUES(4, 'Cancelado')");
 
         return sqLiteDatabasePar;
     }

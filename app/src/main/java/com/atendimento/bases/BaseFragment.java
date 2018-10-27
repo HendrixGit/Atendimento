@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.atendimento.R;
 import com.atendimento.util.SimpleDividerItemDecoration;
@@ -28,7 +27,7 @@ public abstract class BaseFragment extends Fragment {
     protected View viewBase;
     protected RecyclerView recyclerViewBase;
     protected FloatingActionButton floatingActionButtonBase;
-    protected Boolean modoSelecaoBase = false;
+    protected Boolean modoSelecaoBase  = false;
     protected Integer selecionadosBase = 0;
     protected Query queryBase;
     protected DatabaseReference firebaseDatabase;
