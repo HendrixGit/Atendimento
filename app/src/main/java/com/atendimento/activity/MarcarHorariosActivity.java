@@ -131,7 +131,7 @@ public class MarcarHorariosActivity extends BaseActivity {
 
         Calendar calendario = Calendar.getInstance();
         int dia = calendario.get(Calendar.DAY_OF_WEEK);
-        dia = 1;
+        calendar.setDateSelected(calendario, true);
         setarDiasSemana(empresa, dia);
         RecyclerView.LayoutManager layoutManager   = new LinearLayoutManager(this);
         recyclerViewMarcarHorarios.setLayoutManager(layoutManager);

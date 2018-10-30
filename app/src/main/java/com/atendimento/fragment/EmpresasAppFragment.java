@@ -61,7 +61,7 @@ public class EmpresasAppFragment extends BaseFragment {
 
             }
         });
-
+        floatingActionButtonBase.setVisibility(View.GONE);
 
         firebaseDatabase = ConfiguracaoFirebase.getFirebaseDatabase();
         queryBase = firebaseDatabase.child("empresasApp").orderByChild("nome");

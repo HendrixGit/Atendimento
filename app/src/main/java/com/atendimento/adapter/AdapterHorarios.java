@@ -9,6 +9,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.atendimento.R;
 import com.atendimento.model.Horario;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -60,6 +65,8 @@ public class AdapterHorarios extends RecyclerView.Adapter<AdapterHorarios.Horari
         holder.inicio.setText(horario.getHoraInicio());
         holder.fim.setText(horario.getHoraFinal());
 
+        Date dataAtual = Calendar.getInstance().getTime();
+        String horaMinutos = new SimpleDateFormat("H:mm").format(dataAtual); // 9:00
     }
 
     @Override

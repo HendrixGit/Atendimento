@@ -22,11 +22,10 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-            android:id="@+id/calendarMarcarHorarios"
             style="@style/dialogHorario"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-
+            android:id="@+id/calendarMarcarHorarios"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -73,6 +72,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textViewTituloMarcar" />
 
         <android.support.v7.widget.RecyclerView
+            android:background="@drawable/border"
             android:id="@+id/recyclerViewMarcarHorarios"
             android:layout_width="0dp"
             android:layout_height="0dp"
