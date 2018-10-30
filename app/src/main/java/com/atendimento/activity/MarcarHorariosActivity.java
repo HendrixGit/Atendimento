@@ -13,7 +13,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -65,6 +64,7 @@ public class MarcarHorariosActivity extends BaseActivity {
         progressBar = findViewById(R.id.progressBarMarcarHorarios);
         progressBar.setVisibility(View.VISIBLE);
         horariosDisponiveis = findViewById(R.id.textViewHorariosDiponiveis);
+        firebase = ConfiguracaoFirebase.getFirebaseDatabase();
 
         Intent intent = getIntent();
         final Empresa empresa = (Empresa) intent.getSerializableExtra("empresa");
@@ -131,11 +131,10 @@ public class MarcarHorariosActivity extends BaseActivity {
 
         Calendar calendario = Calendar.getInstance();
         int dia = calendario.get(Calendar.DAY_OF_WEEK);
-        dia = 2;
+        dia = 1;
         setarDiasSemana(empresa, dia);
         RecyclerView.LayoutManager layoutManager   = new LinearLayoutManager(this);
         recyclerViewMarcarHorarios.setLayoutManager(layoutManager);
-        recyclerViewMarcarHorarios.setAdapter(adapterHorarios);
     }
 
     @Override
@@ -146,17 +145,14 @@ public class MarcarHorariosActivity extends BaseActivity {
 
     public void setarDiasSemana(Empresa empresa, Integer dia){
         listaHorarios.clear();
-        if(adapterHorarios == null) {
-            adapterHorarios = new AdapterHorarios(listaHorarios, MarcarHorariosActivity.this);
-        }
-        firebase = ConfiguracaoFirebase.getFirebaseDatabase();
-        query    = firebase.child("horariosUsuarios").child(empresa.getId()).child(String.valueOf(dia)).orderByChild("ordem");
+        horariosDisponiveis.setText("Sem horários");
+        adapterHorarios = new AdapterHorarios(listaHorarios, MarcarHorariosActivity.this);
+        recyclerViewMarcarHorarios.setAdapter(adapterHorarios);
+        query = firebase.child("horariosUsuarios").child(empresa.getId()).child(String.valueOf(dia)).orderByChild("ordem");
         childEventListenerHorarios = query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Horario horario = dataSnapshot.getValue(Horario.class);
-                listaHorarios.add(horario);
-                horariosDisponiveis.setText(horario.getDescricaoDia().toString());
+                setHorario(dataSnapshot);
             }
 
             @Override
@@ -179,9 +175,14 @@ public class MarcarHorariosActivity extends BaseActivity {
 
             }
         });
-        adapterHorarios.notifyDataSetChanged();
     }
 
+    private void setHorario(DataSnapshot dataSnapshot){
+        Horario horario = dataSnapshot.getValue(Horario.class);
+        listaHorarios.add(horario);
+        horariosDisponiveis.setText(horario.getDescricaoDia().toString());
+        adapterHorarios.notifyDataSetChanged();
+    }
 
 
 }
