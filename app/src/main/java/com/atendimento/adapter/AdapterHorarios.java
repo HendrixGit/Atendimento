@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.atendimento.R;
 import com.atendimento.model.Horario;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -65,8 +63,28 @@ public class AdapterHorarios extends RecyclerView.Adapter<AdapterHorarios.Horari
         holder.inicio.setText(horario.getHoraInicio());
         holder.fim.setText(horario.getHoraFinal());
 
-        Date dataAtual = Calendar.getInstance().getTime();
-        String horaMinutos = new SimpleDateFormat("H:mm").format(dataAtual); // 9:00
+        Date dataAtual          = Calendar.getInstance().getTime();
+        int  diaSemana          = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        String horaAtualTexto   = new SimpleDateFormat("HH:mm").format(dataAtual);
+
+        if (horario.getDiaSemana() == diaSemana) {
+
+            int hora    = Integer.parseInt(holder.inicio.getText().toString().substring(0, 2));
+            int minutos = Integer.parseInt(holder.inicio.getText().toString().substring(3, 5));
+
+            int horaAtual    = Integer.parseInt(horaAtualTexto.substring(0, 2));
+            int minutosAtual = Integer.parseInt(horaAtualTexto.substring(3, 5));
+
+            if (hora >= horaAtual || minutos >= minutosAtual) {
+                holder.situacao.setText(": Marcado");
+            } else {
+                holder.situacao.setText(": Atrasado");
+            }
+        }
+        else{
+            holder.situacao.setText(": Marcado");
+        }
+
     }
 
     @Override

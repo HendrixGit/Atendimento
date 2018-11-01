@@ -484,7 +484,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                     }
 
                     Horario horarioParametros = empresaHorarios.get(i);
-                    horarioParametros.setHoraInicio(horaInicio     +  ":"  +  descricaoDuracaoInicio);
+                    horarioParametros.setHoraInicio( preencheHora(horaInicio) + horaInicio     +  ":"  +  descricaoDuracaoInicio);
                     horarioParametros.setHoraFinal(horaFim         +  ":"  +  descricaoDuracao);
                     horarioParametros.setOrdem(ordem);
 
@@ -513,6 +513,15 @@ public class CadastrarEmpresaActivity extends BaseActivity {
                 }
             }
             i++;
+        }
+    }
+
+    private String preencheHora(int hora){
+        if (hora < 10){
+            return "0";
+        }
+        else{
+            return "";
         }
     }
 
