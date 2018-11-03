@@ -39,7 +39,7 @@ public class BaseActivity extends AppCompatActivity {
             Manifest.permission.INTERNET,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.CAMERA
+            Manifest.permission.CAMERA,
     };
 
     protected Toolbar toolbarBase;

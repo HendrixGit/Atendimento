@@ -71,4 +71,5 @@
     <string name="duracaoDescricao">Duração</string>
     <string name="horariosDisponiveis">Horários Disponíveis</string>
     <string name="situacao">Situação</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

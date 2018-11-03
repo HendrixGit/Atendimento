@@ -32,6 +32,7 @@ import com.atendimento.model.Empresa;
 import com.atendimento.model.Horario;
 import com.atendimento.util.Preferencias;
 import com.atendimento.util.Util;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -75,7 +76,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     private AlertDialog opcoes;
     private Dialog.OnClickListener onClickCameraListener;
     private Dialog.OnClickListener onClickGaleriaListener;
-    private UploadTask uploadTask;
+    private Task<Uri> uploadTask;
     private ImageView imageViewEditNomeEmpresa;
     private String idKey = "";
     private String urlImagem = "";
@@ -254,25 +255,34 @@ public class CadastrarEmpresaActivity extends BaseActivity {
 
     private Task salvarImagem() {
         if (imagemEmpresaParametro != null) {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            imagemEmpresaParametro.compress(Bitmap.CompressFormat.PNG, 75, stream);
-            byte[] byteArray = stream.toByteArray();
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            imagemEmpresaParametro.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), imagemEmpresaParametro, "Title", null);
+            Uri uri =  Uri.parse(path);
 
-            storageReference = ConfiguracaoFirebase.getStorage().child("empresas").child(identificadorUsuario).child(idKey);
-            uploadTask = storageReference.putBytes(byteArray);
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            uploadTask = storageReference.putFile(uri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    urlImagem = taskSnapshot.getDownloadUrl().toString();
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+                    return storageReference.getDownloadUrl();
                 }
-            }).addOnFailureListener(new OnFailureListener() {
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Toast.makeText(getApplicationContext(), "Falha ao enviar foto", Toast.LENGTH_LONG).show();
-                    Log.i("erroFoto", exception.toString() + " " + exception.getCause().toString());
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        urlImagem = downloadUri.toString();
+                    }
+                    else {
+
+                    }
                 }
             });
+
         }
+
         return uploadTask;
     }
 

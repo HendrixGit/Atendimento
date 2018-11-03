@@ -26,24 +26,22 @@
             style="@style/dialogHorario"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewSubTituloMarcar"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewImagemMarcar"
             app:mcv_arrowColor="@color/colorBranco"
             app:mcv_calendarMode="week"
-            app:mcv_dateTextAppearance="@style/dialogHorario"/>
+            app:mcv_dateTextAppearance="@style/dialogHorario" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageViewImagemMarcar"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/include8" />
 
@@ -51,19 +49,23 @@
             android:id="@+id/textViewTituloMarcar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
             android:textColor="@color/colorPreto"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewImagemMarcar" />
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/imageViewImagemMarcar"
+            app:layout_constraintTop_toBottomOf="@+id/include8" />
 
         <TextView
             android:id="@+id/textViewSubTituloMarcar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
             android:textColor="@color/colorPreto"
             app:layout_constraintEnd_toEndOf="@+id/textViewTituloMarcar"
             app:layout_constraintStart_toStartOf="@+id/textViewTituloMarcar"

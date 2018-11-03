@@ -82,7 +82,7 @@ public class AdapterHorarios extends RecyclerView.Adapter<AdapterHorarios.Horari
             }
         }
         else{
-            holder.situacao.setText(": Marcado");
+            holder.situacao.setText(": Disponível");
         }
 
     }

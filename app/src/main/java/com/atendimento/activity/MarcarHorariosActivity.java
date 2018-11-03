@@ -8,6 +8,7 @@ import com.atendimento.bases.BaseActivity;
 import com.atendimento.config.ConfiguracaoFirebase;
 import com.atendimento.model.Empresa;
 import com.atendimento.model.Horario;
+import com.atendimento.util.RecyclerItemClickListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,6 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -59,7 +61,7 @@ public class MarcarHorariosActivity extends BaseActivity {
 
         titulo    = findViewById(R.id.textViewTituloMarcar);
         subTitulo = findViewById(R.id.textViewSubTituloMarcar);
-        circleImageViewMarcar = findViewById(R.id.imageViewImagemMarcar);
+        circleImageViewMarcar      = findViewById(R.id.imageViewImagemMarcar);
         recyclerViewMarcarHorarios = findViewById(R.id.recyclerViewMarcarHorarios);
         progressBar = findViewById(R.id.progressBarMarcarHorarios);
         progressBar.setVisibility(View.VISIBLE);
@@ -135,7 +137,31 @@ public class MarcarHorariosActivity extends BaseActivity {
         setarDiasSemana(empresa, dia);
         RecyclerView.LayoutManager layoutManager   = new LinearLayoutManager(this);
         recyclerViewMarcarHorarios.setLayoutManager(layoutManager);
+        recyclerViewMarcarHorarios.addOnItemTouchListener(
+                new RecyclerItemClickListener(
+                        this,
+                        recyclerViewMarcarHorarios,
+                        new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                mudarTela(getApplicationContext(), MapsActivity.class);
+                            }
+
+                            @Override
+                            public void onLongItemClick(View view, int position) {
+
+                            }
+
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                            }
+                        }
+                )
+        );
     }
+
+
 
     @Override
     public void onBackPressed() {
