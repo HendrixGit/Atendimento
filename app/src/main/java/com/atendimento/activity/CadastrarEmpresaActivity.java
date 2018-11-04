@@ -76,7 +76,7 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     private AlertDialog opcoes;
     private Dialog.OnClickListener onClickCameraListener;
     private Dialog.OnClickListener onClickGaleriaListener;
-    private Task<Uri> uploadTask;
+    private Task uploadTask;
     private ImageView imageViewEditNomeEmpresa;
     private String idKey = "";
     private String urlImagem = "";
@@ -254,13 +254,14 @@ public class CadastrarEmpresaActivity extends BaseActivity {
     }
 
     private Task salvarImagem() {
+
         if (imagemEmpresaParametro != null) {
+
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             imagemEmpresaParametro.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), imagemEmpresaParametro, "Title", null);
-            Uri uri =  Uri.parse(path);
+            String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), imagemEmpresaParametro, idKey, null);
 
-            uploadTask = storageReference.putFile(uri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            uploadTask = storageReference.putFile(Uri.parse(path)).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                     if (!task.isSuccessful()) {

@@ -201,6 +201,7 @@ public class MarcarHorariosActivity extends BaseActivity {
 
             }
         });
+
     }
 
     private void setHorario(DataSnapshot dataSnapshot){

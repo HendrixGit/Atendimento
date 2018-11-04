@@ -273,6 +273,8 @@ public class HorariosEmpresaActivity extends BaseActivity {
             empresaHorarios.add(horarioSexta);
             empresaHorarios.add(horarioSabado);
             empresaHorarios.add(horarioDomingo);
+            pos = 0;
+            diaAtivo = true;
         }
 
 
@@ -293,6 +295,7 @@ public class HorariosEmpresaActivity extends BaseActivity {
     }
 
     private void preencheSpinnerDuracao(String descricaoDuracao) {
+        if (Integer.parseInt(descricaoDuracao) == 0){ descricaoDuracao = "15"; }
         Integer opDuracaoFinal = getCodigoDuracao(descricaoDuracao);
         spinnerDuracao.setSelection(opDuracaoFinal - 1);
     }
@@ -348,7 +351,6 @@ public class HorariosEmpresaActivity extends BaseActivity {
         }
         dataHorarios = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, listaHorarios);
         spinnerHorarios.setAdapter(dataHorarios);
-
         setSpinnerValues(posicao, diaParametro);
         spinnerHorarios.setSelection(posicao);
     }
