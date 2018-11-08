@@ -4,9 +4,12 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.provider.Telephony;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -27,6 +30,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -57,35 +64,58 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         // Add a marker in Sydney and move the camera
-        mMap = googleMap;;
+        mMap = googleMap;
+        //mMap.setTrafficEnabled(true);
+
         LatLng cecap1 = new LatLng(-20.407734, -49.992736);
         LatLng cecap2 = new LatLng(-20.406975, -49.987906);
         LatLng cecap3 = new LatLng(-20.411033, -49.987007);
         final LatLng vot = cecap1;
-        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 
-//        CircleOptions circleOptions = new CircleOptions();
-//        circleOptions.center(vot);
-//        circleOptions.radius(500);//em metros
-//        circleOptions.fillColor(Color.BLUE);
-//        circleOptions.fillColor(Color.argb(82, 119, 188, 1));
-//        circleOptions.strokeWidth(10);
-//        circleOptions.strokeColor(Color.BLACK);
-//        mMap.addCircle(circleOptions);
+        CircleOptions circleOptions = new CircleOptions();
+        circleOptions.center(vot);
+        circleOptions.radius(500);//em metros
+        circleOptions.fillColor(Color.BLUE);
+        circleOptions.fillColor(Color.argb(82, 119, 188, 1));
+        circleOptions.strokeWidth(10);
+        circleOptions.strokeColor(Color.BLACK);
+        mMap.addCircle(circleOptions);
 
         final PolygonOptions polygonOptions = new PolygonOptions();
         polygonOptions.add(cecap1);
         polygonOptions.add(cecap2);
         polygonOptions.add(cecap3);
-
         mMap.addPolygon(polygonOptions);
-        mMap.setTrafficEnabled(true);
+
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-               latLngUsuario = new LatLng(location.getLongitude(), location.getLatitude());
-               Log.d("location", String.valueOf(latLngUsuario.latitude));
+
+                Double latitude = location.getLatitude();
+                Double longitude = location.getLongitude();
+
+                latLngUsuario = new LatLng(latitude, longitude);
+                Log.d("location", String.valueOf(latLngUsuario.latitude));
+
+                mMap.addMarker(new MarkerOptions().position(latLngUsuario).title("My Position")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_user)));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngUsuario, 15));
+
+                //Recuperar Endereco
+                Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+                try {
+                    List<Address> listaEndereco = geocoder.getFromLocation(latitude, longitude, 2);
+                    if(listaEndereco != null && listaEndereco.size() >0){
+                        Address address = listaEndereco.get(0);
+                        Log.d("Address", address.toString());
+                    }
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
             }
 
             @Override
@@ -106,8 +136,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ){
             locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    0,
+                    LocationManager.NETWORK_PROVIDER,
+                    10000,
                     0,//se mover 10 metros atualiza
                     locationListener
             );
@@ -154,12 +184,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        mMap.addMarker(new MarkerOptions().position(vot).title("Default Position")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.close)));
-
         //icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
         //zoom de 2.0 ate 21.0
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(vot, 15));
+//        mMap.addMarker(new MarkerOptions().position(vot).title("Default Position")
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.close)));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(vot, 15));
 
     }
 }
