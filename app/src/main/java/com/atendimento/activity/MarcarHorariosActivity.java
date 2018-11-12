@@ -144,7 +144,7 @@ public class MarcarHorariosActivity extends BaseActivity {
                         new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
-                                mudarTela(getApplicationContext(), MapsActivity.class);
+                                mudarTela(getApplicationContext(), MapaActivity.class);
                             }
 
                             @Override

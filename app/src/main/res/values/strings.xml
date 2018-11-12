@@ -72,4 +72,5 @@
     <string name="horariosDisponiveis">Horários Disponíveis</string>
     <string name="situacao">Situação</string>
     <string name="title_activity_maps">Map</string>
+    <string name="localiacao">Minha Localização</string>
 </resources>
