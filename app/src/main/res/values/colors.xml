@@ -13,4 +13,5 @@
     <color name="colorDiaAtivo">#03698f</color>
     <color name="colorInicio">#00ff7e</color>
     <color name="colorFim">#f85555</color>
+    <color name="colorVerde">#49c961</color>
 </resources>
