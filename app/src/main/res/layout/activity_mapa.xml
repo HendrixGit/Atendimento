@@ -34,35 +34,13 @@
 
         <android.support.constraint.ConstraintLayout
 
-            android:layout_margin="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="8dp"
             android:background="@color/colorBranco">
 
             <EditText
-                android:id="@+id/editText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="@string/localiacao"
-                android:textColor="@color/colorPreto"
-                android:textSize="14sp"
-                android:drawableLeft="@drawable/circulo_verde"
-                android:drawablePadding="5dp"
-                android:enabled="false"
-                android:textColorHint="@color/colorDiaSelecionado"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <EditText
-                android:id="@+id/editText2"
+                android:id="@+id/editTextPesqEndereco"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -71,29 +49,48 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="@string/pesquisar"
-                android:textColor="@color/colorPreto"
                 android:drawableLeft="@drawable/circulo_cinza"
                 android:drawablePadding="5dp"
+                android:ems="10"
+                android:hint="@string/pesquisar"
+                android:inputType="textPersonName"
+                android:textColor="@color/colorPreto"
                 android:textColorHint="@color/colorDiaSelecionado"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/imageView"
+                app:layout_constraintEnd_toStartOf="@+id/imageViewPesqEndereco"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewPesquisaEndereco" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/imageViewPesqEndereco"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/editText2"
+                android:contentDescription="TODO"
+                app:layout_constraintBottom_toBottomOf="@+id/editTextPesqEndereco"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/editText2"
-                app:srcCompat="@drawable/ic_action_search"
-                android:contentDescription="TODO" />
+                app:layout_constraintTop_toTopOf="@+id/editTextPesqEndereco"
+                app:srcCompat="@drawable/ic_action_search" />
+
+            <TextView
+                android:id="@+id/textViewPesquisaEndereco"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:drawableLeft="@drawable/circulo_verde"
+                android:text="@string/localizacao"
+                android:textColor="@color/colorPreto"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </android.support.constraint.ConstraintLayout>
 
