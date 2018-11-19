@@ -9,17 +9,23 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.atendimento.R;
+import com.atendimento.adapter.AdapterEnderecos;
 import com.atendimento.bases.BaseActivity;
+import com.atendimento.model.Endereco;
+import com.atendimento.util.RecyclerItemClickListener;
+import com.atendimento.util.SimpleDividerItemDecoration;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,6 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,6 +48,9 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
     private EditText destino;
     private ImageView imageViewPesquisarEndereco;
     private TextView minhaLocalizacao;
+    private RecyclerView recyclerViewEnderecos;
+    private List<Endereco> enderecosLista;// = new ArrayList<>();
+    private AdapterEnderecos adapterEnderecos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +76,41 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
                 recuperaLocalizacao();
             }
         });
+        recyclerViewEnderecos = findViewById(R.id.recyclerViewEnderecos);
+        RecyclerView.LayoutManager layoutManager   = new LinearLayoutManager(getApplicationContext());
+        recyclerViewEnderecos.setLayoutManager(layoutManager);
+        recyclerViewEnderecos.setHasFixedSize(true);
+        recyclerViewEnderecos.setVisibility(View.GONE);
+        recyclerViewEnderecos.addItemDecoration(new SimpleDividerItemDecoration(this));
+        recyclerViewEnderecos.addOnItemTouchListener(
+                new RecyclerItemClickListener(
+                        getApplicationContext(),
+                        recyclerViewEnderecos,
+                        new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                buscarEnderecoEmpresa(enderecosLista.get(position));
+                            }
+
+                            @Override
+                            public void onLongItemClick(View view, int position) {
+
+                            }
+
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                            }
+                        }
+                )
+        );
 
         imageViewPesquisarEndereco = findViewById(R.id.imageViewPesqEndereco);
         imageViewPesquisarEndereco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                buscarEndereco(destino.getText().toString());
+                //buscarEndereco(destino.getText().toString());
+                carregarEnderecos(destino.getText().toString());
             }
         });
 
@@ -135,6 +174,45 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private Address carregarEnderecos(String endereco){
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> listaEnderecos = geocoder.getFromLocationName(endereco, 50);
+            if (listaEnderecos != null && listaEnderecos.size() > 0){
+                for (Address address : listaEnderecos){
+                    Endereco enderecoEmpresa = new Endereco();
+                    enderecoEmpresa.setTextoPesquisado(endereco);
+                    enderecoEmpresa.setEndereco(address.getThoroughfare());
+                    enderecoEmpresa.setCidade(address.getAddressLine(0));
+                    enderecoEmpresa.setLatitude(address.getLatitude());
+                    enderecoEmpresa.setLongitude(address.getLongitude());
+                    enderecoEmpresa.setPais(address.getCountryName());
+                    enderecosLista = new ArrayList<>();
+                    enderecosLista.add(enderecoEmpresa);
+                    adapterEnderecos = new AdapterEnderecos(getApplication(), enderecosLista);
+                    recyclerViewEnderecos.setVisibility(View.VISIBLE);
+                    recyclerViewEnderecos.setAdapter(adapterEnderecos);
+                    adapterEnderecos.notifyDataSetChanged();
+                }
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void buscarEnderecoEmpresa(Endereco endereco){
+        if (!destino.getText().equals("") || destino.getText() != null){
+            if (endereco != null){
+                Double latitude  = endereco.getLatitude();
+                Double longitude = endereco.getLongitude();
+                adcionarMarcador("Destino", latitude, longitude);
+                recyclerViewEnderecos.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void recuperaLocalizacao() {
