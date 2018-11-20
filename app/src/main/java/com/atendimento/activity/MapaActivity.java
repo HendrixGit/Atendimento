@@ -33,6 +33,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.zxing.client.result.GeoParsedResult;
 
 import java.io.IOException;
 import java.text.Normalizer;
@@ -51,6 +52,7 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
     private RecyclerView recyclerViewEnderecos;
     private List<Endereco> enderecosLista;// = new ArrayList<>();
     private AdapterEnderecos adapterEnderecos;
+    private LatLng localizacaoAtual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +111,6 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
         imageViewPesquisarEndereco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //buscarEndereco(destino.getText().toString());
                 carregarEnderecos(destino.getText().toString());
             }
         });
@@ -125,9 +126,8 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String textoPesquisa = charSequence.toString().toLowerCase();
-                textoPesquisa = Normalizer.normalize(textoPesquisa, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
-                Log.d("key", textoPesquisa);
+
+
             }
 
             @Override
@@ -177,9 +177,13 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
     }
 
     private Address carregarEnderecos(String endereco){
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
-            List<Address> listaEnderecos = geocoder.getFromLocationName(endereco, 50);
+            String textoPesquisa = endereco.toLowerCase();
+            textoPesquisa = Normalizer.normalize(textoPesquisa, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            List<Address> listaEnderecos = geocoder.getFromLocationName(textoPesquisa, Integer.MAX_VALUE, localizacaoAtual.latitude, localizacaoAtual.longitude,localizacaoAtual.latitude, localizacaoAtual.longitude);
+            enderecosLista = new ArrayList<>();
+            adapterEnderecos = new AdapterEnderecos(getApplication(), enderecosLista);
             if (listaEnderecos != null && listaEnderecos.size() > 0){
                 for (Address address : listaEnderecos){
                     Endereco enderecoEmpresa = new Endereco();
@@ -189,9 +193,7 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
                     enderecoEmpresa.setLatitude(address.getLatitude());
                     enderecoEmpresa.setLongitude(address.getLongitude());
                     enderecoEmpresa.setPais(address.getCountryName());
-                    enderecosLista = new ArrayList<>();
                     enderecosLista.add(enderecoEmpresa);
-                    adapterEnderecos = new AdapterEnderecos(getApplication(), enderecosLista);
                     recyclerViewEnderecos.setVisibility(View.VISIBLE);
                     recyclerViewEnderecos.setAdapter(adapterEnderecos);
                     adapterEnderecos.notifyDataSetChanged();
@@ -222,8 +224,8 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
             public void onLocationChanged(Location location) {
                 Double latitude  = location.getLatitude();
                 Double longitude = location.getLongitude();
-
                 adcionarMarcador("Minha Localização", latitude, longitude);
+                localizacaoAtual = new LatLng(latitude, longitude);
             }
 
             @Override

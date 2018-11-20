@@ -16,13 +16,15 @@
         android:id="@+id/textViewListagemEnderecosEncontrado"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPreto" />
+        android:textColor="@color/colorPreto"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textViewListagemEnderecoCidade"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPreto" />
+        android:textColor="@color/colorPreto"
+        android:textStyle="bold" />
 
 
 </LinearLayout>
