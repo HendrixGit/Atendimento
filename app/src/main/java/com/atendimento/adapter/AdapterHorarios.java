@@ -40,7 +40,7 @@ public class AdapterHorarios extends RecyclerView.Adapter<AdapterHorarios.Horari
     }
 
     @Override
-    public HorariosViewHoder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public HorariosViewHoder onCreateViewHolder(ViewGroup parent, final int viewType) {
         View itemLista = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_horarios, parent, false);
         itemLista.setOnTouchListener(new View.OnTouchListener() {
             @Override

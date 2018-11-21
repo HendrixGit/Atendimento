@@ -71,5 +71,8 @@ public class AdapterEnderecos extends RecyclerView.Adapter<AdapterEnderecos.Ende
         return listaEnderecos.size();
     }
 
+    public List getList() {
+        return listaEnderecos;
+    }
 
 }

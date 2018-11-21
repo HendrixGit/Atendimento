@@ -212,7 +212,7 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
             if (endereco != null){
                 Double latitude  = endereco.getLatitude();
                 Double longitude = endereco.getLongitude();
-                adcionarMarcador("Destino", latitude, longitude);
+                adcionarMarcador(endereco.getEndereco(), latitude, longitude);
                 recyclerViewEnderecos.setVisibility(View.GONE);
             }
         }
