@@ -13,8 +13,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -34,7 +32,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.zxing.client.result.GeoParsedResult;
 
 import java.io.IOException;
 import java.text.Normalizer;
@@ -151,17 +148,6 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
         locationManager.removeUpdates(locationListener);
     }
 
-    private void buscarEndereco(String endereco){
-        if (!destino.getText().equals("") || destino.getText() != null){
-            Address enderecoFinal = recuperarEndereco(endereco);
-            if (enderecoFinal != null){
-                Double latitude  = enderecoFinal.getLatitude();
-                Double longitude = enderecoFinal.getLongitude();
-                adcionarMarcador("Destino", latitude, longitude);
-            }
-        }
-    }
-
     private Address recuperarEndereco(String endereco){
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
@@ -212,7 +198,7 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
             if (endereco != null){
                 Double latitude  = endereco.getLatitude();
                 Double longitude = endereco.getLongitude();
-                adcionarMarcador(endereco.getEndereco(), latitude, longitude);
+                adcionarMarcador(endereco.getCidade(), latitude, longitude);
                 recyclerViewEnderecos.setVisibility(View.GONE);
             }
         }
