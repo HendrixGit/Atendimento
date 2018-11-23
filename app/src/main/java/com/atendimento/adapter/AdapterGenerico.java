@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.atendimento.R;
 import com.squareup.picasso.Picasso;
@@ -28,6 +29,7 @@ public abstract class AdapterGenerico extends RecyclerView.Adapter<AdapterGeneri
         public TextView textViewSubTitulo;
         public CircleImageView circleImageViewImagemListagem;
         public CircleImageView circleImageViewSelecaoListagem;
+        public ProgressBar progressBar;
 
         public MyViewHoder(View itemView) {
             super(itemView);
@@ -35,6 +37,7 @@ public abstract class AdapterGenerico extends RecyclerView.Adapter<AdapterGeneri
             textViewSubTitulo              = itemView.findViewById(R.id.textViewSubTexto);
             circleImageViewImagemListagem  = itemView.findViewById(R.id.circleImageListagem);
             circleImageViewSelecaoListagem = itemView.findViewById(R.id.circleImageSelecaoListagem);
+            progressBar                    = itemView.findViewById(R.id.progressBarAdapter);
         }
     }
 
