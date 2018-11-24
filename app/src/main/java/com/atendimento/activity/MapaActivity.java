@@ -14,9 +14,11 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.atendimento.R;
@@ -51,6 +53,7 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
     private List<Endereco> enderecosLista;// = new ArrayList<>();
     private AdapterEnderecos adapterEnderecos;
     private LatLng localizacaoAtual;
+    private ProgressBar progressBarMapa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,7 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
         toolbarBase = findViewById(R.id.toolbar);
         toolbarBase.setTitle("Definir Local Empresa");
         toolbarBase.setTitleTextColor(getResources().getColor(R.color.colorBranco));
+        progressBarMapa = findViewById(R.id.progressBarMapa);
         destino = findViewById(R.id.editTextPesqEndereco);
         destino.setCursorVisible(false);
         destino.setOnClickListener(new View.OnClickListener() {
@@ -124,8 +128,9 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-
+                if(charSequence.toString().equals("")){
+                    recyclerViewEnderecos.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -169,14 +174,14 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
             textoPesquisa = Normalizer.normalize(textoPesquisa, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
             List<Address> listaEnderecos = geocoder.getFromLocationName(textoPesquisa, Integer.MAX_VALUE, localizacaoAtual.latitude, localizacaoAtual.longitude,localizacaoAtual.latitude, localizacaoAtual.longitude);
-            enderecosLista = new ArrayList<>();
+            enderecosLista   = new ArrayList<>();
             adapterEnderecos = new AdapterEnderecos(getApplication(), enderecosLista);
             if (listaEnderecos != null && listaEnderecos.size() > 0){
                 for (Address address : listaEnderecos){
                     Endereco enderecoEmpresa = new Endereco();
                     enderecoEmpresa.setTextoPesquisado(endereco);
-                    enderecoEmpresa.setEndereco(address.getThoroughfare());
-                    enderecoEmpresa.setCidade(address.getAddressLine(0));
+                    enderecoEmpresa.setEndereco(address.getAddressLine(0));
+                    enderecoEmpresa.setCidade(address.getSubAdminArea());
                     enderecoEmpresa.setLatitude(address.getLatitude());
                     enderecoEmpresa.setLongitude(address.getLongitude());
                     enderecoEmpresa.setPais(address.getCountryName());
@@ -205,6 +210,7 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
     }
 
     private void recuperaLocalizacao() {
+        progressBarMapa.setVisibility(View.VISIBLE);
         locationManager = (LocationManager) this.getSystemService(getApplicationContext().LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
@@ -213,6 +219,7 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
                 Double longitude = location.getLongitude();
                 adcionarMarcador("Minha Localização", latitude, longitude);
                 localizacaoAtual = new LatLng(latitude, longitude);
+                progressBarMapa.setVisibility(View.GONE);
             }
 
             @Override
