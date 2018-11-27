@@ -29,6 +29,7 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +65,13 @@ public class BaseActivity extends AppCompatActivity {
         Intent intent = new Intent(contexto, classe);
         startActivity(intent);
     }
+
+    protected void mudarTelaObject(Context context, Class classe, Serializable serializable, String nomeObjeto){
+        Intent intent = new Intent(context, classe);
+        intent.putExtra(nomeObjeto, serializable);
+        startActivity(intent);
+    }
+
 
     protected void mudarTelaFinish(Context contexto, Class classe) {
         Intent intent = new Intent(contexto, classe);

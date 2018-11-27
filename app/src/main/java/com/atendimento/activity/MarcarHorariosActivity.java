@@ -68,7 +68,7 @@ public class MarcarHorariosActivity extends BaseActivity {
         horariosDisponiveis = findViewById(R.id.textViewHorariosDiponiveis);
         firebase = ConfiguracaoFirebase.getFirebaseDatabase();
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         final Empresa empresa = (Empresa) intent.getSerializableExtra("empresa");
         if (empresa != null){
             titulo.setText(empresa.getNome());
@@ -144,7 +144,7 @@ public class MarcarHorariosActivity extends BaseActivity {
                         new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
-                                mudarTela(getApplicationContext(), MapaActivity.class);
+                                mudarTelaObject(getApplicationContext(), MapaActivity.class, empresa, "empresa");
                             }
 
                             @Override

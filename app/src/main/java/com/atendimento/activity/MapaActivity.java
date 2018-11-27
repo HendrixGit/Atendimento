@@ -1,21 +1,25 @@
 package com.atendimento.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
-import android.widget.AbsListView;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -24,6 +28,7 @@ import android.widget.TextView;
 import com.atendimento.R;
 import com.atendimento.adapter.AdapterEnderecos;
 import com.atendimento.bases.BaseActivity;
+import com.atendimento.model.Empresa;
 import com.atendimento.model.Endereco;
 import com.atendimento.util.RecyclerItemClickListener;
 import com.atendimento.util.SimpleDividerItemDecoration;
@@ -50,10 +55,14 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
     private ImageView imageViewPesquisarEndereco;
     private TextView minhaLocalizacao;
     private RecyclerView recyclerViewEnderecos;
-    private List<Endereco> enderecosLista;// = new ArrayList<>();
+    private List<Endereco> enderecosLista;
     private AdapterEnderecos adapterEnderecos;
     private LatLng localizacaoAtual;
     private ProgressBar progressBarMapa;
+    private Button ok;
+    private Endereco enderecoParametro;
+    private Empresa empresaParametro;
+    private String idEmpresa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +72,21 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
         toolbarBase = findViewById(R.id.toolbar);
         toolbarBase.setTitle("Definir Local Empresa");
         toolbarBase.setTitleTextColor(getResources().getColor(R.color.colorBranco));
+
+        Intent intent = getIntent();
+        empresaParametro = (Empresa) intent.getSerializableExtra("empresa");
+        if (empresaParametro != null){
+             idEmpresa = empresaParametro.getId();
+        }
+
         progressBarMapa = findViewById(R.id.progressBarMapa);
+        ok = findViewById(R.id.buttonOKMapa);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         destino = findViewById(R.id.editTextPesqEndereco);
         destino.setCursorVisible(false);
         destino.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +103,9 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
                 recuperaLocalizacao();
             }
         });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            minhaLocalizacao.setBackground(getResources().getDrawable(R.drawable.selector));
+        }
         recyclerViewEnderecos = findViewById(R.id.recyclerViewEnderecos);
         RecyclerView.LayoutManager layoutManager   = new LinearLayoutManager(getApplicationContext());
         recyclerViewEnderecos.setLayoutManager(layoutManager);
@@ -93,7 +119,7 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
                         new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
-                                buscarEnderecoEmpresa(enderecosLista.get(position));
+                                selecionarEnderecoEmpresa(enderecosLista.get(position));
                             }
 
                             @Override
@@ -145,6 +171,12 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         recuperaLocalizacao();
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                adcionarMarcador("Local", latLng.latitude, latLng.longitude);
+            }
+        });
     }
 
     @Override
@@ -153,19 +185,16 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
         locationManager.removeUpdates(locationListener);
     }
 
-    private Address recuperarEndereco(String endereco){
+    private Address buscarEnderecoLatLong(Location localizacao){
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> listaEnderecos = null;
         try {
-            List<Address> listaEnderecos = geocoder.getFromLocationName(endereco, 1);
-            if (listaEnderecos != null && listaEnderecos.size() > 0){
-                Address address = listaEnderecos.get(0);
-                return address;
-            }
+            listaEnderecos = geocoder.getFromLocation(localizacao.getLatitude(), localizacao.getLongitude(), 1);
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return listaEnderecos.get(0);
     }
 
     private Address carregarEnderecos(String endereco){
@@ -178,13 +207,7 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
             adapterEnderecos = new AdapterEnderecos(getApplication(), enderecosLista);
             if (listaEnderecos != null && listaEnderecos.size() > 0){
                 for (Address address : listaEnderecos){
-                    Endereco enderecoEmpresa = new Endereco();
-                    enderecoEmpresa.setTextoPesquisado(endereco);
-                    enderecoEmpresa.setEndereco(address.getAddressLine(0));
-                    enderecoEmpresa.setCidade(address.getSubAdminArea());
-                    enderecoEmpresa.setLatitude(address.getLatitude());
-                    enderecoEmpresa.setLongitude(address.getLongitude());
-                    enderecoEmpresa.setPais(address.getCountryName());
+                    Endereco enderecoEmpresa = carregaObjetoEndereco(address);
                     enderecosLista.add(enderecoEmpresa);
                     recyclerViewEnderecos.setVisibility(View.VISIBLE);
                     recyclerViewEnderecos.setAdapter(adapterEnderecos);
@@ -198,12 +221,24 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
         return null;
     }
 
-    private void buscarEnderecoEmpresa(Endereco endereco){
+    private Endereco carregaObjetoEndereco(Address address){
+        Endereco enderecoEmpresa = new Endereco();
+        enderecoEmpresa.setTextoPesquisado(address.getFeatureName());
+        enderecoEmpresa.setEndereco(address.getAddressLine(0));
+        enderecoEmpresa.setCidade(address.getSubAdminArea());
+        enderecoEmpresa.setLatitude(address.getLatitude());
+        enderecoEmpresa.setLongitude(address.getLongitude());
+        enderecoEmpresa.setPais(address.getCountryName());
+        Log.i("local", address.toString());
+        return enderecoEmpresa;
+    }
+
+    private void selecionarEnderecoEmpresa(Endereco endereco){
         if (!destino.getText().equals("") || destino.getText() != null){
             if (endereco != null){
                 Double latitude  = endereco.getLatitude();
                 Double longitude = endereco.getLongitude();
-                adcionarMarcador(endereco.getCidade(), latitude, longitude);
+                adcionarMarcador(endereco.getEndereco(), latitude, longitude);
                 recyclerViewEnderecos.setVisibility(View.GONE);
             }
         }
@@ -211,14 +246,18 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
 
     private void recuperaLocalizacao() {
         progressBarMapa.setVisibility(View.VISIBLE);
+        recyclerViewEnderecos.setVisibility(View.GONE);
+        destino.setText("");
+        escondeTeclado();
         locationManager = (LocationManager) this.getSystemService(getApplicationContext().LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 Double latitude  = location.getLatitude();
                 Double longitude = location.getLongitude();
-                adcionarMarcador("Minha Localização", latitude, longitude);
                 localizacaoAtual = new LatLng(latitude, longitude);
+                Address address =  buscarEnderecoLatLong(location);
+                adcionarMarcador("Minha Localização: " + address.getAddressLine(0), latitude, longitude);
                 progressBarMapa.setVisibility(View.GONE);
             }
 
@@ -247,6 +286,15 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
             );
         }
     }
+
+    private void escondeTeclado() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
     private void adcionarMarcador(String descLocalizacao, Double parLatitude, Double parLongitude){
         LatLng localizacao = new LatLng(parLatitude, parLongitude);
 

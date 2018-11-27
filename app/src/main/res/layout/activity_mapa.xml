@@ -71,6 +71,7 @@
                 android:layout_marginRight="8dp"
                 android:clickable="true"
                 android:focusable="true"
+                android:background="@drawable/selector"
                 app:layout_constraintBottom_toBottomOf="@+id/editTextPesqEndereco"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/editTextPesqEndereco"
@@ -119,6 +120,16 @@
             android:layout_height="match_parent"
             android:background="@color/colorSelecao"
             tools:visibility="gone" />
+
+        <Button
+            android:id="@+id/buttonOKMapa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/mdtp_ok"
+            android:clickable="true"
+            android:focusable="true"/>
 
 
     </FrameLayout>
