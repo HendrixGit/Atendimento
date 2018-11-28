@@ -1,7 +1,6 @@
 package com.atendimento.activity;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -28,7 +27,6 @@ import android.widget.TextView;
 import com.atendimento.R;
 import com.atendimento.adapter.AdapterEnderecos;
 import com.atendimento.bases.BaseActivity;
-import com.atendimento.model.Empresa;
 import com.atendimento.model.Endereco;
 import com.atendimento.util.RecyclerItemClickListener;
 import com.atendimento.util.SimpleDividerItemDecoration;
@@ -61,8 +59,6 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
     private ProgressBar progressBarMapa;
     private Button ok;
     private Endereco enderecoParametro;
-    private Empresa empresaParametro;
-    private String idEmpresa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +68,6 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
         toolbarBase = findViewById(R.id.toolbar);
         toolbarBase.setTitle("Definir Local Empresa");
         toolbarBase.setTitleTextColor(getResources().getColor(R.color.colorBranco));
-
-        Intent intent = getIntent();
-        empresaParametro = (Empresa) intent.getSerializableExtra("empresa");
-        if (empresaParametro != null){
-             idEmpresa = empresaParametro.getId();
-        }
 
         progressBarMapa = findViewById(R.id.progressBarMapa);
         ok = findViewById(R.id.buttonOKMapa);
@@ -174,7 +164,8 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                adcionarMarcador("Local", latLng.latitude, latLng.longitude);
+                Address address = buscarEnderecoLatLong(latLng);
+                adcionarMarcador("Local: " + address.getAddressLine(0), latLng.latitude, latLng.longitude);
             }
         });
     }
@@ -185,11 +176,11 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
         locationManager.removeUpdates(locationListener);
     }
 
-    private Address buscarEnderecoLatLong(Location localizacao){
+    private Address buscarEnderecoLatLong(LatLng localizacao){
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         List<Address> listaEnderecos = null;
         try {
-            listaEnderecos = geocoder.getFromLocation(localizacao.getLatitude(), localizacao.getLongitude(), 1);
+            listaEnderecos = geocoder.getFromLocation(localizacao.latitude, localizacao.longitude, 1);
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -256,7 +247,7 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
                 Double latitude  = location.getLatitude();
                 Double longitude = location.getLongitude();
                 localizacaoAtual = new LatLng(latitude, longitude);
-                Address address =  buscarEnderecoLatLong(location);
+                Address address =  buscarEnderecoLatLong(localizacaoAtual);
                 adcionarMarcador("Minha Localização: " + address.getAddressLine(0), latitude, longitude);
                 progressBarMapa.setVisibility(View.GONE);
             }
@@ -297,7 +288,6 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
 
     private void adcionarMarcador(String descLocalizacao, Double parLatitude, Double parLongitude){
         LatLng localizacao = new LatLng(parLatitude, parLongitude);
-
         mMap.clear();
         mMap.addMarker(
                 new MarkerOptions()
