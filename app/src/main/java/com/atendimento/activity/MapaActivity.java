@@ -16,13 +16,13 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.atendimento.R;
 import com.atendimento.adapter.AdapterEnderecos;
@@ -39,6 +39,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,7 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
     private ProgressBar progressBarMapa;
     private Button ok;
     private Endereco enderecoParametro;
+    private Endereco enderecoAtual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +112,28 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
                             @Override
                             public void onItemClick(View view, int position) {
                                 selecionarEnderecoEmpresa(enderecosLista.get(position));
+                                float distancia = calcularDistancia(enderecosLista.get(position));
+                                DecimalFormat decimalFormat;
+                                String distanciaFormatada = "";
+
+                                if(distancia > 1) {
+                                    decimalFormat = new DecimalFormat("0.00 KM");
+                                }
+                                else{
+                                    distancia = distancia * 1000;
+                                    if(String.valueOf(distancia).length() == 3) {
+                                        decimalFormat = new DecimalFormat("000 M");
+                                    }
+                                    else
+                                    if(String.valueOf(distancia).length() == 2){
+                                        decimalFormat = new DecimalFormat("00 M");
+                                    }
+                                    else{
+                                        decimalFormat = new DecimalFormat("0 M");
+                                    }
+                                }
+                                distanciaFormatada = decimalFormat.format(distancia);
+                                Toast.makeText(getApplicationContext(), "Distancia: " + distanciaFormatada,  Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
@@ -235,6 +259,19 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
         }
     }
 
+    private float calcularDistancia(Endereco endereco){
+        Location location = new Location("localAtual");
+        location.setLatitude(localizacaoAtual.latitude);
+        location.setLongitude(localizacaoAtual.longitude);
+
+        Location destino = new Location("destino");
+        destino.setLatitude(endereco.getLatitude());
+        destino.setLongitude(endereco.getLongitude());
+
+        float distancia = location.distanceTo(destino) / 1000; //distancia retornada em metros depois calculada para kilometros
+        return distancia;
+    }
+
     private void recuperaLocalizacao() {
         progressBarMapa.setVisibility(View.VISIBLE);
         recyclerViewEnderecos.setVisibility(View.GONE);
@@ -248,6 +285,7 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
                 Double longitude = location.getLongitude();
                 localizacaoAtual = new LatLng(latitude, longitude);
                 Address address =  buscarEnderecoLatLong(localizacaoAtual);
+                enderecoAtual = carregaObjetoEndereco(address);
                 adcionarMarcador("Minha Localização: " + address.getAddressLine(0), latitude, longitude);
                 progressBarMapa.setVisibility(View.GONE);
             }
@@ -275,14 +313,6 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
                     10,
                     locationListener
             );
-        }
-    }
-
-    private void escondeTeclado() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 

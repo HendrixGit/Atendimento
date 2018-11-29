@@ -28,5 +28,4 @@
         android:textColor="@color/colorPreto"
         android:textStyle="bold" />
 
-
 </LinearLayout>
