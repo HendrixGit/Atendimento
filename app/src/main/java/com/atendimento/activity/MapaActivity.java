@@ -30,6 +30,7 @@ import com.atendimento.bases.BaseActivity;
 import com.atendimento.model.Endereco;
 import com.atendimento.util.RecyclerItemClickListener;
 import com.atendimento.util.SimpleDividerItemDecoration;
+import com.atendimento.util.Util;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,11 +40,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
 
 public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
 
@@ -56,11 +57,12 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
     private RecyclerView recyclerViewEnderecos;
     private List<Endereco> enderecosLista;
     private AdapterEnderecos adapterEnderecos;
-    private LatLng localizacaoAtual;
+    private Location localizacaoAtualUsuario;
     private ProgressBar progressBarMapa;
     private Button ok;
     private Endereco enderecoParametro;
     private Endereco enderecoAtual;
+    private Util util;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,7 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
         toolbarBase = findViewById(R.id.toolbar);
         toolbarBase.setTitle("Definir Local Empresa");
         toolbarBase.setTitleTextColor(getResources().getColor(R.color.colorBranco));
+        util = new Util();
 
         progressBarMapa = findViewById(R.id.progressBarMapa);
         ok = findViewById(R.id.buttonOKMapa);
@@ -112,28 +115,8 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
                             @Override
                             public void onItemClick(View view, int position) {
                                 selecionarEnderecoEmpresa(enderecosLista.get(position));
-                                float distancia = calcularDistancia(enderecosLista.get(position));
-                                DecimalFormat decimalFormat;
-                                String distanciaFormatada = "";
-
-                                if(distancia > 1) {
-                                    decimalFormat = new DecimalFormat("0.00 KM");
-                                }
-                                else{
-                                    distancia = distancia * 1000;
-                                    if(String.valueOf(distancia).length() == 3) {
-                                        decimalFormat = new DecimalFormat("000 M");
-                                    }
-                                    else
-                                    if(String.valueOf(distancia).length() == 2){
-                                        decimalFormat = new DecimalFormat("00 M");
-                                    }
-                                    else{
-                                        decimalFormat = new DecimalFormat("0 M");
-                                    }
-                                }
-                                distanciaFormatada = decimalFormat.format(distancia);
-                                Toast.makeText(getApplicationContext(), "Distancia: " + distanciaFormatada,  Toast.LENGTH_SHORT).show();
+                                float distancia = util.calcularDistancia(localizacaoAtualUsuario ,enderecosLista.get(position));
+                                Toast.makeText(getApplicationContext(), util.retornarDistancia(distancia), Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
@@ -185,6 +168,7 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         recuperaLocalizacao();
+        locationManager.removeUpdates(locationListener);
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -217,9 +201,10 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
             String textoPesquisa = endereco.toLowerCase();
             textoPesquisa = Normalizer.normalize(textoPesquisa, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            List<Address> listaEnderecos = geocoder.getFromLocationName(textoPesquisa, Integer.MAX_VALUE, localizacaoAtual.latitude, localizacaoAtual.longitude,localizacaoAtual.latitude, localizacaoAtual.longitude);
+            List<Address> listaEnderecos = geocoder.getFromLocationName(textoPesquisa, Integer.MAX_VALUE, localizacaoAtualUsuario.getLatitude(), localizacaoAtualUsuario.getLongitude(),
+                    localizacaoAtualUsuario.getLatitude(), localizacaoAtualUsuario.getLongitude());
             enderecosLista   = new ArrayList<>();
-            adapterEnderecos = new AdapterEnderecos(getApplication(), enderecosLista);
+            adapterEnderecos = new AdapterEnderecos(getApplication(), enderecosLista, localizacaoAtualUsuario);
             if (listaEnderecos != null && listaEnderecos.size() > 0){
                 for (Address address : listaEnderecos){
                     Endereco enderecoEmpresa = carregaObjetoEndereco(address);
@@ -259,19 +244,6 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
         }
     }
 
-    private float calcularDistancia(Endereco endereco){
-        Location location = new Location("localAtual");
-        location.setLatitude(localizacaoAtual.latitude);
-        location.setLongitude(localizacaoAtual.longitude);
-
-        Location destino = new Location("destino");
-        destino.setLatitude(endereco.getLatitude());
-        destino.setLongitude(endereco.getLongitude());
-
-        float distancia = location.distanceTo(destino) / 1000; //distancia retornada em metros depois calculada para kilometros
-        return distancia;
-    }
-
     private void recuperaLocalizacao() {
         progressBarMapa.setVisibility(View.VISIBLE);
         recyclerViewEnderecos.setVisibility(View.GONE);
@@ -281,12 +253,13 @@ public class MapaActivity extends BaseActivity implements OnMapReadyCallback {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Double latitude  = location.getLatitude();
-                Double longitude = location.getLongitude();
-                localizacaoAtual = new LatLng(latitude, longitude);
-                Address address =  buscarEnderecoLatLong(localizacaoAtual);
+                localizacaoAtualUsuario = new Location("localUsuario");
+                localizacaoAtualUsuario.setLatitude(location.getLatitude());
+                localizacaoAtualUsuario.setLongitude(location.getLongitude());
+                LatLng latlangAtual = new LatLng(localizacaoAtualUsuario.getLatitude(), localizacaoAtualUsuario.getLongitude());
+                Address address =  buscarEnderecoLatLong(latlangAtual);
                 enderecoAtual = carregaObjetoEndereco(address);
-                adcionarMarcador("Minha Localização: " + address.getAddressLine(0), latitude, longitude);
+                adcionarMarcador("Minha Localização: " + address.getAddressLine(0), localizacaoAtualUsuario.getLatitude(), localizacaoAtualUsuario.getLongitude());
                 progressBarMapa.setVisibility(View.GONE);
             }
 

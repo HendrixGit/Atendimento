@@ -1,6 +1,7 @@
 package com.atendimento.adapter;
 
 import android.content.Context;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,10 +19,12 @@ public class AdapterEnderecos extends RecyclerView.Adapter<AdapterEnderecos.Ende
 
     private List<Endereco> listaEnderecos;
     private Context contexto;
+    private Location localizacao;
 
-    public AdapterEnderecos(Context contexto, List<Endereco> lista) {
+    public AdapterEnderecos(Context contexto, List<Endereco> lista, Location location) {
         this.contexto       = contexto;
         this.listaEnderecos = lista;
+        this.localizacao    = location;
     }
 
 

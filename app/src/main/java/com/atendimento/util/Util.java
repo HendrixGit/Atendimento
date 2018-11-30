@@ -5,9 +5,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.location.Location;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.atendimento.R;
+import com.atendimento.model.Endereco;
+
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
@@ -15,6 +20,36 @@ import java.util.Date;
 
 
 public class Util{
+
+    public String retornarDistancia(Float distancia){
+        DecimalFormat decimalFormat;
+        if(distancia > 1) {
+            decimalFormat = new DecimalFormat("0.00 KM");
+        }
+        else{
+            distancia = distancia * 1000;
+            if(String.valueOf(distancia).length() == 3) {
+                decimalFormat = new DecimalFormat("000 M");
+            }
+            else
+            if(String.valueOf(distancia).length() == 2){
+                decimalFormat = new DecimalFormat("00 M");
+            }
+            else{
+                decimalFormat = new DecimalFormat("0 M");
+            }
+        }
+        return decimalFormat.format(distancia);
+    }
+
+    public float calcularDistancia(Location localizacaoAtual, Endereco endereco){
+        Location destino = new Location("destino");
+        destino.setLatitude(endereco.getLatitude());
+        destino.setLongitude(endereco.getLongitude());
+
+        float distancia = localizacaoAtual.distanceTo(destino) / 1000; //distancia retornada em metros depois calculada para kilometros
+        return distancia;
+    }
 
     public String returnDataString(Date data) throws ParseException {
         long now = System.currentTimeMillis();
